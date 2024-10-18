@@ -1,0 +1,51 @@
+digraph "DFG for'kernel' function" {
+	Node0x588a0a9d6db8[shape=record, label="  %indvars.iv = phi i64 [ 0, %for.body3.us ], [ %indvars.iv.next, %for.body8.us ]"];
+	Node0x588a0a9d6eb0[shape=record, label="  %arrayidx10.us = getelementptr inbounds double, double* %s, i64 %indvars.iv"];
+	Node0x588a0a9d9730[shape=record, label="  %arrayidx26.us = getelementptr inbounds double, double* %p, i64 %indvars.iv"];
+	Node0x588a0a9d9900[shape=record, label="  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1"];
+	Node0x588a0a9d6f18[shape=oval, color=darkorange, style=filled, label="  %2 = load double, double* %arrayidx10.us, align 8, !tbaa !2"];
+	Node0x588a0a9d9798[shape=oval, color=darkorange, style=filled, label="  %7 = load double, double* %arrayidx26.us, align 8, !tbaa !2"];
+	Node0x588a0a9d9970[shape=record, label="  %exitcond = icmp eq i64 %indvars.iv.next, %wide.trip.count"];
+	Node0x588a0a9d99f8[shape=record, label="  br i1 %exitcond, label %for.cond6.for.inc34_crit_edge.us, label %for.body8.us"];
+	Node0x588a0a9d6f78[shape=oval, color=darkorange, style=filled, label="  %3 = load double, double* %arrayidx12.us, align 8, !tbaa !2"];
+	Node0x588a0a9d7008[shape=record, label="  %arrayidx16.us = getelementptr inbounds [1900 x double], [1900 x double]* %A, i64 %indvars.iv68, i64 %indvars.iv"];
+	Node0x588a0a9d7158[shape=oval, color=darkorange, style=filled, label="  %5 = load double, double* %arrayidx5.us, align 8, !tbaa !2"];
+	Node0x588a0a9d7078[shape=oval, color=darkorange, style=filled, label="  %4 = load double, double* %arrayidx16.us, align 8, !tbaa !2"];
+	Node0x588a0a9d96b8[shape=oval, color=darkorange, style=filled, label="  %6 = load double, double* %arrayidx16.us, align 8, !tbaa !2"];
+	Node0x588a0a9ce8d0[shape=record, label="  %mul.us = fmul double %3, %4"];
+	Node0x588a0a9ce5f0[shape=record, label="  %mul27.us = fmul double %6, %7"];
+	Node0x588a0a9ce560[shape=record, label="  %add.us = fadd double %2, %mul.us"];
+	Node0x588a0a9d9810[shape=record, label="  %add28.us = fadd double %5, %mul27.us"];
+	Node0x588a0a9d70f0[shape=oval, color=darkorange, style=filled, label="  store double %add.us, double* %arrayidx10.us, align 8, !tbaa !2"];
+	Node0x588a0a9d9880[shape=oval, color=darkorange, style=filled, label="  store double %add28.us, double* %arrayidx5.us, align 8, !tbaa !2"];
+edge [color=blue]
+	Node0x588a0a9d99f8 -> Node0x588a0a9d6db8
+	Node0x588a0a9d99f8 -> Node0x588a0a9d6f78
+	Node0x588a0a9d99f8 -> Node0x588a0a9d7008
+	Node0x588a0a9d99f8 -> Node0x588a0a9d7158
+	Node0x588a0a9d99f8 -> Node0x588a0a9d9880
+	Node0x588a0a9d99f8 -> Node0x588a0a9d9970
+edge [color=red]
+	Node0x588a0a9d9900 -> Node0x588a0a9d6db8
+	Node0x588a0a9d6db8 -> Node0x588a0a9d6eb0
+	Node0x588a0a9d6eb0 -> Node0x588a0a9d6f18
+	Node0x588a0a9d6db8 -> Node0x588a0a9d7008
+	Node0x588a0a9d7008 -> Node0x588a0a9d7078
+	Node0x588a0a9d6f78 -> Node0x588a0a9ce8d0
+	Node0x588a0a9d7078 -> Node0x588a0a9ce8d0
+	Node0x588a0a9d6f18 -> Node0x588a0a9ce560
+	Node0x588a0a9ce8d0 -> Node0x588a0a9ce560
+	Node0x588a0a9ce560 -> Node0x588a0a9d70f0
+	Node0x588a0a9d6eb0 -> Node0x588a0a9d70f0
+	Node0x588a0a9d7008 -> Node0x588a0a9d96b8
+	Node0x588a0a9d6db8 -> Node0x588a0a9d9730
+	Node0x588a0a9d9730 -> Node0x588a0a9d9798
+	Node0x588a0a9d96b8 -> Node0x588a0a9ce5f0
+	Node0x588a0a9d9798 -> Node0x588a0a9ce5f0
+	Node0x588a0a9d7158 -> Node0x588a0a9d9810
+	Node0x588a0a9ce5f0 -> Node0x588a0a9d9810
+	Node0x588a0a9d9810 -> Node0x588a0a9d9880
+	Node0x588a0a9d6db8 -> Node0x588a0a9d9900
+	Node0x588a0a9d9900 -> Node0x588a0a9d9970
+	Node0x588a0a9d9970 -> Node0x588a0a9d99f8
+}

@@ -1,0 +1,32 @@
+digraph "DFG for'_Z6kernelPfS_S_' function" {
+	Node0x5589f00b9c20[shape=record, label="  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1"];
+	Node0x5589f00c1d70[shape=record, label="  %exitcond = icmp eq i64 %indvars.iv.next, 32"];
+	Node0x5589f0043e58[shape=record, label="  br i1 %exitcond, label %for.end, label %for.body"];
+	Node0x5589f00c1a38[shape=record, label="  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next, %for.body ]"];
+	Node0x5589f00c1b30[shape=record, label="  %arrayidx = getelementptr inbounds float, float* %input, i64 %indvars.iv"];
+	Node0x5589f00c1c10[shape=record, label="  %arrayidx2 = getelementptr inbounds float, float* %coefficient, i64 %indvars.iv"];
+	Node0x5589f00c1b98[shape=record, label="  %1 = load float, float* %arrayidx, align 4, !tbaa !2"];
+	Node0x5589f00c1c78[shape=record, label="  %2 = load float, float* %arrayidx2, align 4, !tbaa !2"];
+	Node0x5589f00b9d00[shape=record, label="  %mul = fmul float %1, %2"];
+	Node0x5589f00b9c90[shape=record, label="  %add = fadd float %0, %mul"];
+	Node0x5589f00c18d8[shape=record, label="  %0 = phi float [ %.pre, %entry ], [ %add, %for.body ]"];
+	Node0x5589f00c1cf0[shape=record, label="  store float %add, float* %output, align 4, !tbaa !2"];
+edge [color=blue]
+	Node0x5589f0043e58 -> Node0x5589f00c18d8
+	Node0x5589f0043e58 -> Node0x5589f00c1a38
+edge [color=red]
+	Node0x5589f00b9c90 -> Node0x5589f00c18d8
+	Node0x5589f00b9c20 -> Node0x5589f00c1a38
+	Node0x5589f00c1a38 -> Node0x5589f00c1b30
+	Node0x5589f00c1b30 -> Node0x5589f00c1b98
+	Node0x5589f00c1a38 -> Node0x5589f00c1c10
+	Node0x5589f00c1c10 -> Node0x5589f00c1c78
+	Node0x5589f00c1b98 -> Node0x5589f00b9d00
+	Node0x5589f00c1c78 -> Node0x5589f00b9d00
+	Node0x5589f00c18d8 -> Node0x5589f00b9c90
+	Node0x5589f00b9d00 -> Node0x5589f00b9c90
+	Node0x5589f00b9c90 -> Node0x5589f00c1cf0
+	Node0x5589f00c1a38 -> Node0x5589f00b9c20
+	Node0x5589f00b9c20 -> Node0x5589f00c1d70
+	Node0x5589f00c1d70 -> Node0x5589f0043e58
+}

@@ -1,0 +1,51 @@
+digraph "DFG for'kernel' function" {
+	Node0x6183f771f4a8[shape=record, label="  %epil.iter = phi i32 [ %epil.iter.sub, %for.body.epil ], [ %xtraiter, %for.end.loopexit.unr-lcssa ]"];
+	Node0x6183f771fc60[shape=record, label="  %epil.iter.sub = add i32 %epil.iter, -1"];
+	Node0x6183f771fcd0[shape=record, label="  %epil.iter.cmp = icmp eq i32 %epil.iter.sub, 0"];
+	Node0x6183f771fd58[shape=record, label="  br i1 %epil.iter.cmp, label %for.end, label %for.body.epil, !llvm.loop !8"];
+	Node0x6183f771f408[shape=record, label="  %indvars.iv.epil = phi i64 [ %indvars.iv.next.epil, %for.body.epil ], [ %indvars.iv.unr, %for.end.loopexit.unr-lcssa ]"];
+	Node0x6183f771f570[shape=record, label="  %arrayidx.epil = getelementptr inbounds i32, i32* %val, i64 %indvars.iv.epil"];
+	Node0x6183f771f650[shape=record, label="  %arrayidx2.epil = getelementptr inbounds i32, i32* %col, i64 %indvars.iv.epil"];
+	Node0x6183f771f8e0[shape=record, label="  %arrayidx6.epil = getelementptr inbounds i32, i32* %row, i64 %indvars.iv.epil"];
+	Node0x6183f771fbf0[shape=record, label="  %indvars.iv.next.epil = add nuw nsw i64 %indvars.iv.epil, 1"];
+	Node0x6183f771f5d8[shape=oval, color=darkorange, style=filled, label="  %22 = load i32, i32* %arrayidx.epil, align 4, !tbaa !2"];
+	Node0x6183f771f6b8[shape=oval, color=darkorange, style=filled, label="  %23 = load i32, i32* %arrayidx2.epil, align 4, !tbaa !2"];
+	Node0x6183f771f948[shape=oval, color=darkorange, style=filled, label="  %25 = load i32, i32* %arrayidx6.epil, align 4, !tbaa !2"];
+	Node0x6183f771f718[shape=record, label="  %idxprom3.epil = sext i32 %23 to i64"];
+	Node0x6183f771f9a8[shape=record, label="  %idxprom7.epil = sext i32 %25 to i64"];
+	Node0x6183f771f790[shape=record, label="  %arrayidx4.epil = getelementptr inbounds i32, i32* %feature, i64 %idxprom3.epil"];
+	Node0x6183f771fa20[shape=record, label="  %arrayidx8.epil = getelementptr inbounds i32, i32* %output, i64 %idxprom7.epil"];
+	Node0x6183f771f7f8[shape=oval, color=darkorange, style=filled, label="  %24 = load i32, i32* %arrayidx4.epil, align 4, !tbaa !2"];
+	Node0x6183f771fa88[shape=oval, color=darkorange, style=filled, label="  %26 = load i32, i32* %arrayidx8.epil, align 4, !tbaa !2"];
+	Node0x6183f771f870[shape=record, label="  %mul.epil = mul nsw i32 %24, %22"];
+	Node0x6183f771fb00[shape=record, label="  %add.epil = add nsw i32 %26, %mul.epil"];
+	Node0x6183f771fb70[shape=oval, color=darkorange, style=filled, label="  store i32 %add.epil, i32* %arrayidx8.epil, align 4, !tbaa !2"];
+edge [color=blue]
+	Node0x6183f771fd58 -> Node0x6183f771f408
+	Node0x6183f771fd58 -> Node0x6183f771f4a8
+edge [color=red]
+	Node0x6183f771fbf0 -> Node0x6183f771f408
+	Node0x6183f771fc60 -> Node0x6183f771f4a8
+	Node0x6183f771f408 -> Node0x6183f771f570
+	Node0x6183f771f570 -> Node0x6183f771f5d8
+	Node0x6183f771f408 -> Node0x6183f771f650
+	Node0x6183f771f650 -> Node0x6183f771f6b8
+	Node0x6183f771f6b8 -> Node0x6183f771f718
+	Node0x6183f771f718 -> Node0x6183f771f790
+	Node0x6183f771f790 -> Node0x6183f771f7f8
+	Node0x6183f771f7f8 -> Node0x6183f771f870
+	Node0x6183f771f5d8 -> Node0x6183f771f870
+	Node0x6183f771f408 -> Node0x6183f771f8e0
+	Node0x6183f771f8e0 -> Node0x6183f771f948
+	Node0x6183f771f948 -> Node0x6183f771f9a8
+	Node0x6183f771f9a8 -> Node0x6183f771fa20
+	Node0x6183f771fa20 -> Node0x6183f771fa88
+	Node0x6183f771fa88 -> Node0x6183f771fb00
+	Node0x6183f771f870 -> Node0x6183f771fb00
+	Node0x6183f771fb00 -> Node0x6183f771fb70
+	Node0x6183f771fa20 -> Node0x6183f771fb70
+	Node0x6183f771f408 -> Node0x6183f771fbf0
+	Node0x6183f771f4a8 -> Node0x6183f771fc60
+	Node0x6183f771fc60 -> Node0x6183f771fcd0
+	Node0x6183f771fcd0 -> Node0x6183f771fd58
+}

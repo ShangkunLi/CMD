@@ -1,0 +1,6 @@
+/home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles/intrinsics_gen.dir
+/home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles/edit_cache.dir
+/home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles/rebuild_cache.dir
+/home/lucas/Project/Hi-DPS/DFG_Generation/build/src/CMakeFiles/genDFGPass.dir
+/home/lucas/Project/Hi-DPS/DFG_Generation/build/src/CMakeFiles/edit_cache.dir
+/home/lucas/Project/Hi-DPS/DFG_Generation/build/src/CMakeFiles/rebuild_cache.dir
