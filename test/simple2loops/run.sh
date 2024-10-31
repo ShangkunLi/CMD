@@ -1,0 +1,1 @@
+opt -load ../../build/src/libgenDFGPass.so -genDFGPass simple2loops.bc

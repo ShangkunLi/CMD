@@ -29,81 +29,84 @@
 using namespace llvm;
 using namespace std;
 
-class DFG {
-  private:
-    int m_num;
-    bool m_CDFGFused;
-    bool m_targetFunction;
-    bool m_precisionAware;
-    list<DFGNode*>* m_orderedNodes;
-    list<Loop*>* m_targetLoops;
+class DFG
+{
+private:
+  int m_num;
+  bool m_CDFGFused;
+  bool m_targetFunction;
+  bool m_precisionAware;
+  list<DFGNode *> *m_orderedNodes;
+  list<Loop *> *m_targetLoops;
 
-    //edges of data flow
-    list<DFGEdge*> m_DFGEdges;
-    list<DFGEdge*> m_ctrlEdges;
+  // edges of data flow
+  list<DFGEdge *> m_DFGEdges;
+  list<DFGEdge *> m_ctrlEdges;
 
-    string changeIns2Str(Instruction* ins);
-    //get value's name or inst's content
-    StringRef getValueName(Value* v);
-    void DFS_on_DFG(DFGNode*, DFGNode*, list<DFGNode*>*, list<DFGEdge*>*,
-        list<DFGEdge*>*, list<list<DFGEdge*>*>*);
-    DFGNode* getNode(Value*);
-    bool hasNode(Value*);
-    DFGEdge* getDFGEdge(DFGNode*, DFGNode*);
-    void deleteDFGEdge(DFGNode*, DFGNode*);
-    void replaceDFGEdge(DFGNode*, DFGNode*, DFGNode*, DFGNode*);
-    bool hasDFGEdge(DFGNode*, DFGNode*);
-    DFGEdge* getCtrlEdge(DFGNode*, DFGNode*);
-    bool hasCtrlEdge(DFGNode*, DFGNode*);
-    bool shouldIgnore(Instruction*);
-    void tuneForBranch();
-    void tuneForBitcast();
-    void tuneForLoad();
-    void tuneForPattern();
-    void combineCmpBranch();
-    void combineMulAdd();
-    void combinePhiAdd();
-    void combine(string, string);
-    void combineForIter(list<string>*);
-    // combineForUnroll is used to reconstruct "phi-add-add-..." alike patterns with a limited length.
-    void combineForUnroll(list<string>*); 
-    void trimForStandalone();
-    void detectMemDataDependency();
-    void eliminateOpcode(string);
-    bool searchDFS(DFGNode*, DFGNode*, list<DFGNode*>*);
-    void connectDFGNodes();
-    bool isLiveInInst(BasicBlock*, Instruction*);
-    bool containsInst(BasicBlock*, Instruction*);
-    int getInstID(BasicBlock*, Instruction*);
-    // Reorder the DFG nodes (initial CPU execution ordering) in
-    // ASAP (as soon as possible) or ALAP (as last as possible)
-    // for mapping.
-    void reorderInASAP();
-    void reorderInALAP();
-    void reorderInLongest();
-    void reorderDFS(set<DFGNode*>*, list<DFGNode*>*,
-                    list<DFGNode*>*, DFGNode*);
-    void initExecLatency(map<string, int>*);
-    void initPipelinedOpt(list<string>*);
-    bool isMinimumAndHasNotBeenVisited(set<DFGNode*>*, map<DFGNode*, int>*, DFGNode*);
+  string changeIns2Str(Instruction *ins);
+  // get value's name or inst's content
+  StringRef getValueName(Value *v);
+  void DFS_on_DFG(DFGNode *, DFGNode *, list<DFGNode *> *, list<DFGEdge *> *,
+                  list<DFGEdge *> *, list<list<DFGEdge *> *> *);
+  DFGNode *getNode(Value *);
+  bool hasNode(Value *);
+  DFGEdge *getDFGEdge(DFGNode *, DFGNode *);
+  void deleteDFGEdge(DFGNode *, DFGNode *);
+  void replaceDFGEdge(DFGNode *, DFGNode *, DFGNode *, DFGNode *);
+  bool hasDFGEdge(DFGNode *, DFGNode *);
+  DFGEdge *getCtrlEdge(DFGNode *, DFGNode *);
+  bool hasCtrlEdge(DFGNode *, DFGNode *);
+  bool shouldIgnore(Instruction *);
+  void tuneForBranch();
+  void tuneForBitcast();
+  void tuneForLoad();
+  void tuneForPattern();
+  void combineCmpBranch();
+  void combineMulAdd();
+  void combinePhiAdd();
+  void combine(string, string);
+  void combineForIter(list<string> *);
+  // combineForUnroll is used to reconstruct "phi-add-add-..." alike patterns with a limited length.
+  void combineForUnroll(list<string> *);
+  void trimForStandalone();
+  void detectMemDataDependency();
+  void eliminateOpcode(string);
+  bool searchDFS(DFGNode *, DFGNode *, list<DFGNode *> *);
+  void connectDFGNodes();
+  bool isLiveInInst(BasicBlock *, Instruction *);
+  bool containsInst(BasicBlock *, Instruction *);
+  int getInstID(BasicBlock *, Instruction *);
+  // Reorder the DFG nodes (initial CPU execution ordering) in
+  // ASAP (as soon as possible) or ALAP (as last as possible)
+  // for mapping.
+  void reorderInASAP();
+  void reorderInALAP();
+  void reorderInLongest();
+  void reorderDFS(set<DFGNode *> *, list<DFGNode *> *,
+                  list<DFGNode *> *, DFGNode *);
+  void initExecLatency(map<string, int> *);
+  void initPipelinedOpt(list<string> *);
+  bool isMinimumAndHasNotBeenVisited(set<DFGNode *> *, map<DFGNode *, int> *, DFGNode *);
 
-  public:
-    DFG(Function&, list<Loop*>*, bool, bool, bool, map<string, int>*, list<string>*);
-    list<list<DFGNode*>*>* m_cycleNodeLists;
-    //initial ordering of insts
-    list<DFGNode*> nodes;
+public:
+  DFG(Function &, list<Loop *> *, bool, bool, bool, map<string, int> *, list<string> *);
+  DFG(list<Loop *> *, bool, bool, bool, map<string, int> *, list<string> *);
+  list<list<DFGNode *> *> *m_cycleNodeLists;
+  // initial ordering of insts
+  list<DFGNode *> nodes;
 
-    list<DFGNode*>* getBFSOrderedNodes();
-    list<DFGNode*>* getDFSOrderedNodes();
-    int getNodeCount();
-    void construct(Function&);
-    void setupCycles();
-    list<list<DFGEdge*>*>* calculateCycles();
-    list<list<DFGNode*>*>* getCycleLists();
-    int getID(DFGNode*);
-    bool isLoad(DFGNode*);
-    bool isStore(DFGNode*);
-    void showOpcodeDistribution();
-    void generateDot(Function&, bool);
-    void generateJSON();
+  list<DFGNode *> *getBFSOrderedNodes();
+  list<DFGNode *> *getDFSOrderedNodes();
+  int getNodeCount();
+  void construct(Function &);
+  bool constructWithLoop(Loop *);
+  void setupCycles();
+  list<list<DFGEdge *> *> *calculateCycles();
+  list<list<DFGNode *> *> *getCycleLists();
+  int getID(DFGNode *);
+  bool isLoad(DFGNode *);
+  bool isStore(DFGNode *);
+  void showOpcodeDistribution();
+  void generateDot(Function &, bool);
+  void generateJSON();
 };

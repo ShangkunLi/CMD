@@ -1,0 +1,86 @@
+digraph "DFG for'_Z6kernelPfS_S_' function" {
+	Node0x62a85be5cea0[shape=record, label="  %indvars.iv.next.1 = add nuw nsw i64 %indvars.iv.next, 1"];
+	Node0x62a85be5cf10[shape=record, label="  %arrayidx.2 = getelementptr inbounds float, float* %input, i64 %indvars.iv.next.1"];
+	Node0x62a85be5d400[shape=record, label="  %arrayidx2.2 = getelementptr inbounds float, float* %coefficient, i64 %indvars.iv.next.1"];
+	Node0x62a85be5d640[shape=record, label="  %indvars.iv.next.2 = add nuw nsw i64 %indvars.iv.next.1, 1"];
+	Node0x62a85be5d388[shape=oval, color=darkorange, style=filled, label="  %5 = load float, float* %arrayidx.2, align 4, !tbaa !2"];
+	Node0x62a85be5d468[shape=oval, color=darkorange, style=filled, label="  %6 = load float, float* %arrayidx2.2, align 4, !tbaa !2"];
+	Node0x62a85be5d6b0[shape=record, label="  %arrayidx.3 = getelementptr inbounds float, float* %input, i64 %indvars.iv.next.2"];
+	Node0x62a85be5d790[shape=record, label="  %arrayidx2.3 = getelementptr inbounds float, float* %coefficient, i64 %indvars.iv.next.2"];
+	Node0x62a85be5d9d0[shape=record, label="  %indvars.iv.next.3 = add nuw nsw i64 %indvars.iv.next.2, 1"];
+	Node0x62a85be5d4e0[shape=record, label="  %mul.2 = fmul float %5, %6"];
+	Node0x62a85be5d718[shape=oval, color=darkorange, style=filled, label="  %7 = load float, float* %arrayidx.3, align 4, !tbaa !2"];
+	Node0x62a85be5d7f8[shape=oval, color=darkorange, style=filled, label="  %8 = load float, float* %arrayidx2.3, align 4, !tbaa !2"];
+	Node0x62a85be5da40[shape=record, label="  %exitcond.3 = icmp eq i64 %indvars.iv.next.3, 32"];
+	Node0x62a85be5d870[shape=record, label="  %mul.3 = fmul float %7, %8"];
+	Node0x62a85bddcd38[shape=record, label="  br i1 %exitcond.3, label %for.end, label %for.body, !llvm.loop !6"];
+	Node0x62a85be5c6f8[shape=record, label="  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next.3, %for.body ]"];
+	Node0x62a85be5c7f0[shape=record, label="  %arrayidx = getelementptr inbounds float, float* %input, i64 %indvars.iv"];
+	Node0x62a85be5c8d0[shape=record, label="  %arrayidx2 = getelementptr inbounds float, float* %coefficient, i64 %indvars.iv"];
+	Node0x62a85be5cb10[shape=record, label="  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1"];
+	Node0x62a85be5c858[shape=oval, color=darkorange, style=filled, label="  %1 = load float, float* %arrayidx, align 4, !tbaa !2"];
+	Node0x62a85be5c938[shape=oval, color=darkorange, style=filled, label="  %2 = load float, float* %arrayidx2, align 4, !tbaa !2"];
+	Node0x62a85be5cb80[shape=record, label="  %arrayidx.1 = getelementptr inbounds float, float* %input, i64 %indvars.iv.next"];
+	Node0x62a85be5cc60[shape=record, label="  %arrayidx2.1 = getelementptr inbounds float, float* %coefficient, i64 %indvars.iv.next"];
+	Node0x62a85be5c9b0[shape=record, label="  %mul = fmul float %1, %2"];
+	Node0x62a85be5cbe8[shape=oval, color=darkorange, style=filled, label="  %3 = load float, float* %arrayidx.1, align 4, !tbaa !2"];
+	Node0x62a85be5ccc8[shape=oval, color=darkorange, style=filled, label="  %4 = load float, float* %arrayidx2.1, align 4, !tbaa !2"];
+	Node0x62a85be5cd40[shape=record, label="  %mul.1 = fmul float %3, %4"];
+	Node0x62a85be5cdb0[shape=record, label="  %add.1 = fadd float %add, %mul.1"];
+	Node0x62a85be5ce20[shape=oval, color=darkorange, style=filled, label="  store float %add.1, float* %output, align 4, !tbaa !2"];
+	Node0x62a85be5d550[shape=record, label="  %add.2 = fadd float %add.1, %mul.2"];
+	Node0x62a85be5d5c0[shape=oval, color=darkorange, style=filled, label="  store float %add.2, float* %output, align 4, !tbaa !2"];
+	Node0x62a85be5d8e0[shape=record, label="  %add.3 = fadd float %add.2, %mul.3"];
+	Node0x62a85be5c548[shape=record, label="  %0 = phi float [ %.pre, %entry ], [ %add.3, %for.body ]"];
+	Node0x62a85be5d950[shape=oval, color=darkorange, style=filled, label="  store float %add.3, float* %output, align 4, !tbaa !2"];
+	Node0x62a85be5ca20[shape=record, label="  %add = fadd float %0, %mul"];
+	Node0x62a85be5ca90[shape=oval, color=darkorange, style=filled, label="  store float %add, float* %output, align 4, !tbaa !2"];
+edge [color=blue]
+	Node0x62a85bddcd38 -> Node0x62a85be5c548
+	Node0x62a85bddcd38 -> Node0x62a85be5c6f8
+edge [color=red]
+	Node0x62a85be5d8e0 -> Node0x62a85be5c548
+	Node0x62a85be5d9d0 -> Node0x62a85be5c6f8
+	Node0x62a85be5c6f8 -> Node0x62a85be5c7f0
+	Node0x62a85be5c7f0 -> Node0x62a85be5c858
+	Node0x62a85be5c6f8 -> Node0x62a85be5c8d0
+	Node0x62a85be5c8d0 -> Node0x62a85be5c938
+	Node0x62a85be5c858 -> Node0x62a85be5c9b0
+	Node0x62a85be5c938 -> Node0x62a85be5c9b0
+	Node0x62a85be5c548 -> Node0x62a85be5ca20
+	Node0x62a85be5c9b0 -> Node0x62a85be5ca20
+	Node0x62a85be5ca20 -> Node0x62a85be5ca90
+	Node0x62a85be5c6f8 -> Node0x62a85be5cb10
+	Node0x62a85be5cb10 -> Node0x62a85be5cb80
+	Node0x62a85be5cb80 -> Node0x62a85be5cbe8
+	Node0x62a85be5cb10 -> Node0x62a85be5cc60
+	Node0x62a85be5cc60 -> Node0x62a85be5ccc8
+	Node0x62a85be5cbe8 -> Node0x62a85be5cd40
+	Node0x62a85be5ccc8 -> Node0x62a85be5cd40
+	Node0x62a85be5ca20 -> Node0x62a85be5cdb0
+	Node0x62a85be5cd40 -> Node0x62a85be5cdb0
+	Node0x62a85be5cdb0 -> Node0x62a85be5ce20
+	Node0x62a85be5cb10 -> Node0x62a85be5cea0
+	Node0x62a85be5cea0 -> Node0x62a85be5cf10
+	Node0x62a85be5cf10 -> Node0x62a85be5d388
+	Node0x62a85be5cea0 -> Node0x62a85be5d400
+	Node0x62a85be5d400 -> Node0x62a85be5d468
+	Node0x62a85be5d388 -> Node0x62a85be5d4e0
+	Node0x62a85be5d468 -> Node0x62a85be5d4e0
+	Node0x62a85be5cdb0 -> Node0x62a85be5d550
+	Node0x62a85be5d4e0 -> Node0x62a85be5d550
+	Node0x62a85be5d550 -> Node0x62a85be5d5c0
+	Node0x62a85be5cea0 -> Node0x62a85be5d640
+	Node0x62a85be5d640 -> Node0x62a85be5d6b0
+	Node0x62a85be5d6b0 -> Node0x62a85be5d718
+	Node0x62a85be5d640 -> Node0x62a85be5d790
+	Node0x62a85be5d790 -> Node0x62a85be5d7f8
+	Node0x62a85be5d718 -> Node0x62a85be5d870
+	Node0x62a85be5d7f8 -> Node0x62a85be5d870
+	Node0x62a85be5d550 -> Node0x62a85be5d8e0
+	Node0x62a85be5d870 -> Node0x62a85be5d8e0
+	Node0x62a85be5d8e0 -> Node0x62a85be5d950
+	Node0x62a85be5d640 -> Node0x62a85be5d9d0
+	Node0x62a85be5d9d0 -> Node0x62a85be5da40
+	Node0x62a85be5da40 -> Node0x62a85bddcd38
+}

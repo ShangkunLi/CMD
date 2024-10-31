@@ -1,44 +1,44 @@
 digraph "DFG for'kernel' function" {
-	Node0x583b5755b5e0[shape=record, label="  %index.next = add i32 %index, 4"];
-	Node0x583b5755b670[shape=record, label="  %10 = icmp eq i32 %index.next, 1100000"];
-	Node0x583b5755fe28[shape=record, label="  br i1 %10, label %middle.block, label %vector.body, !llvm.loop !6"];
-	Node0x583b575639c8[shape=record, label="  %index = phi i32 [ 0, %entry ], [ %index.next, %vector.body ]"];
-	Node0x583b5755caa0[shape=record, label="  %0 = udiv i32 %index, 1100"];
-	Node0x583b5755ca30[shape=record, label="  %1 = urem i32 %index, 1100"];
-	Node0x583b57565b88[shape=record, label="  %2 = zext i32 %0 to i64"];
-	Node0x583b57565be8[shape=record, label="  %3 = zext i32 %1 to i64"];
-	Node0x583b57565c78[shape=record, label="  %4 = getelementptr inbounds [1100 x i32], [1100 x i32]* %A, i64 %2, i64 %3"];
-	Node0x583b57565dd8[shape=record, label="  %6 = getelementptr inbounds [1100 x i32], [1100 x i32]* %B, i64 %2, i64 %3"];
-	Node0x583b57565ce8[shape=record, label="  %5 = bitcast i32* %4 to <4 x i32>*"];
-	Node0x583b57565e48[shape=record, label="  %7 = bitcast i32* %6 to <4 x i32>*"];
-	Node0x583b57565d48[shape=oval, color=darkorange, style=filled, label="  %wide.load = load <4 x i32>, <4 x i32>* %5, align 4, !tbaa !2"];
-	Node0x583b57565ea8[shape=oval, color=darkorange, style=filled, label="  %wide.load21 = load <4 x i32>, <4 x i32>* %7, align 4, !tbaa !2"];
-	Node0x583b5755c6f0[shape=record, label="  %8 = mul nsw <4 x i32> %wide.load21, %wide.load"];
-	Node0x583b5755b950[shape=record, label="  %9 = add <4 x i32> %8, %vec.phi"];
-	Node0x583b57565298[shape=record, label="  %vec.phi = phi <4 x i32> [ zeroinitializer, %entry ], [ %9, %vector.body ]"];
+	Node0x6082644315e0[shape=record, label="  %index.next = add i32 %index, 4"];
+	Node0x608264431670[shape=record, label="  %10 = icmp eq i32 %index.next, 1100000"];
+	Node0x608264435e28[shape=record, label="  br i1 %10, label %middle.block, label %vector.body, !llvm.loop !6"];
+	Node0x6082644399c8[shape=record, label="  %index = phi i32 [ 0, %entry ], [ %index.next, %vector.body ]"];
+	Node0x608264432aa0[shape=record, label="  %0 = udiv i32 %index, 1100"];
+	Node0x608264432a30[shape=record, label="  %1 = urem i32 %index, 1100"];
+	Node0x60826443bb88[shape=record, label="  %2 = zext i32 %0 to i64"];
+	Node0x60826443bbe8[shape=record, label="  %3 = zext i32 %1 to i64"];
+	Node0x60826443bc78[shape=record, label="  %4 = getelementptr inbounds [1100 x i32], [1100 x i32]* %A, i64 %2, i64 %3"];
+	Node0x60826443bdd8[shape=record, label="  %6 = getelementptr inbounds [1100 x i32], [1100 x i32]* %B, i64 %2, i64 %3"];
+	Node0x60826443bce8[shape=record, label="  %5 = bitcast i32* %4 to <4 x i32>*"];
+	Node0x60826443be48[shape=record, label="  %7 = bitcast i32* %6 to <4 x i32>*"];
+	Node0x60826443bd48[shape=oval, color=darkorange, style=filled, label="  %wide.load = load <4 x i32>, <4 x i32>* %5, align 4, !tbaa !2"];
+	Node0x60826443bea8[shape=oval, color=darkorange, style=filled, label="  %wide.load21 = load <4 x i32>, <4 x i32>* %7, align 4, !tbaa !2"];
+	Node0x6082644326f0[shape=record, label="  %8 = mul nsw <4 x i32> %wide.load21, %wide.load"];
+	Node0x608264431950[shape=record, label="  %9 = add <4 x i32> %8, %vec.phi"];
+	Node0x60826443b298[shape=record, label="  %vec.phi = phi <4 x i32> [ zeroinitializer, %entry ], [ %9, %vector.body ]"];
 edge [color=blue]
-	Node0x583b5755fe28 -> Node0x583b575639c8
-	Node0x583b5755fe28 -> Node0x583b57565298
+	Node0x608264435e28 -> Node0x6082644399c8
+	Node0x608264435e28 -> Node0x60826443b298
 edge [color=red]
-	Node0x583b5755b5e0 -> Node0x583b575639c8
-	Node0x583b5755b950 -> Node0x583b57565298
-	Node0x583b575639c8 -> Node0x583b5755caa0
-	Node0x583b575639c8 -> Node0x583b5755ca30
-	Node0x583b5755caa0 -> Node0x583b57565b88
-	Node0x583b5755ca30 -> Node0x583b57565be8
-	Node0x583b57565b88 -> Node0x583b57565c78
-	Node0x583b57565be8 -> Node0x583b57565c78
-	Node0x583b57565c78 -> Node0x583b57565ce8
-	Node0x583b57565ce8 -> Node0x583b57565d48
-	Node0x583b57565b88 -> Node0x583b57565dd8
-	Node0x583b57565be8 -> Node0x583b57565dd8
-	Node0x583b57565dd8 -> Node0x583b57565e48
-	Node0x583b57565e48 -> Node0x583b57565ea8
-	Node0x583b57565ea8 -> Node0x583b5755c6f0
-	Node0x583b57565d48 -> Node0x583b5755c6f0
-	Node0x583b5755c6f0 -> Node0x583b5755b950
-	Node0x583b57565298 -> Node0x583b5755b950
-	Node0x583b575639c8 -> Node0x583b5755b5e0
-	Node0x583b5755b5e0 -> Node0x583b5755b670
-	Node0x583b5755b670 -> Node0x583b5755fe28
+	Node0x6082644315e0 -> Node0x6082644399c8
+	Node0x608264431950 -> Node0x60826443b298
+	Node0x6082644399c8 -> Node0x608264432aa0
+	Node0x6082644399c8 -> Node0x608264432a30
+	Node0x608264432aa0 -> Node0x60826443bb88
+	Node0x608264432a30 -> Node0x60826443bbe8
+	Node0x60826443bb88 -> Node0x60826443bc78
+	Node0x60826443bbe8 -> Node0x60826443bc78
+	Node0x60826443bc78 -> Node0x60826443bce8
+	Node0x60826443bce8 -> Node0x60826443bd48
+	Node0x60826443bb88 -> Node0x60826443bdd8
+	Node0x60826443bbe8 -> Node0x60826443bdd8
+	Node0x60826443bdd8 -> Node0x60826443be48
+	Node0x60826443be48 -> Node0x60826443bea8
+	Node0x60826443bea8 -> Node0x6082644326f0
+	Node0x60826443bd48 -> Node0x6082644326f0
+	Node0x6082644326f0 -> Node0x608264431950
+	Node0x60826443b298 -> Node0x608264431950
+	Node0x6082644399c8 -> Node0x6082644315e0
+	Node0x6082644315e0 -> Node0x608264431670
+	Node0x608264431670 -> Node0x608264435e28
 }

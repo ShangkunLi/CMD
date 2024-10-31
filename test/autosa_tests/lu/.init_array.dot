@@ -1,0 +1,38 @@
+digraph "CFG for 'init_array' function" {
+	label="CFG for 'init_array' function";
+
+	Node0x62c090880640 [shape=record,label="{entry:\l  %B = alloca [32 x [32 x float]], align 16\l  br label %for.cond1.preheader\l}"];
+	Node0x62c090880640 -> Node0x62c090887e50;
+	Node0x62c090887e50 [shape=record,label="{for.cond1.preheader:                              \l  %indvar181 = phi i64 [ 0, %entry ], [ %indvar.next182, %for.end17 ]\l  %indvars.iv176 = phi i64 [ 1, %entry ], [ %indvars.iv.next177, %for.end17 ]\l  %0 = mul nuw nsw i64 %indvar181, 33\l  %1 = add nuw nsw i64 %0, 1\l  %scevgep183 = getelementptr [32 x float], [32 x float]* %A, i64 0, i64 %1\l  %scevgep183184 = bitcast float* %scevgep183 to i8*\l  %2 = shl i64 %indvar181, 2\l  %3 = sub i64 120, %2\l  %4 = and i64 %3, 17179869180\l  %5 = add nuw nsw i64 %4, 4\l  br label %for.body3\l}"];
+	Node0x62c090887e50 -> Node0x62c090887ea0;
+	Node0x62c090887ea0 [shape=record,label="{for.body3:                                        \l  %indvars.iv170 = phi i64 [ %indvars.iv.next171, %for.body3 ], [ 0,\l... %for.cond1.preheader ]\l  %6 = trunc i64 %indvars.iv170 to i32\l  %7 = sub i32 0, %6\l  %conv = sitofp i32 %7 to float\l  %div = fmul float %conv, 3.125000e-02\l  %add = fadd float %div, 1.000000e+00\l  %arrayidx5 = getelementptr inbounds [32 x float], [32 x float]* %A, i64\l... %indvar181, i64 %indvars.iv170\l  store float %add, float* %arrayidx5, align 4, !tbaa !2\l  %indvars.iv.next171 = add nuw nsw i64 %indvars.iv170, 1\l  %exitcond175 = icmp eq i64 %indvars.iv.next171, %indvars.iv176\l  br i1 %exitcond175, label %for.end, label %for.body3\l|{<s0>T|<s1>F}}"];
+	Node0x62c090887ea0:s0 -> Node0x62c090887ef0;
+	Node0x62c090887ea0:s1 -> Node0x62c090887ea0;
+	Node0x62c090887ef0 [shape=record,label="{for.end:                                          \l  %indvar.next182 = add nuw nsw i64 %indvar181, 1\l  %cmp8149 = icmp ult i64 %indvar181, 31\l  br i1 %cmp8149, label %for.body10.preheader, label %for.end17\l|{<s0>T|<s1>F}}"];
+	Node0x62c090887ef0:s0 -> Node0x62c090887f40;
+	Node0x62c090887ef0:s1 -> Node0x62c090887f90;
+	Node0x62c090887f40 [shape=record,label="{for.body10.preheader:                             \l  call void @llvm.memset.p0i8.i64(i8* nonnull align 4 dereferenceable(1)\l... %scevgep183184, i8 0, i64 %5, i1 false)\l  br label %for.end17\l}"];
+	Node0x62c090887f40 -> Node0x62c090887f90;
+	Node0x62c090887f90 [shape=record,label="{for.end17:                                        \l  %arrayidx21 = getelementptr inbounds [32 x float], [32 x float]* %A, i64\l... %indvar181, i64 %indvar181\l  store float 1.000000e+00, float* %arrayidx21, align 4, !tbaa !2\l  %indvars.iv.next177 = add nuw nsw i64 %indvars.iv176, 1\l  %exitcond185 = icmp eq i64 %indvar.next182, 32\l  br i1 %exitcond185, label %for.end24, label %for.cond1.preheader\l|{<s0>T|<s1>F}}"];
+	Node0x62c090887f90:s0 -> Node0x62c090887fe0;
+	Node0x62c090887f90:s1 -> Node0x62c090887e50;
+	Node0x62c090887fe0 [shape=record,label="{for.end24:                                        \l  %8 = bitcast [32 x [32 x float]]* %B to i8*\l  call void @llvm.lifetime.start.p0i8(i64 4096, i8* nonnull %8) #5\l  call void @llvm.memset.p0i8.i64(i8* nonnull align 16 dereferenceable(4096)\l... %8, i8 0, i64 4096, i1 false)\l  br label %for.cond47.preheader\l}"];
+	Node0x62c090887fe0 -> Node0x62c090888030;
+	Node0x62c090888030 [shape=record,label="{for.cond47.preheader:                             \l  %indvars.iv159 = phi i64 [ 0, %for.end24 ], [ %indvars.iv.next160,\l... %for.inc74 ]\l  br label %for.cond51.preheader\l}"];
+	Node0x62c090888030 -> Node0x62c090888080;
+	Node0x62c090888080 [shape=record,label="{for.cond51.preheader:                             \l  %indvars.iv156 = phi i64 [ 0, %for.cond47.preheader ], [\l... %indvars.iv.next157, %for.inc71 ]\l  %arrayidx58 = getelementptr inbounds [32 x float], [32 x float]* %A, i64\l... %indvars.iv156, i64 %indvars.iv159\l  %9 = load float, float* %arrayidx58, align 4, !tbaa !2\l  br label %for.body54\l}"];
+	Node0x62c090888080 -> Node0x62c0908880d0;
+	Node0x62c0908880d0 [shape=record,label="{for.body54:                                       \l  %indvars.iv = phi i64 [ 0, %for.cond51.preheader ], [ %indvars.iv.next,\l... %for.body54 ]\l  %arrayidx62 = getelementptr inbounds [32 x float], [32 x float]* %A, i64\l... %indvars.iv, i64 %indvars.iv159\l  %10 = load float, float* %arrayidx62, align 4, !tbaa !2\l  %mul = fmul float %9, %10\l  %arrayidx66 = getelementptr inbounds [32 x [32 x float]], [32 x [32 x\l... float]]* %B, i64 0, i64 %indvars.iv156, i64 %indvars.iv\l  %11 = load float, float* %arrayidx66, align 4, !tbaa !2\l  %add67 = fadd float %11, %mul\l  store float %add67, float* %arrayidx66, align 4, !tbaa !2\l  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1\l  %exitcond155 = icmp eq i64 %indvars.iv.next, 32\l  br i1 %exitcond155, label %for.inc71, label %for.body54\l|{<s0>T|<s1>F}}"];
+	Node0x62c0908880d0:s0 -> Node0x62c090888120;
+	Node0x62c0908880d0:s1 -> Node0x62c0908880d0;
+	Node0x62c090888120 [shape=record,label="{for.inc71:                                        \l  %indvars.iv.next157 = add nuw nsw i64 %indvars.iv156, 1\l  %exitcond158 = icmp eq i64 %indvars.iv.next157, 32\l  br i1 %exitcond158, label %for.inc74, label %for.cond51.preheader\l|{<s0>T|<s1>F}}"];
+	Node0x62c090888120:s0 -> Node0x62c090888170;
+	Node0x62c090888120:s1 -> Node0x62c090888080;
+	Node0x62c090888170 [shape=record,label="{for.inc74:                                        \l  %indvars.iv.next160 = add nuw nsw i64 %indvars.iv159, 1\l  %exitcond161 = icmp eq i64 %indvars.iv.next160, 32\l  br i1 %exitcond161, label %for.cond81.preheader, label %for.cond47.preheader\l|{<s0>T|<s1>F}}"];
+	Node0x62c090888170:s0 -> Node0x62c0908881c0;
+	Node0x62c090888170:s1 -> Node0x62c090888030;
+	Node0x62c0908881c0 [shape=record,label="{for.cond81.preheader:                             \l  %indvar = phi i64 [ %indvar.next, %for.cond81.preheader ], [ 0, %for.inc74 ]\l  %scevgep = getelementptr [32 x float], [32 x float]* %A, i64 %indvar, i64 0\l  %scevgep152 = bitcast float* %scevgep to i8*\l  %scevgep153 = getelementptr [32 x [32 x float]], [32 x [32 x float]]* %B,\l... i64 0, i64 %indvar, i64 0\l  %scevgep153154 = bitcast float* %scevgep153 to i8*\l  call void @llvm.memcpy.p0i8.p0i8.i64(i8* nonnull align 4\l... dereferenceable(128) %scevgep152, i8* nonnull align 16 dereferenceable(128)\l... %scevgep153154, i64 128, i1 false)\l  %indvar.next = add nuw nsw i64 %indvar, 1\l  %exitcond = icmp eq i64 %indvar.next, 32\l  br i1 %exitcond, label %for.end98, label %for.cond81.preheader\l|{<s0>T|<s1>F}}"];
+	Node0x62c0908881c0:s0 -> Node0x62c090888210;
+	Node0x62c0908881c0:s1 -> Node0x62c0908881c0;
+	Node0x62c090888210 [shape=record,label="{for.end98:                                        \l  call void @llvm.lifetime.end.p0i8(i64 4096, i8* nonnull %8) #5\l  ret void\l}"];
+}

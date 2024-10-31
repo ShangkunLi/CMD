@@ -7,12 +7,10 @@
 #include <iostream>
 #include <set>
 
-#include "json.hpp"
 #include "DFG.h"
 
 using namespace llvm;
 using namespace std;
-using json = nlohmann::json;
 using namespace chrono;
 
 void addDefaultKernels(map<string, list<int> *> *);
@@ -63,24 +61,31 @@ namespace
             cout << "==================================\n";
             cout << "[function \'" << t_F.getName().str() << "\' is one of our targets]\n";
 
-            list<Loop *> *targetLoops = getTargetLoops(t_F, functionWithLoop, targetNested);
-            DFG *dfg = new DFG(t_F, targetLoops, targetEntireFunction, precisionAware,
-                               heterogeneity, execLatency, pipelinedOpt);
+            // list<Loop *> *targetLoops = getTargetLoops(t_F, functionWithLoop, targetNested);
+            // DFG *dfg = new DFG(t_F, targetLoops, targetEntireFunction, precisionAware,
+            //                    heterogeneity, execLatency, pipelinedOpt);
 
-            // Show the count of different opcodes (IRs).
-            cout << "==================================\n";
-            cout << "[show opcode count]\n";
-            dfg->showOpcodeDistribution();
+            // // Show the count of different opcodes (IRs).
+            // cout << "==================================\n";
+            // cout << "[show opcode count]\n";
+            // dfg->showOpcodeDistribution();
 
-            // Generate the DFG dot file.
-            cout << "==================================\n";
-            cout << "[generate dot for DFG]\n";
-            dfg->generateDot(t_F, isTrimmedDemo);
+            // // Generate the DFG dot file.
+            // cout << "==================================\n";
+            // cout << "[generate dot for DFG]\n";
+            // dfg->generateDot(t_F, isTrimmedDemo);
 
-            // Generate the DFG dot file.
+            // // Generate the DFG dot file.
+            // cout << "==================================\n";
+            // cout << "[generate JSON for DFG]\n";
+            // dfg->generateJSON();
+
+            list<Loop *> *innermostLoops = getInnermostLoops(t_F, functionWithLoop, targetNested);
             cout << "==================================\n";
-            cout << "[generate JSON for DFG]\n";
-            dfg->generateJSON();
+            cout << "number of innermost loops: " << innermostLoops->size() << "\n";
+            cout << "==================================\n";
+            DFG *dfg2 = new DFG(innermostLoops, targetEntireFunction, precisionAware,
+                                heterogeneity, execLatency, pipelinedOpt);
         }
 
         /*
@@ -129,6 +134,55 @@ namespace
             }
             errs() << "... done detected loops.size(): " << targetLoops->size() << "\n";
             return targetLoops;
+        }
+
+        list<Loop *> *getInnermostLoops(Function &t_F, map<string, list<int> *> *t_functionWithLoop, bool t_targetNested)
+        {
+            int targetLoopID = 0;
+            list<Loop *> *innermostLoops = new list<Loop *>();
+            list<Loop *> *nestedLoops = new list<Loop *>();
+            // Since the ordering of the target loop id could be random, I use O(n^2) to search the target loop.
+            LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
+            Loop *current_loop = NULL;
+            for (LoopInfo::iterator loopItr = LI.begin();
+                 loopItr != LI.end(); ++loopItr)
+            {
+                current_loop = *loopItr;
+                if (!t_targetNested)
+                {
+                    if (current_loop->getSubLoops().empty())
+                    {
+                        innermostLoops->push_back(current_loop);
+                        errs() << "Innermost loop detected: "<< current_loop->getName() << "\n";
+                        continue;
+                    }
+                    else
+                    {
+                        nestedLoops->push_back(current_loop);
+                        errs() << "Nested loop detected: "<< current_loop->getName() << "\n";
+                    }
+
+                    while (!nestedLoops->empty())
+                    {
+                        for(Loop* subloop: nestedLoops->front()->getSubLoops())
+                        {
+                            if(subloop->getSubLoops().empty())
+                            {
+                                innermostLoops->push_back(subloop);
+                                errs() << "Innermost loop detected: "<< subloop->getName() << "\n";
+                            }
+                            else
+                            {
+                                nestedLoops->push_back(subloop);
+                                errs() << "Nested loop detected: "<< subloop->getName() << "\n";
+                            }
+                        }
+                        nestedLoops->pop_front();
+                    }
+                }
+            }
+            errs() << "... done detected innermost loops.size(): " << innermostLoops->size() << "\n";
+            return innermostLoops;
         }
     };
 }
@@ -204,6 +258,10 @@ void addDefaultKernels(map<string, list<int> *> *t_functionWithLoop)
     // invert
     (*t_functionWithLoop)["_Z6kernelPPdPiiS0_"] = new list<int>();
     (*t_functionWithLoop)["_Z6kernelPPdPiiS0_"]->push_back(0);
+
+    // For AutoSA test:
+    (*t_functionWithLoop)["lu_cpu"] = new list<int>();
+    (*t_functionWithLoop)["lu_cpu"]->push_back(0);
 
     // nested
     // (*t_functionWithLoop)["_Z6kernelPfS_S_"] = new list<int>();

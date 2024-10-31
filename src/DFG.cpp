@@ -50,6 +50,24 @@ DFG::DFG(Function &t_F, list<Loop *> *t_loops, bool t_targetFunction,
   initPipelinedOpt(t_pipelinedOpt);
 }
 
+DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
+         bool t_precisionAware, bool t_heterogeneity,
+         map<string, int> *t_execLatency, list<string> *t_pipelinedOpt)
+{
+  m_num = 0;
+  m_targetFunction = t_targetFunction;
+  m_targetLoops = t_loops;
+  m_orderedNodes = NULL;
+  m_CDFGFused = false;
+  m_cycleNodeLists = new list<list<DFGNode *> *>();
+  m_precisionAware = t_precisionAware;
+  for (Loop *loop : *t_loops)
+  {
+    constructWithLoop(loop);
+    cout << "==================================\n";
+  }
+}
+
 // FIXME: only combine operations of mul+alu and alu+cmp for now,
 //        since these two are the most common patterns across all
 //        the kernels.
@@ -450,6 +468,84 @@ list<DFGNode *> *DFG::getBFSOrderedNodes()
   return m_orderedNodes;
 }
 
+// extract DFG with data accessing info
+bool DFG::constructWithLoop(Loop *L)
+{
+  m_DFGEdges.clear();
+  nodes.clear();
+  m_ctrlEdges.clear();
+
+  int nodeID = 0;
+  int ctrlEdgeID = 0;
+  int dfgEdgeID = 0;
+
+  if (!L->getSubLoops().empty())
+  {
+    errs() << "Nested Loop not Supported: " << L->getName() << "\n";
+    return false;
+  }
+
+  errs() << "Loop Detected: " << L->getName() << "\n";
+  errs() << "Loop Header: " << L->getHeader()->getName() << "\n";
+  errs() << "Blocks Detected: \n";
+
+  for (BasicBlock *BB : L->getBlocks())
+  {
+    errs() << "BB: " << BB->getName() << "\n";
+  }
+
+  for (BasicBlock *BB : L->getBlocks())
+  {
+    BasicBlock *curBB = BB;
+    errs() << "*** current basic block: " << *curBB->begin() << "\n";
+    for (BasicBlock *sucBB : successors(curBB))
+    {
+      errs() << "   ****** succ bb: " << *sucBB->begin() << "\n";
+    }
+
+    for (BasicBlock::iterator II = curBB->begin(), IEnd = curBB->end(); II != IEnd; ++II)
+    {
+
+      Instruction *curII = &*II;
+      errs() << *curII;
+
+      // Make nodes for each instruction in the basic block.
+      DFGNode *dfgNode;
+      dfgNode = new DFGNode(nodeID++, m_precisionAware, curII, getValueName(curII));
+      nodes.push_back(dfgNode);
+      cout << " (ID: " << dfgNode->getID() << ")\n";
+
+      if (curII->getOpcode() == Instruction::Load || curII->getOpcode() == Instruction::Store || isLiveInInst(curBB, curII))
+      {
+        if (curII->getOpcode() == Instruction::Load)
+        {
+          LoadInst *loadInst = dyn_cast<LoadInst>(curII);
+          if (loadInst)
+          {
+            errs() << "LoadInst: " << *loadInst << "\n";
+            Instruction *addressCalcInst = dyn_cast<Instruction>(loadInst->getOperand(0));
+            errs() << "Operand: " << *addressCalcInst << "\n";
+          }
+          else
+          {
+            errs() << "[ERROR] loadInst is NULL\n";
+          }
+        }
+        else if (curII->getOpcode() == Instruction::Store)
+        {
+          // StoreInst *storeInst = dyn_cast<StoreInst>(curII);
+          // Value *storeVal = storeInst->getValueOperand();
+          // DFGNode *storeNode = new DFGNode(nodeID++, m_precisionAware, storeVal, getValueName(storeVal));
+          // nodes.push_back(storeNode);
+          // DFGEdge *dfgEdge = new DFGEdge(dfgEdgeID++, storeNode, dfgNode);
+          // m_DFGEdges.push_back(dfgEdge);
+        }
+      }
+    }
+    return true;
+  }
+}
+
 // extract DFG from specific function
 void DFG::construct(Function &t_F)
 {
@@ -485,7 +581,7 @@ void DFG::construct(Function &t_F)
       // Ignore this IR if it is out of the scope.
       if (shouldIgnore(curII))
       {
-        errs() << *curII << " *** ignored by pass due to that the BB is out " << "of the scope (target loop)\n";
+        errs() << *curII << " *** ignored by pass due to that the BB is out of the scope (target loop)\n";
         continue;
       }
       errs() << *curII;
@@ -1054,12 +1150,14 @@ bool DFG::isLiveInInst(BasicBlock *t_bb, Instruction *t_inst)
     errs() << "ctrl to: " << *t_inst << "; front: " << (t_bb->front()) << "; ";
     return true;
   }
+  int num_op = 0;
   for (Instruction::op_iterator op = t_inst->op_begin(), opEnd = t_inst->op_end(); op != opEnd; ++op)
   {
     Instruction *tempInst = dyn_cast<Instruction>(*op);
     if (tempInst and !containsInst(t_bb, tempInst))
     {
-      errs() << "ctrl to: " << *t_inst << "; containsInst(t_bb, tempInst): " << containsInst(t_bb, tempInst) << "; ";
+      errs() << "tempInst: " << *tempInst << ";\n ";
+      errs() << "ctrl to: " << *t_inst << "; containsInst(t_bb, tempInst): " << containsInst(t_bb, tempInst) << "; \n";
       return true;
     }
   }
@@ -1074,7 +1172,7 @@ bool DFG::isLiveInInst(BasicBlock *t_bb, Instruction *t_inst)
     }
   }
 
-  errs() << "ctrl to: " << *t_inst << "; ";
+  errs() << "ctrl to: " << *t_inst << "; \n";
   return true;
 }
 

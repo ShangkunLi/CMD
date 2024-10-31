@@ -1,0 +1,37 @@
+digraph "DFG for'kernel' function" {
+	Node0x633b2a5cff50[shape=record, label="  %inc = add nuw nsw i32 %x.032, 1"];
+	Node0x633b2a5cf1b0[shape=record, label="  %exitcond = icmp eq i32 %inc, 1100000"];
+	Node0x633b2a5d7c98[shape=record, label="  br i1 %exitcond, label %for.end, label %for.body"];
+	Node0x633b2a5d71d8[shape=record, label="  %x.032 = phi i32 [ 0, %entry ], [ %inc, %for.body ]"];
+	Node0x633b2a5d01f0[shape=record, label="  %div = udiv i32 %x.032, 1100"];
+	Node0x633b2a5cf850[shape=record, label="  %rem = urem i32 %x.032, 1100"];
+	Node0x633b2a5d7988[shape=record, label="  %idxprom = zext i32 %div to i64"];
+	Node0x633b2a5d79e8[shape=record, label="  %idxprom1 = zext i32 %rem to i64"];
+	Node0x633b2a5d7a78[shape=record, label="  %arrayidx2 = getelementptr inbounds [1100 x i32], [1100 x i32]* %A, i64 %idxprom, i64 %idxprom1"];
+	Node0x633b2a5d7b78[shape=record, label="  %arrayidx7 = getelementptr inbounds [1100 x i32], [1100 x i32]* %C, i64 %idxprom, i64 %idxprom1"];
+	Node0x633b2a5d7ae8[shape=oval, color=darkorange, style=filled, label="  %0 = load i32, i32* %arrayidx2, align 4, !tbaa !2"];
+	Node0x633b2a5cfee0[shape=record, label="  %1 = icmp sgt i32 %0, 0"];
+	Node0x633b2a558f78[shape=record, label="  %. = select i1 %1, i32 %0, i32 0"];
+	Node0x633b2a5d7c00[shape=oval, color=darkorange, style=filled, label="  store i32 %., i32* %arrayidx7, align 4, !tbaa !2"];
+edge [color=blue]
+	Node0x633b2a5d7c98 -> Node0x633b2a5d71d8
+edge [color=red]
+	Node0x633b2a5cff50 -> Node0x633b2a5d71d8
+	Node0x633b2a5d71d8 -> Node0x633b2a5d01f0
+	Node0x633b2a5d71d8 -> Node0x633b2a5cf850
+	Node0x633b2a5d01f0 -> Node0x633b2a5d7988
+	Node0x633b2a5cf850 -> Node0x633b2a5d79e8
+	Node0x633b2a5d7988 -> Node0x633b2a5d7a78
+	Node0x633b2a5d79e8 -> Node0x633b2a5d7a78
+	Node0x633b2a5d7a78 -> Node0x633b2a5d7ae8
+	Node0x633b2a5d7988 -> Node0x633b2a5d7b78
+	Node0x633b2a5d79e8 -> Node0x633b2a5d7b78
+	Node0x633b2a5d7ae8 -> Node0x633b2a5cfee0
+	Node0x633b2a5cfee0 -> Node0x633b2a558f78
+	Node0x633b2a5d7ae8 -> Node0x633b2a558f78
+	Node0x633b2a558f78 -> Node0x633b2a5d7c00
+	Node0x633b2a5d7b78 -> Node0x633b2a5d7c00
+	Node0x633b2a5d71d8 -> Node0x633b2a5cff50
+	Node0x633b2a5cff50 -> Node0x633b2a5cf1b0
+	Node0x633b2a5cf1b0 -> Node0x633b2a5d7c98
+}
