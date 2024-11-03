@@ -202,6 +202,30 @@ DFGNode.cpp.s:
 	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.s
 .PHONY : DFGNode.cpp.s
 
+DataMemNode.o: DataMemNode.cpp.o
+.PHONY : DataMemNode.o
+
+# target to build an object file
+DataMemNode.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o
+.PHONY : DataMemNode.cpp.o
+
+DataMemNode.i: DataMemNode.cpp.i
+.PHONY : DataMemNode.i
+
+# target to preprocess a source file
+DataMemNode.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.i
+.PHONY : DataMemNode.cpp.i
+
+DataMemNode.s: DataMemNode.cpp.s
+.PHONY : DataMemNode.s
+
+# target to generate assembly for a file
+DataMemNode.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.s
+.PHONY : DataMemNode.cpp.s
+
 genDFGPass.o: genDFGPass.cpp.o
 .PHONY : genDFGPass.o
 
@@ -244,6 +268,9 @@ help:
 	@echo "... DFGNode.o"
 	@echo "... DFGNode.i"
 	@echo "... DFGNode.s"
+	@echo "... DataMemNode.o"
+	@echo "... DataMemNode.i"
+	@echo "... DataMemNode.s"
 	@echo "... genDFGPass.o"
 	@echo "... genDFGPass.i"
 	@echo "... genDFGPass.s"

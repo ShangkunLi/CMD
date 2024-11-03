@@ -65,12 +65,29 @@ private:
 
 public:
   DFGNode(int, bool, Instruction *, StringRef);
+  DFGNode();
+  string getOptType();
+  void setOptType(string t_optType);
   int getID();
   void setID(int);
+  bool getPrecisionAware();
+  void setPrecisionAware(bool);
+  Value *getValue();
+  void setValue(Value *);
+  StringRef getStringRef();
+  void setSringRef(StringRef);
+  string getOpcodeName();
+  void setOpcodeName(string);
+  void initPredNodes(list<DFGNode *> *predNodes = NULL);
+  void addPredNode(DFGNode *);
+  void initSuccNodes(list<DFGNode *> *succNodes = NULL);
+  void addSuccNode(DFGNode *);
+  string getFuType();
+  void setFuType(string);
   void setLevel(int);
   int getLevel();
   bool isMapped();
-  void setMapped();
+  void setMapped(bool Mapped = true);
   void clearMapped();
   bool isLoad();
   bool isStore();
@@ -89,11 +106,10 @@ public:
   bool isOpt(string);
   bool isVectorized();
   bool hasCombined();
-  void setCombine();
+  void setCombine(bool combined = true);
   void addPatternPartner(DFGNode *);
+  void initPatternNodes();
   Instruction *getInst();
-  StringRef getStringRef();
-  string getOpcodeName();
   list<DFGNode *> *getPredNodes();
   list<DFGNode *> *getSuccNodes();
   bool isSuccessorOf(DFGNode *);
@@ -103,32 +119,34 @@ public:
   void setOutEdge(DFGEdge *);
   void cutEdges();
   string getJSONOpt();
-  string getFuType();
+  void setConst(int);
   void addConst();
   void removeConst();
   int getNumConst();
   void initType();
   bool isPatternRoot();
+  void setIsPatternRoot(bool);
   DFGNode *getPatternRoot();
+  void initPatternRoot();
   list<DFGNode *> *getPatternNodes();
-  void setCritical();
   void addCycleID(int);
+  void setCritical(bool critical = true);
   bool isCritical();
-  int getCycleID();
   list<int> *getCycleIDs();
   void addPredicatee(DFGNode *);
   list<DFGNode *> *getPredicatees();
-  void setPredicatee();
+  void setIsPredicatee(bool ispredicatee = true);
   bool isPredicatee();
+  void setIsPredicater(bool ispredicater = true);
   bool isPredicater();
+  void initPredicatees();
   bool shareSameCycle(DFGNode *);
-  void setExecLatency(int);
+  void setExecLatency(int t_execLatency = 1);
   bool isMultiCycleExec();
   int getExecLatency();
-  void setPipelinable();
+  void setPipelinable(bool pipelinable = true);
   bool isPipelinable();
   bool shareFU(DFGNode *);
 };
-
 
 #endif

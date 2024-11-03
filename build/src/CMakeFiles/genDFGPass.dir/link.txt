@@ -1,1 +1,1 @@
-/usr/bin/c++ -fPIC -shared  -o libgenDFGPass.so CMakeFiles/genDFGPass.dir/DFGNode.cpp.o CMakeFiles/genDFGPass.dir/DFGEdge.cpp.o CMakeFiles/genDFGPass.dir/DFG.cpp.o CMakeFiles/genDFGPass.dir/genDFGPass.cpp.o   -L/usr/local/lib 
+/usr/bin/c++ -fPIC -shared  -o libgenDFGPass.so CMakeFiles/genDFGPass.dir/DFGNode.cpp.o CMakeFiles/genDFGPass.dir/DFGEdge.cpp.o CMakeFiles/genDFGPass.dir/DFG.cpp.o CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o CMakeFiles/genDFGPass.dir/genDFGPass.cpp.o   -L/usr/local/lib 

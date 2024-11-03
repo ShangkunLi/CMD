@@ -18,6 +18,7 @@
 #include <llvm/IR/Use.h>
 #include <llvm/Analysis/CFG.h>
 #include <llvm/Analysis/LoopInfo.h>
+#include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <list>
 #include <set>
 #include <map>
@@ -25,6 +26,7 @@
 
 #include "DFGNode.h"
 #include "DFGEdge.h"
+#include "DataMemNode.h"
 
 using namespace llvm;
 using namespace std;
@@ -32,6 +34,10 @@ using namespace std;
 class DFG
 {
 private:
+  int m_nodeCount;
+  int m_ctrledgeCount;
+  int m_dfgedgeCount;
+
   int m_num;
   bool m_CDFGFused;
   bool m_targetFunction;
@@ -95,11 +101,15 @@ public:
   // initial ordering of insts
   list<DFGNode *> nodes;
 
+  list<Loop *> DFGLoops;
+  map<Loop *, vector<BasicBlock *>> LoopBBs;
+  map<BasicBlock *, vector<Instruction *>> BBInsts;
+
   list<DFGNode *> *getBFSOrderedNodes();
   list<DFGNode *> *getDFSOrderedNodes();
   int getNodeCount();
   void construct(Function &);
-  bool constructWithLoop(Loop *);
+  bool constructWithDataMem(Loop *);
   void setupCycles();
   list<list<DFGEdge *> *> *calculateCycles();
   list<list<DFGNode *> *> *getCycleLists();
@@ -109,4 +119,7 @@ public:
   void showOpcodeDistribution();
   void generateDot(Function &, bool);
   void generateJSON();
+  bool isLiveInBasicBlock(BasicBlock *BB, Instruction *t_inst);
+  Instruction *getInstNotInBasicBlock(BasicBlock *BB, Instruction *t_inst);
+  Instruction *getParentGEP(Instruction *t_inst);
 };

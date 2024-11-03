@@ -13,6 +13,7 @@ add_library(genDFGPass MODULE
     DFGNode.cpp
     DFGEdge.cpp
     DFG.cpp
+    DataMemNode.cpp
     genDFGPass.cpp
 )
 

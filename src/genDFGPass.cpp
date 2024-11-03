@@ -37,7 +37,7 @@ namespace
             bool targetEntireFunction = false;
             bool precisionAware = false;
             bool heterogeneity = false;
-            bool isTrimmedDemo = false;
+            bool isTrimmedDemo = true;
 
             map<string, int> *execLatency = new map<string, int>();
             execLatency->insert(pair<string, int>("load", 2));
@@ -86,6 +86,16 @@ namespace
             cout << "==================================\n";
             DFG *dfg2 = new DFG(innermostLoops, targetEntireFunction, precisionAware,
                                 heterogeneity, execLatency, pipelinedOpt);
+
+            // Show the count of different opcodes (IRs).
+            // cout << "==================================\n";
+            // cout << "[show opcode count]\n";
+            // dfg2->showOpcodeDistribution();
+
+            // Generate the DFG dot file.
+            cout << "==================================\n";
+            cout << "[generate dot for DFG]\n";
+            dfg2->generateDot(t_F, isTrimmedDemo);
         }
 
         /*
@@ -153,28 +163,28 @@ namespace
                     if (current_loop->getSubLoops().empty())
                     {
                         innermostLoops->push_back(current_loop);
-                        errs() << "Innermost loop detected: "<< current_loop->getName() << "\n";
+                        errs() << "Innermost loop detected: " << current_loop->getName() << "\n";
                         continue;
                     }
                     else
                     {
                         nestedLoops->push_back(current_loop);
-                        errs() << "Nested loop detected: "<< current_loop->getName() << "\n";
+                        errs() << "Nested loop detected: " << current_loop->getName() << "\n";
                     }
 
                     while (!nestedLoops->empty())
                     {
-                        for(Loop* subloop: nestedLoops->front()->getSubLoops())
+                        for (Loop *subloop : nestedLoops->front()->getSubLoops())
                         {
-                            if(subloop->getSubLoops().empty())
+                            if (subloop->getSubLoops().empty())
                             {
                                 innermostLoops->push_back(subloop);
-                                errs() << "Innermost loop detected: "<< subloop->getName() << "\n";
+                                errs() << "Innermost loop detected: " << subloop->getName() << "\n";
                             }
                             else
                             {
                                 nestedLoops->push_back(subloop);
-                                errs() << "Nested loop detected: "<< subloop->getName() << "\n";
+                                errs() << "Nested loop detected: " << subloop->getName() << "\n";
                             }
                         }
                         nestedLoops->pop_front();

@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/genDFGPass.dir/DFGEdge.cpp.o.d"
   "CMakeFiles/genDFGPass.dir/DFGNode.cpp.o"
   "CMakeFiles/genDFGPass.dir/DFGNode.cpp.o.d"
+  "CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o"
+  "CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o.d"
   "CMakeFiles/genDFGPass.dir/genDFGPass.cpp.o"
   "CMakeFiles/genDFGPass.dir/genDFGPass.cpp.o.d"
   "libgenDFGPass.pdb"

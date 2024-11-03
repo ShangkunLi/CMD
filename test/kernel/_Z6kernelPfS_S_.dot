@@ -1,32 +1,45 @@
 digraph "DFG for'_Z6kernelPfS_S_' function" {
-	Node0x584ec6cc7c20[shape=record, label="  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1"];
-	Node0x584ec6ccfd70[shape=record, label="  %exitcond = icmp eq i64 %indvars.iv.next, 32"];
-	Node0x584ec6c51e58[shape=record, label="  br i1 %exitcond, label %for.end, label %for.body"];
-	Node0x584ec6ccfa38[shape=record, label="  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next, %for.body ]"];
-	Node0x584ec6ccfb30[shape=record, label="  %arrayidx = getelementptr inbounds float, float* %input, i64 %indvars.iv"];
-	Node0x584ec6ccfc10[shape=record, label="  %arrayidx2 = getelementptr inbounds float, float* %coefficient, i64 %indvars.iv"];
-	Node0x584ec6ccfb98[shape=oval, color=darkorange, style=filled, label="  %1 = load float, float* %arrayidx, align 4, !tbaa !2"];
-	Node0x584ec6ccfc78[shape=oval, color=darkorange, style=filled, label="  %2 = load float, float* %arrayidx2, align 4, !tbaa !2"];
-	Node0x584ec6cc7d00[shape=record, label="  %mul = fmul float %1, %2"];
-	Node0x584ec6cc7c90[shape=record, label="  %add = fadd float %0, %mul"];
-	Node0x584ec6ccf8d8[shape=record, label="  %0 = phi float [ %.pre, %entry ], [ %add, %for.body ]"];
-	Node0x584ec6ccfcf0[shape=oval, color=darkorange, style=filled, label="  store float %add, float* %output, align 4, !tbaa !2"];
+	Node0phi[shape=record, label="(0) phi"];
+	Node1br[shape=record, label="(1) br"];
+	Node2phi[shape=record, label="(2) phi"];
+	Node3getelementptr[shape=record, label="(3) getelementptr"];
+	Node4load[shape=oval, color=darkorange, style=filled, label="(4) load"];
+	Node5datamem[shape=record, label="(5) datamem"];
+	Node6getelementptr[shape=record, label="(6) getelementptr"];
+	Node7load[shape=oval, color=darkorange, style=filled, label="(7) load"];
+	Node8datamem[shape=record, label="(8) datamem"];
+	Node9mul[shape=record, label="(9) mul"];
+	Node10add[shape=record, label="(10) add"];
+	Node11store[shape=oval, color=darkorange, style=filled, label="(11) store"];
+	Node12datamem[shape=record, label="(12) datamem"];
+	Node13add[shape=record, label="(13) add"];
+	Node14cmp[shape=record, label="(14) cmp"];
+	Node15br[shape=record, label="(15) br"];
+	Node16ret[shape=record, label="(16) ret"];
+	Node17load[shape=oval, color=darkorange, style=filled, label="(17) load"];
 edge [color=blue]
-	Node0x584ec6c51e58 -> Node0x584ec6ccf8d8
-	Node0x584ec6c51e58 -> Node0x584ec6ccfa38
+	Node1br -> Node0phi
+	Node1br -> Node2phi
+	Node15br -> Node16ret
+	Node15br -> Node0phi
+	Node15br -> Node2phi
 edge [color=red]
-	Node0x584ec6cc7c90 -> Node0x584ec6ccf8d8
-	Node0x584ec6cc7c20 -> Node0x584ec6ccfa38
-	Node0x584ec6ccfa38 -> Node0x584ec6ccfb30
-	Node0x584ec6ccfb30 -> Node0x584ec6ccfb98
-	Node0x584ec6ccfa38 -> Node0x584ec6ccfc10
-	Node0x584ec6ccfc10 -> Node0x584ec6ccfc78
-	Node0x584ec6ccfb98 -> Node0x584ec6cc7d00
-	Node0x584ec6ccfc78 -> Node0x584ec6cc7d00
-	Node0x584ec6ccf8d8 -> Node0x584ec6cc7c90
-	Node0x584ec6cc7d00 -> Node0x584ec6cc7c90
-	Node0x584ec6cc7c90 -> Node0x584ec6ccfcf0
-	Node0x584ec6ccfa38 -> Node0x584ec6cc7c20
-	Node0x584ec6cc7c20 -> Node0x584ec6ccfd70
-	Node0x584ec6ccfd70 -> Node0x584ec6c51e58
+	Node5datamem -> Node4load
+	Node8datamem -> Node7load
+	Node11store -> Node12datamem
+	Node10add -> Node11store
+	Node17load -> Node0phi
+	Node10add -> Node0phi
+	Node13add -> Node2phi
+	Node2phi -> Node3getelementptr
+	Node3getelementptr -> Node4load
+	Node2phi -> Node6getelementptr
+	Node6getelementptr -> Node7load
+	Node4load -> Node9mul
+	Node7load -> Node9mul
+	Node0phi -> Node10add
+	Node9mul -> Node10add
+	Node2phi -> Node13add
+	Node13add -> Node14cmp
+	Node14cmp -> Node15br
 }
