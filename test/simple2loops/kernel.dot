@@ -5,11 +5,11 @@ digraph "DFG for'kernel' function" {
 	Node3getelementptr[shape=record, label="(3) getelementptr"];
 	Node4alloca[shape=record, label="(4) alloca"];
 	Node5load[shape=oval, color=darkorange, style=filled, label="(5) load"];
-	Node6datamem[shape=record, label="(6) datamem"];
+	Node6datamem[shape=record, color=lightblue, style=filled, label="(6) datamem"];
 	Node7trunc[shape=record, label="(7) trunc"];
 	Node8call[shape=record, label="(8) call"];
 	Node9load[shape=oval, color=darkorange, style=filled, label="(9) load"];
-	Node10datamem[shape=record, label="(10) datamem"];
+	Node10datamem[shape=record, color=lightblue, style=filled, label="(10) datamem"];
 	Node11add[shape=record, label="(11) add"];
 	Node12add[shape=record, label="(12) add"];
 	Node13cmp[shape=record, label="(13) cmp"];
@@ -23,15 +23,15 @@ digraph "DFG for'kernel' function" {
 	Node21getelementptr[shape=record, label="(21) getelementptr"];
 	Node22alloca[shape=record, label="(22) alloca"];
 	Node23load[shape=oval, color=darkorange, style=filled, label="(23) load"];
-	Node24datamem[shape=record, label="(24) datamem"];
+	Node24datamem[shape=record, color=lightblue, style=filled, label="(24) datamem"];
 	Node25getelementptr[shape=record, label="(25) getelementptr"];
 	Node26alloca[shape=record, label="(26) alloca"];
 	Node27load[shape=oval, color=darkorange, style=filled, label="(27) load"];
-	Node28datamem[shape=record, label="(28) datamem"];
+	Node28datamem[shape=record, color=lightblue, style=filled, label="(28) datamem"];
 	Node29add[shape=record, label="(29) add"];
 	Node30getelementptr[shape=record, label="(30) getelementptr"];
 	Node31store[shape=oval, color=darkorange, style=filled, label="(31) store"];
-	Node32datamem[shape=record, label="(32) datamem"];
+	Node32datamem[shape=record, color=lightblue, style=filled, label="(32) datamem"];
 edge [color=blue]
 	Node1br -> Node0phi
 	Node1br -> Node2phi

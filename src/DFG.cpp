@@ -1733,6 +1733,9 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
       {
         file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=oval, color=darkorange, style=filled, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
       }
+      else if(node->getOpcodeName()=="datamem"){
+        file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=record, color=lightblue, style=filled, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
+      }
       else
       {
         file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=record, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
