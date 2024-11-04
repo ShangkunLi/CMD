@@ -764,6 +764,13 @@ bool DFG::constructWithDataMem(Loop *L)
       }
       Instruction *curII = node->getInst();
       assert(node->getInst() == curII);
+
+      // Only consider the control dependencies for nodes in current BB
+      if(BBInsts.find(curII->getParent()) == BBInsts.end())
+      {
+        continue;
+      }
+
       if (curII->getOpcode() == Instruction::PHI)
       {
         PHINode *phiNode = dyn_cast<PHINode>(curII);
@@ -796,6 +803,7 @@ bool DFG::constructWithDataMem(Loop *L)
               errs() << "Control Edge does not exist.\n";
               ctrlEdge = new DFGEdge(m_ctrledgeCount++, ctrlNode, node, true);
               this->m_ctrlEdges.push_back(ctrlEdge);
+              errs()<< "Control Edge: " << ctrlEdge->getID() << " " << ctrlEdge->getSrc()->getID() << " -> " << ctrlEdge->getDst()->getID() << "\n";
             }
           }
         }

@@ -29,12 +29,18 @@ void kernel(float input[], float output[], float coefficient[])
 {
   int i;
   int j = 0;
+  int tmp = 0;
 
   // for (j = 0; j < NTAPS; ++j)
   // {
-    for (i = 0; i < NTAPS; ++i)
-    {
-      output[j] += input[i] * coefficient[i];
-    }
+  for (i = 0; i < NTAPS; ++i)
+  {
+    // if (i < NTAPS / 2)
+    //   tmp = coefficient[i + 1];
+    // else
+    //   tmp = 2 * coefficient[i];
+
+    output[j] += input[i] * coefficient[i] + tmp;
+  }
   // }
 }
