@@ -1,87 +1,65 @@
 digraph "DFG for'_Z6kernelPfS_S_' function" {
 	Node0phi[shape=record, label="(0) phi"];
 	Node1br[shape=record, label="(1) br"];
-	Node2cmp[shape=record, label="(2) cmp"];
-	Node3br[shape=record, label="(3) br"];
-	Node4add[shape=record, label="(4) add"];
-	Node5br[shape=record, label="(5) br"];
-	Node6phi[shape=record, label="(6) phi"];
-	Node7cmp[shape=record, label="(7) cmp"];
-	Node8add[shape=record, label="(8) add"];
-	Node9getelementptr[shape=record, label="(9) getelementptr"];
-	Node10load[shape=oval, color=darkorange, style=filled, label="(10) load"];
-	Node11datamem[shape=record, label="(11) datamem"];
-	Node12mul[shape=record, label="(12) mul"];
-	Node13br[shape=record, label="(13) br"];
-	Node14br[shape=record, label="(14) br"];
-	Node15getelementptr[shape=record, label="(15) getelementptr"];
+	Node2getelementptr[shape=record, label="(2) getelementptr"];
+	Node3load[shape=oval, color=darkorange, style=filled, label="(3) load"];
+	Node4datamem[shape=record, color=lightblue, style=filled, label="(4) datamem"];
+	Node5getelementptr[shape=record, label="(5) getelementptr"];
+	Node6load[shape=oval, color=darkorange, style=filled, label="(6) load"];
+	Node7datamem[shape=record, color=lightblue, style=filled, label="(7) datamem"];
+	Node8mul[shape=record, label="(8) mul"];
+	Node9load[shape=oval, color=darkorange, style=filled, label="(9) load"];
+	Node10datamem[shape=record, color=lightblue, style=filled, label="(10) datamem"];
+	Node11add[shape=record, label="(11) add"];
+	Node12store[shape=oval, color=darkorange, style=filled, label="(12) store"];
+	Node13datamem[shape=record, color=lightblue, style=filled, label="(13) datamem"];
+	Node14load[shape=oval, color=darkorange, style=filled, label="(14) load"];
+	Node15datamem[shape=record, color=lightblue, style=filled, label="(15) datamem"];
 	Node16load[shape=oval, color=darkorange, style=filled, label="(16) load"];
-	Node17datamem[shape=record, label="(17) datamem"];
-	Node18getelementptr[shape=record, label="(18) getelementptr"];
-	Node19load[shape=oval, color=darkorange, style=filled, label="(19) load"];
-	Node20datamem[shape=record, label="(20) datamem"];
-	Node21phi[shape=record, label="(21) phi"];
-	Node22phi[shape=record, label="(22) phi"];
-	Node23fptosi[shape=record, label="(23) fptosi"];
-	Node24getelementptr[shape=record, label="(24) getelementptr"];
-	Node25load[shape=oval, color=darkorange, style=filled, label="(25) load"];
-	Node26datamem[shape=record, label="(26) datamem"];
-	Node27mul[shape=record, label="(27) mul"];
-	Node28sitofp[shape=record, label="(28) sitofp"];
-	Node29add[shape=record, label="(29) add"];
-	Node30load[shape=oval, color=darkorange, style=filled, label="(30) load"];
-	Node31datamem[shape=record, label="(31) datamem"];
-	Node32add[shape=record, label="(32) add"];
-	Node33store[shape=oval, color=darkorange, style=filled, label="(33) store"];
-	Node34datamem[shape=record, label="(34) datamem"];
-	Node35ret[shape=record, label="(35) ret"];
+	Node17datamem[shape=record, color=lightblue, style=filled, label="(17) datamem"];
+	Node18mul[shape=record, label="(18) mul"];
+	Node19add[shape=record, label="(19) add"];
+	Node20load[shape=oval, color=darkorange, style=filled, label="(20) load"];
+	Node21datamem[shape=record, color=lightblue, style=filled, label="(21) datamem"];
+	Node22add[shape=record, label="(22) add"];
+	Node23store[shape=oval, color=darkorange, style=filled, label="(23) store"];
+	Node24datamem[shape=record, color=lightblue, style=filled, label="(24) datamem"];
+	Node25add[shape=record, label="(25) add"];
+	Node26cmp[shape=record, label="(26) cmp"];
+	Node27br[shape=record, label="(27) br"];
+	Node28ret[shape=record, label="(28) ret"];
 edge [color=blue]
 	Node1br -> Node0phi
-	Node3br -> Node4add
-	Node13br -> Node6phi
-	Node5br -> Node0phi
-	Node14br -> Node6phi
-	Node13br -> Node21phi
-	Node13br -> Node22phi
-	Node5br -> Node35ret
-	Node14br -> Node21phi
-	Node14br -> Node22phi
+	Node27br -> Node28ret
+	Node27br -> Node0phi
 edge [color=red]
-	Node6phi -> Node0phi
-	Node0phi -> Node2cmp
-	Node2cmp -> Node3br
-	Node0phi -> Node4add
-	Node7cmp -> Node5br
-	Node8add -> Node6phi
-	Node4add -> Node6phi
-	Node6phi -> Node7cmp
-	Node0phi -> Node8add
-	Node0phi -> Node9getelementptr
-	Node11datamem -> Node10load
-	Node9getelementptr -> Node10load
-	Node10load -> Node12mul
+	Node4datamem -> Node3load
+	Node7datamem -> Node6load
+	Node10datamem -> Node9load
+	Node12store -> Node13datamem
+	Node11add -> Node12store
+	Node15datamem -> Node14load
 	Node17datamem -> Node16load
-	Node0phi -> Node18getelementptr
-	Node20datamem -> Node19load
-	Node4add -> Node15getelementptr
-	Node15getelementptr -> Node16load
-	Node18getelementptr -> Node19load
-	Node0phi -> Node24getelementptr
-	Node26datamem -> Node25load
-	Node31datamem -> Node30load
-	Node33store -> Node34datamem
-	Node32add -> Node33store
-	Node10load -> Node21phi
-	Node19load -> Node21phi
-	Node12mul -> Node22phi
-	Node16load -> Node22phi
-	Node22phi -> Node23fptosi
-	Node24getelementptr -> Node25load
-	Node25load -> Node27mul
-	Node21phi -> Node27mul
-	Node23fptosi -> Node28sitofp
-	Node27mul -> Node29add
-	Node28sitofp -> Node29add
-	Node30load -> Node32add
-	Node29add -> Node32add
+	Node21datamem -> Node20load
+	Node23store -> Node24datamem
+	Node22add -> Node23store
+	Node25add -> Node0phi
+	Node0phi -> Node2getelementptr
+	Node2getelementptr -> Node3load
+	Node0phi -> Node5getelementptr
+	Node5getelementptr -> Node6load
+	Node3load -> Node8mul
+	Node6load -> Node8mul
+	Node9load -> Node11add
+	Node8mul -> Node11add
+	Node2getelementptr -> Node14load
+	Node5getelementptr -> Node16load
+	Node14load -> Node18mul
+	Node16load -> Node18mul
+	Node18mul -> Node19add
+	Node20load -> Node22add
+	Node19add -> Node22add
+	Node0phi -> Node25add
+	Node25add -> Node26cmp
+	Node26cmp -> Node27br
 }

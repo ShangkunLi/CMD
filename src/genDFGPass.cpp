@@ -273,6 +273,14 @@ void addDefaultKernels(map<string, list<int> *> *t_functionWithLoop)
     (*t_functionWithLoop)["lu_cpu"] = new list<int>();
     (*t_functionWithLoop)["lu_cpu"]->push_back(0);
 
+    // For Array_add:
+    (*t_functionWithLoop)["_Z6kernelv"] = new list<int>();
+    (*t_functionWithLoop)["_Z6kernelv"]->push_back(0);
+
+    // For Polybench:
+    (*t_functionWithLoop)["_Z6kernelPfS_S_S_S_"] = new list<int>();
+    (*t_functionWithLoop)["_Z6kernelPfS_S_S_S_"]->push_back(0);
+
     // nested
     // (*t_functionWithLoop)["_Z6kernelPfS_S_"] = new list<int>();
     // (*t_functionWithLoop)["_Z6kernelPfS_S_"]->push_back(0);

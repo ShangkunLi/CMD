@@ -6,76 +6,67 @@ digraph "DFG for'kernel' function" {
 	Node4alloca[shape=record, label="(4) alloca"];
 	Node5load[shape=oval, color=darkorange, style=filled, label="(5) load"];
 	Node6datamem[shape=record, color=lightblue, style=filled, label="(6) datamem"];
-	Node7trunc[shape=record, label="(7) trunc"];
-	Node8call[shape=record, label="(8) call"];
-	Node9load[shape=oval, color=darkorange, style=filled, label="(9) load"];
-	Node10datamem[shape=record, color=lightblue, style=filled, label="(10) datamem"];
-	Node11add[shape=record, label="(11) add"];
-	Node12add[shape=record, label="(12) add"];
-	Node13cmp[shape=record, label="(13) cmp"];
-	Node14br[shape=record, label="(14) br"];
-	Node15call[shape=record, label="(15) call"];
-	Node16cmp[shape=record, label="(16) cmp"];
-	Node17bitcast[shape=record, label="(17) bitcast"];
-	Node18add[shape=record, label="(18) add"];
-	Node19phi[shape=record, label="(19) phi"];
-	Node20br[shape=record, label="(20) br"];
+	Node7add[shape=record, label="(7) add"];
+	Node8add[shape=record, label="(8) add"];
+	Node9cmp[shape=record, label="(9) cmp"];
+	Node10br[shape=record, label="(10) br"];
+	Node11call[shape=record, label="(11) call"];
+	Node12cmp[shape=record, label="(12) cmp"];
+	Node13bitcast[shape=record, label="(13) bitcast"];
+	Node14add[shape=record, label="(14) add"];
+	Node15phi[shape=record, label="(15) phi"];
+	Node16br[shape=record, label="(16) br"];
+	Node17getelementptr[shape=record, label="(17) getelementptr"];
+	Node18alloca[shape=record, label="(18) alloca"];
+	Node19load[shape=oval, color=darkorange, style=filled, label="(19) load"];
+	Node20datamem[shape=record, color=lightblue, style=filled, label="(20) datamem"];
 	Node21getelementptr[shape=record, label="(21) getelementptr"];
 	Node22alloca[shape=record, label="(22) alloca"];
 	Node23load[shape=oval, color=darkorange, style=filled, label="(23) load"];
 	Node24datamem[shape=record, color=lightblue, style=filled, label="(24) datamem"];
-	Node25getelementptr[shape=record, label="(25) getelementptr"];
-	Node26alloca[shape=record, label="(26) alloca"];
-	Node27load[shape=oval, color=darkorange, style=filled, label="(27) load"];
+	Node25add[shape=record, label="(25) add"];
+	Node26getelementptr[shape=record, label="(26) getelementptr"];
+	Node27store[shape=oval, color=darkorange, style=filled, label="(27) store"];
 	Node28datamem[shape=record, color=lightblue, style=filled, label="(28) datamem"];
-	Node29add[shape=record, label="(29) add"];
-	Node30getelementptr[shape=record, label="(30) getelementptr"];
-	Node31store[shape=oval, color=darkorange, style=filled, label="(31) store"];
-	Node32datamem[shape=record, color=lightblue, style=filled, label="(32) datamem"];
 edge [color=blue]
 	Node1br -> Node0phi
 	Node1br -> Node2phi
-	Node14br -> Node15call
-	Node14br -> Node0phi
-	Node14br -> Node2phi
-	Node20br -> Node19phi
-	Node1br -> Node19phi
+	Node10br -> Node11call
+	Node10br -> Node0phi
+	Node10br -> Node2phi
+	Node16br -> Node15phi
+	Node1br -> Node15phi
 edge [color=red]
 	Node4alloca -> Node3getelementptr
 	Node6datamem -> Node5load
-	Node10datamem -> Node9load
-	Node12add -> Node0phi
-	Node16cmp -> Node1br
-	Node11add -> Node2phi
+	Node8add -> Node0phi
+	Node12cmp -> Node1br
+	Node7add -> Node2phi
 	Node0phi -> Node3getelementptr
 	Node3getelementptr -> Node5load
-	Node0phi -> Node7trunc
-	Node7trunc -> Node8call
-	Node5load -> Node8call
-	Node3getelementptr -> Node9load
-	Node9load -> Node11add
-	Node2phi -> Node11add
-	Node0phi -> Node12add
-	Node12add -> Node13cmp
-	Node13cmp -> Node14br
-	Node17bitcast -> Node15call
-	Node18add -> Node16cmp
-	Node4alloca -> Node17bitcast
-	Node19phi -> Node18add
-	Node18add -> Node19phi
+	Node5load -> Node7add
+	Node2phi -> Node7add
+	Node0phi -> Node8add
+	Node8add -> Node9cmp
+	Node9cmp -> Node10br
+	Node13bitcast -> Node11call
+	Node14add -> Node12cmp
+	Node4alloca -> Node13bitcast
+	Node15phi -> Node14add
+	Node14add -> Node15phi
+	Node18alloca -> Node17getelementptr
+	Node20datamem -> Node19load
 	Node22alloca -> Node21getelementptr
 	Node24datamem -> Node23load
-	Node26alloca -> Node25getelementptr
-	Node28datamem -> Node27load
-	Node4alloca -> Node30getelementptr
-	Node31store -> Node32datamem
-	Node29add -> Node31store
-	Node19phi -> Node21getelementptr
+	Node4alloca -> Node26getelementptr
+	Node27store -> Node28datamem
+	Node25add -> Node27store
+	Node15phi -> Node17getelementptr
+	Node17getelementptr -> Node19load
+	Node15phi -> Node21getelementptr
 	Node21getelementptr -> Node23load
-	Node19phi -> Node25getelementptr
-	Node25getelementptr -> Node27load
-	Node27load -> Node29add
-	Node23load -> Node29add
-	Node19phi -> Node30getelementptr
-	Node30getelementptr -> Node31store
+	Node23load -> Node25add
+	Node19load -> Node25add
+	Node15phi -> Node26getelementptr
+	Node26getelementptr -> Node27store
 }

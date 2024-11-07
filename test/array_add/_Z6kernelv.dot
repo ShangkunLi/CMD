@@ -1,0 +1,365 @@
+digraph "DFG for'_Z6kernelv' function" {
+	Node0phi[shape=record, label="(0) phi"];
+	Node1br[shape=record, label="(1) br"];
+	Node2getelementptr[shape=record, label="(2) getelementptr"];
+	Node3load[shape=oval, color=darkorange, style=filled, label="(3) load"];
+	Node4datamem[shape=record, color=lightblue, style=filled, label="(4) datamem"];
+	Node5getelementptr[shape=record, label="(5) getelementptr"];
+	Node6load[shape=oval, color=darkorange, style=filled, label="(6) load"];
+	Node7datamem[shape=record, color=lightblue, style=filled, label="(7) datamem"];
+	Node8add[shape=record, label="(8) add"];
+	Node9getelementptr[shape=record, label="(9) getelementptr"];
+	Node10store[shape=oval, color=darkorange, style=filled, label="(10) store"];
+	Node11datamem[shape=record, color=lightblue, style=filled, label="(11) datamem"];
+	Node12getelementptr[shape=record, label="(12) getelementptr"];
+	Node13phi[shape=record, label="(13) phi"];
+	Node14store[shape=oval, color=darkorange, style=filled, label="(14) store"];
+	Node15datamem[shape=record, color=lightblue, style=filled, label="(15) datamem"];
+	Node16getelementptr[shape=record, label="(16) getelementptr"];
+	Node17load[shape=oval, color=darkorange, style=filled, label="(17) load"];
+	Node18datamem[shape=record, color=lightblue, style=filled, label="(18) datamem"];
+	Node19add[shape=record, label="(19) add"];
+	Node20store[shape=oval, color=darkorange, style=filled, label="(20) store"];
+	Node21datamem[shape=record, color=lightblue, style=filled, label="(21) datamem"];
+	Node22getelementptr[shape=record, label="(22) getelementptr"];
+	Node23br[shape=record, label="(23) br"];
+	Node24store[shape=oval, color=darkorange, style=filled, label="(24) store"];
+	Node25br[shape=record, label="(25) br"];
+	Node26add[shape=record, label="(26) add"];
+	Node27add[shape=record, label="(27) add"];
+	Node28cmp[shape=record, label="(28) cmp"];
+	Node29cmp[shape=record, label="(29) cmp"];
+	Node30phi[shape=record, label="(30) phi"];
+	Node31add[shape=record, label="(31) add"];
+	Node32load[shape=oval, color=darkorange, style=filled, label="(32) load"];
+	Node33datamem[shape=record, color=lightblue, style=filled, label="(33) datamem"];
+	Node34add[shape=record, label="(34) add"];
+	Node35store[shape=oval, color=darkorange, style=filled, label="(35) store"];
+	Node36datamem[shape=record, color=lightblue, style=filled, label="(36) datamem"];
+	Node37add[shape=record, label="(37) add"];
+	Node38load[shape=oval, color=darkorange, style=filled, label="(38) load"];
+	Node39getelementptr[shape=record, label="(39) getelementptr"];
+	Node40datamem[shape=record, color=lightblue, style=filled, label="(40) datamem"];
+	Node41br[shape=record, label="(41) br"];
+	Node42phi[shape=record, label="(42) phi"];
+	Node43br[shape=record, label="(43) br"];
+	Node44datamem[shape=record, color=lightblue, style=filled, label="(44) datamem"];
+	Node45load[shape=oval, color=darkorange, style=filled, label="(45) load"];
+	Node46datamem[shape=record, color=lightblue, style=filled, label="(46) datamem"];
+	Node47phi[shape=record, label="(47) phi"];
+	Node48add[shape=record, label="(48) add"];
+	Node49store[shape=oval, color=darkorange, style=filled, label="(49) store"];
+	Node50datamem[shape=record, color=lightblue, style=filled, label="(50) datamem"];
+	Node51phi[shape=record, label="(51) phi"];
+	Node52br[shape=record, label="(52) br"];
+	Node53or[shape=record, label="(53) or"];
+	Node54or[shape=record, label="(54) or"];
+	Node55or[shape=record, label="(55) or"];
+	Node56getelementptr[shape=record, label="(56) getelementptr"];
+	Node57bitcast[shape=record, label="(57) bitcast"];
+	Node58load[shape=oval, color=darkorange, style=filled, label="(58) load"];
+	Node59datamem[shape=record, color=lightblue, style=filled, label="(59) datamem"];
+	Node60getelementptr[shape=record, label="(60) getelementptr"];
+	Node61bitcast[shape=record, label="(61) bitcast"];
+	Node62load[shape=oval, color=darkorange, style=filled, label="(62) load"];
+	Node63datamem[shape=record, color=lightblue, style=filled, label="(63) datamem"];
+	Node64add[shape=record, label="(64) add"];
+	Node65getelementptr[shape=record, label="(65) getelementptr"];
+	Node66bitcast[shape=record, label="(66) bitcast"];
+	Node67store[shape=oval, color=darkorange, style=filled, label="(67) store"];
+	Node68datamem[shape=record, color=lightblue, style=filled, label="(68) datamem"];
+	Node69getelementptr[shape=record, label="(69) getelementptr"];
+	Node70phi[shape=record, label="(70) phi"];
+	Node71getelementptr[shape=record, label="(71) getelementptr"];
+	Node72getelementptr[shape=record, label="(72) getelementptr"];
+	Node73getelementptr[shape=record, label="(73) getelementptr"];
+	Node74getelementptr[shape=record, label="(74) getelementptr"];
+	Node75bitcast[shape=record, label="(75) bitcast"];
+	Node76store[shape=oval, color=darkorange, style=filled, label="(76) store"];
+	Node77datamem[shape=record, color=lightblue, style=filled, label="(77) datamem"];
+	Node78getelementptr[shape=record, label="(78) getelementptr"];
+	Node79bitcast[shape=record, label="(79) bitcast"];
+	Node80load[shape=oval, color=darkorange, style=filled, label="(80) load"];
+	Node81datamem[shape=record, color=lightblue, style=filled, label="(81) datamem"];
+	Node82add[shape=record, label="(82) add"];
+	Node83bitcast[shape=record, label="(83) bitcast"];
+	Node84store[shape=oval, color=darkorange, style=filled, label="(84) store"];
+	Node85datamem[shape=record, color=lightblue, style=filled, label="(85) datamem"];
+	Node86add[shape=record, label="(86) add"];
+	Node87add[shape=record, label="(87) add"];
+	Node88shufflevector[shape=record, label="(88) shufflevector"];
+	Node89extractelement[shape=record, label="(89) extractelement"];
+	Node90store[shape=oval, color=darkorange, style=filled, label="(90) store"];
+	Node91datamem[shape=record, color=lightblue, style=filled, label="(91) datamem"];
+	Node92extractelement[shape=record, label="(92) extractelement"];
+	Node93store[shape=oval, color=darkorange, style=filled, label="(93) store"];
+	Node94datamem[shape=record, color=lightblue, style=filled, label="(94) datamem"];
+	Node95extractelement[shape=record, label="(95) extractelement"];
+	Node96store[shape=oval, color=darkorange, style=filled, label="(96) store"];
+	Node97datamem[shape=record, color=lightblue, style=filled, label="(97) datamem"];
+	Node98extractelement[shape=record, label="(98) extractelement"];
+	Node99store[shape=oval, color=darkorange, style=filled, label="(99) store"];
+	Node100datamem[shape=record, color=lightblue, style=filled, label="(100) datamem"];
+	Node101add[shape=record, label="(101) add"];
+	Node102cmp[shape=record, label="(102) cmp"];
+	Node103br[shape=record, label="(103) br"];
+	Node104add[shape=record, label="(104) add"];
+	Node105cmp[shape=record, label="(105) cmp"];
+	Node106insertelement[shape=record, label="(106) insertelement"];
+	Node107load[shape=oval, color=darkorange, style=filled, label="(107) load"];
+	Node108getelementptr[shape=record, label="(108) getelementptr"];
+	Node109phi[shape=record, label="(109) phi"];
+	Node110or[shape=record, label="(110) or"];
+	Node111or[shape=record, label="(111) or"];
+	Node112or[shape=record, label="(112) or"];
+	Node113getelementptr[shape=record, label="(113) getelementptr"];
+	Node114bitcast[shape=record, label="(114) bitcast"];
+	Node115load[shape=oval, color=darkorange, style=filled, label="(115) load"];
+	Node116datamem[shape=record, color=lightblue, style=filled, label="(116) datamem"];
+	Node117getelementptr[shape=record, label="(117) getelementptr"];
+	Node118bitcast[shape=record, label="(118) bitcast"];
+	Node119load[shape=oval, color=darkorange, style=filled, label="(119) load"];
+	Node120datamem[shape=record, color=lightblue, style=filled, label="(120) datamem"];
+	Node121add[shape=record, label="(121) add"];
+	Node122getelementptr[shape=record, label="(122) getelementptr"];
+	Node123bitcast[shape=record, label="(123) bitcast"];
+	Node124store[shape=oval, color=darkorange, style=filled, label="(124) store"];
+	Node125datamem[shape=record, color=lightblue, style=filled, label="(125) datamem"];
+	Node126getelementptr[shape=record, label="(126) getelementptr"];
+	Node127getelementptr[shape=record, label="(127) getelementptr"];
+	Node128getelementptr[shape=record, label="(128) getelementptr"];
+	Node129getelementptr[shape=record, label="(129) getelementptr"];
+	Node130getelementptr[shape=record, label="(130) getelementptr"];
+	Node131bitcast[shape=record, label="(131) bitcast"];
+	Node132store[shape=oval, color=darkorange, style=filled, label="(132) store"];
+	Node133datamem[shape=record, color=lightblue, style=filled, label="(133) datamem"];
+	Node134getelementptr[shape=record, label="(134) getelementptr"];
+	Node135bitcast[shape=record, label="(135) bitcast"];
+	Node136store[shape=oval, color=darkorange, style=filled, label="(136) store"];
+	Node137datamem[shape=record, color=lightblue, style=filled, label="(137) datamem"];
+	Node138add[shape=record, label="(138) add"];
+	Node139extractelement[shape=record, label="(139) extractelement"];
+	Node140store[shape=oval, color=darkorange, style=filled, label="(140) store"];
+	Node141datamem[shape=record, color=lightblue, style=filled, label="(141) datamem"];
+	Node142extractelement[shape=record, label="(142) extractelement"];
+	Node143store[shape=oval, color=darkorange, style=filled, label="(143) store"];
+	Node144datamem[shape=record, color=lightblue, style=filled, label="(144) datamem"];
+	Node145extractelement[shape=record, label="(145) extractelement"];
+	Node146store[shape=oval, color=darkorange, style=filled, label="(146) store"];
+	Node147datamem[shape=record, color=lightblue, style=filled, label="(147) datamem"];
+	Node148extractelement[shape=record, label="(148) extractelement"];
+	Node149store[shape=oval, color=darkorange, style=filled, label="(149) store"];
+	Node150datamem[shape=record, color=lightblue, style=filled, label="(150) datamem"];
+	Node151add[shape=record, label="(151) add"];
+	Node152cmp[shape=record, label="(152) cmp"];
+	Node153br[shape=record, label="(153) br"];
+edge [color=blue]
+	Node1br -> Node0phi
+	Node23br -> Node24store
+	Node41br -> Node42phi
+	Node25br -> Node0phi
+	Node25br -> Node42phi
+	Node43br -> Node42phi
+	Node43br -> Node47phi
+	Node25br -> Node27add
+	Node41br -> Node47phi
+	Node52br -> Node51phi
+	Node103br -> Node104add
+	Node103br -> Node51phi
+	Node52br -> Node109phi
+	Node153br -> Node104add
+	Node153br -> Node109phi
+edge [color=red]
+	Node4datamem -> Node3load
+	Node7datamem -> Node6load
+	Node10store -> Node11datamem
+	Node8add -> Node10store
+	Node13phi -> Node12getelementptr
+	Node14store -> Node15datamem
+	Node8add -> Node14store
+	Node13phi -> Node16getelementptr
+	Node18datamem -> Node17load
+	Node20store -> Node21datamem
+	Node19add -> Node20store
+	Node26add -> Node0phi
+	Node0phi -> Node2getelementptr
+	Node2getelementptr -> Node3load
+	Node0phi -> Node5getelementptr
+	Node5getelementptr -> Node6load
+	Node6load -> Node8add
+	Node3load -> Node8add
+	Node0phi -> Node9getelementptr
+	Node9getelementptr -> Node10store
+	Node0phi -> Node12getelementptr
+	Node27add -> Node13phi
+	Node12getelementptr -> Node14store
+	Node0phi -> Node16getelementptr
+	Node16getelementptr -> Node17load
+	Node17load -> Node19add
+	Node8add -> Node19add
+	Node16getelementptr -> Node20store
+	Node0phi -> Node22getelementptr
+	Node28cmp -> Node23br
+	Node19add -> Node24store
+	Node22getelementptr -> Node24store
+	Node29cmp -> Node25br
+	Node0phi -> Node26add
+	Node13phi -> Node27add
+	Node13phi -> Node28cmp
+	Node30phi -> Node28cmp
+	Node26add -> Node29cmp
+	Node31add -> Node30phi
+	Node30phi -> Node31add
+	Node33datamem -> Node32load
+	Node19add -> Node34add
+	Node35store -> Node36datamem
+	Node34add -> Node35store
+	Node8add -> Node37add
+	Node40datamem -> Node38load
+	Node22getelementptr -> Node32load
+	Node32load -> Node34add
+	Node22getelementptr -> Node35store
+	Node3load -> Node37add
+	Node39getelementptr -> Node38load
+	Node13phi -> Node39getelementptr
+	Node3load -> Node42phi
+	Node38load -> Node42phi
+	Node24store -> Node44datamem
+	Node46datamem -> Node45load
+	Node39getelementptr -> Node45load
+	Node49store -> Node50datamem
+	Node48add -> Node49store
+	Node45load -> Node47phi
+	Node37add -> Node47phi
+	Node47phi -> Node48add
+	Node42phi -> Node48add
+	Node12getelementptr -> Node49store
+	Node59datamem -> Node58load
+	Node63datamem -> Node62load
+	Node67store -> Node68datamem
+	Node64add -> Node67store
+	Node70phi -> Node69getelementptr
+	Node70phi -> Node71getelementptr
+	Node70phi -> Node72getelementptr
+	Node70phi -> Node73getelementptr
+	Node70phi -> Node74getelementptr
+	Node76store -> Node77datamem
+	Node64add -> Node76store
+	Node81datamem -> Node80load
+	Node84store -> Node85datamem
+	Node82add -> Node84store
+	Node88shufflevector -> Node87add
+	Node90store -> Node91datamem
+	Node89extractelement -> Node90store
+	Node93store -> Node94datamem
+	Node92extractelement -> Node93store
+	Node96store -> Node97datamem
+	Node95extractelement -> Node96store
+	Node99store -> Node100datamem
+	Node98extractelement -> Node99store
+	Node101add -> Node51phi
+	Node105cmp -> Node52br
+	Node51phi -> Node53or
+	Node51phi -> Node54or
+	Node51phi -> Node55or
+	Node51phi -> Node56getelementptr
+	Node56getelementptr -> Node57bitcast
+	Node57bitcast -> Node58load
+	Node51phi -> Node60getelementptr
+	Node60getelementptr -> Node61bitcast
+	Node61bitcast -> Node62load
+	Node62load -> Node64add
+	Node58load -> Node64add
+	Node51phi -> Node65getelementptr
+	Node65getelementptr -> Node66bitcast
+	Node66bitcast -> Node67store
+	Node51phi -> Node69getelementptr
+	Node104add -> Node70phi
+	Node53or -> Node71getelementptr
+	Node54or -> Node72getelementptr
+	Node55or -> Node73getelementptr
+	Node51phi -> Node74getelementptr
+	Node74getelementptr -> Node75bitcast
+	Node75bitcast -> Node76store
+	Node51phi -> Node78getelementptr
+	Node78getelementptr -> Node79bitcast
+	Node79bitcast -> Node80load
+	Node64add -> Node82add
+	Node80load -> Node82add
+	Node78getelementptr -> Node83bitcast
+	Node83bitcast -> Node84store
+	Node64add -> Node86add
+	Node58load -> Node86add
+	Node86add -> Node87add
+	Node106insertelement -> Node88shufflevector
+	Node87add -> Node89extractelement
+	Node69getelementptr -> Node90store
+	Node87add -> Node92extractelement
+	Node71getelementptr -> Node93store
+	Node87add -> Node95extractelement
+	Node72getelementptr -> Node96store
+	Node87add -> Node98extractelement
+	Node73getelementptr -> Node99store
+	Node51phi -> Node101add
+	Node101add -> Node102cmp
+	Node102cmp -> Node103br
+	Node70phi -> Node104add
+	Node70phi -> Node105cmp
+	Node107load -> Node106insertelement
+	Node108getelementptr -> Node107load
+	Node70phi -> Node108getelementptr
+	Node116datamem -> Node115load
+	Node120datamem -> Node119load
+	Node124store -> Node125datamem
+	Node121add -> Node124store
+	Node132store -> Node133datamem
+	Node121add -> Node132store
+	Node136store -> Node137datamem
+	Node121add -> Node136store
+	Node88shufflevector -> Node138add
+	Node140store -> Node141datamem
+	Node139extractelement -> Node140store
+	Node143store -> Node144datamem
+	Node142extractelement -> Node143store
+	Node146store -> Node147datamem
+	Node145extractelement -> Node146store
+	Node149store -> Node150datamem
+	Node148extractelement -> Node149store
+	Node151add -> Node109phi
+	Node109phi -> Node110or
+	Node109phi -> Node111or
+	Node109phi -> Node112or
+	Node109phi -> Node113getelementptr
+	Node113getelementptr -> Node114bitcast
+	Node114bitcast -> Node115load
+	Node109phi -> Node117getelementptr
+	Node117getelementptr -> Node118bitcast
+	Node118bitcast -> Node119load
+	Node119load -> Node121add
+	Node115load -> Node121add
+	Node109phi -> Node122getelementptr
+	Node122getelementptr -> Node123bitcast
+	Node123bitcast -> Node124store
+	Node109phi -> Node126getelementptr
+	Node110or -> Node127getelementptr
+	Node111or -> Node128getelementptr
+	Node112or -> Node129getelementptr
+	Node109phi -> Node130getelementptr
+	Node130getelementptr -> Node131bitcast
+	Node131bitcast -> Node132store
+	Node109phi -> Node134getelementptr
+	Node134getelementptr -> Node135bitcast
+	Node135bitcast -> Node136store
+	Node115load -> Node138add
+	Node138add -> Node139extractelement
+	Node126getelementptr -> Node140store
+	Node138add -> Node142extractelement
+	Node127getelementptr -> Node143store
+	Node138add -> Node145extractelement
+	Node128getelementptr -> Node146store
+	Node138add -> Node148extractelement
+	Node129getelementptr -> Node149store
+	Node109phi -> Node151add
+	Node151add -> Node152cmp
+	Node152cmp -> Node153br
+}

@@ -2,6 +2,7 @@
 
 float input[NTAPS];
 float output[NTAPS];
+float temp[NTAPS];
 float coefficients[NTAPS] = {0.25, 1.50, 3.75, -2.25, 0.50, 0.75, -3.00, 1.25,
                              0.25, 1.50, 3.75, -2.25, 0.50, 0.75, -3.00, 1.25,
                              0.25, 1.50, 3.75, -2.25, 0.50, 0.75, -3.00, 1.25,
@@ -22,25 +23,26 @@ int main()
   return 0;
 }
 
-void kernel(float input[], float output[], float coefficient[])
+void kernel(float input1[], float output[], float coefficient1[],float coefficient2[], float input2[])
 /*   input :           input sample array */
 /*   output:           output sample array */
 /*   coefficient:      coefficient array */
 {
   int i;
   int j = 0;
-  int tmp = 0;
+  float out1 = 0;
+  float out2 = 0;
+  float out=0;
 
   // for (j = 0; j < NTAPS; ++j)
   // {
   for (i = 0; i < NTAPS; ++i)
   {
-    // if (i < NTAPS / 2)
-    //   tmp = coefficient[i + 1];
-    // else
-    //   tmp = 2 * coefficient[i];
+    // out1 += input1[i] * coefficient1[i];
+    // out2 += input2[i] + coefficient2[i];
+    // *output += out1 + out2;
 
-    output[j] += input[i] * coefficient[i] + tmp;
+    output[j] += coefficient1[i] * input1[i];
   }
   // }
 }

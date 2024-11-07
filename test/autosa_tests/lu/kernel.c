@@ -42,33 +42,33 @@ void lu_cpu(data_t A[N][N], data_t L[N][N], data_t U[N][N])
     for (int j = k; j < N; j++)
       for (int i = k; i < N; i++)
       {
-        if (k == 0)
-          prev_V[i][j][k] = A[i][j];
-        else
-          prev_V[i][j][k] = V_tmp[i][j][k - 1];
+        // if (k == 0)
+        //   prev_V[i][j][k] = A[i][j];
+        // else
+        //   prev_V[i][j][k] = V_tmp[i][j][k - 1];
 
         U_tmp[i][j][k] = prev_V[i][j][k];
         U[j][i] = U_tmp[i][j][k];
-        // if (j == k)
-        // {
-        //   U_tmp[i][j][k] = prev_V[i][j][k];
-        //   U[j][i] = U_tmp[i][j][k];
-        // }
-        // else
-        // {
-        //   U_tmp[i][j][k] = U_tmp[i][j - 1][k];
+        if (j == k)
+        {
+          U_tmp[i][j][k] = prev_V[i][j][k];
+          U[j][i] = U_tmp[i][j][k];
+        }
+        else
+        {
+          U_tmp[i][j][k] = U_tmp[i][j - 1][k];
 
-        //   if (i == k)
-        //   {
-        //     L_tmp[i][j][k] = prev_V[i][j][k] / U_tmp[i][j - 1][k]; // final
-        //     L[i][j] = L_tmp[i][j][k];
-        //   }
-        //   else
-        //   {
-        //     L_tmp[i][j][k] = L_tmp[i - 1][j][k];
-        //   }
-        //   V_tmp[i][j][k] = prev_V[i][j][k] - L_tmp[i][j][k] * U_tmp[i][j - 1][k];
-        // }
+          if (i == k)
+          {
+            L_tmp[i][j][k] = prev_V[i][j][k] / U_tmp[i][j - 1][k]; // final
+            L[i][j] = L_tmp[i][j][k];
+          }
+          else
+          {
+            L_tmp[i][j][k] = L_tmp[i - 1][j][k];
+          }
+          V_tmp[i][j][k] = prev_V[i][j][k] - L_tmp[i][j][k] * U_tmp[i][j - 1][k];
+        }
       }
 }
 
