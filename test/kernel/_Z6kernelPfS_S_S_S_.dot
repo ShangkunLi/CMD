@@ -13,69 +13,24 @@ digraph "DFG for'_Z6kernelPfS_S_S_S_' function" {
 	Node11store[shape=oval, color=darkorange, style=filled, label="(11) store"];
 	Node12datamem[shape=record, color=lightblue, style=filled, label="(12) datamem"];
 	Node13add[shape=record, label="(13) add"];
-	Node14getelementptr[shape=record, label="(14) getelementptr"];
-	Node15load[shape=oval, color=darkorange, style=filled, label="(15) load"];
-	Node16datamem[shape=record, color=lightblue, style=filled, label="(16) datamem"];
-	Node17getelementptr[shape=record, label="(17) getelementptr"];
-	Node18load[shape=oval, color=darkorange, style=filled, label="(18) load"];
-	Node19datamem[shape=record, color=lightblue, style=filled, label="(19) datamem"];
-	Node20mul[shape=record, label="(20) mul"];
-	Node21add[shape=record, label="(21) add"];
-	Node22store[shape=oval, color=darkorange, style=filled, label="(22) store"];
-	Node23datamem[shape=record, color=lightblue, style=filled, label="(23) datamem"];
-	Node24add[shape=record, label="(24) add"];
-	Node25getelementptr[shape=record, label="(25) getelementptr"];
-	Node26load[shape=oval, color=darkorange, style=filled, label="(26) load"];
-	Node27datamem[shape=record, color=lightblue, style=filled, label="(27) datamem"];
-	Node28getelementptr[shape=record, label="(28) getelementptr"];
-	Node29load[shape=oval, color=darkorange, style=filled, label="(29) load"];
-	Node30datamem[shape=record, color=lightblue, style=filled, label="(30) datamem"];
-	Node31mul[shape=record, label="(31) mul"];
-	Node32add[shape=record, label="(32) add"];
-	Node33store[shape=oval, color=darkorange, style=filled, label="(33) store"];
-	Node34datamem[shape=record, color=lightblue, style=filled, label="(34) datamem"];
-	Node35add[shape=record, label="(35) add"];
-	Node36getelementptr[shape=record, label="(36) getelementptr"];
-	Node37load[shape=oval, color=darkorange, style=filled, label="(37) load"];
-	Node38datamem[shape=record, color=lightblue, style=filled, label="(38) datamem"];
-	Node39getelementptr[shape=record, label="(39) getelementptr"];
-	Node40load[shape=oval, color=darkorange, style=filled, label="(40) load"];
-	Node41datamem[shape=record, color=lightblue, style=filled, label="(41) datamem"];
-	Node42mul[shape=record, label="(42) mul"];
-	Node43add[shape=record, label="(43) add"];
-	Node44store[shape=oval, color=darkorange, style=filled, label="(44) store"];
-	Node45datamem[shape=record, color=lightblue, style=filled, label="(45) datamem"];
-	Node46add[shape=record, label="(46) add"];
-	Node47cmp[shape=record, label="(47) cmp"];
-	Node48br[shape=record, label="(48) br"];
-	Node49ret[shape=record, label="(49) ret"];
-	Node50load[shape=oval, color=darkorange, style=filled, label="(50) load"];
+	Node14cmp[shape=record, label="(14) cmp"];
+	Node15br[shape=record, label="(15) br"];
+	Node16ret[shape=record, label="(16) ret"];
+	Node17load[shape=oval, color=darkorange, style=filled, label="(17) load"];
 edge [color=blue]
 	Node1br -> Node0phi
 	Node1br -> Node2phi
-	Node48br -> Node49ret
-	Node48br -> Node0phi
-	Node48br -> Node2phi
+	Node15br -> Node16ret
+	Node15br -> Node0phi
+	Node15br -> Node2phi
 edge [color=red]
 	Node5datamem -> Node4load
 	Node8datamem -> Node7load
 	Node11store -> Node12datamem
 	Node10add -> Node11store
-	Node16datamem -> Node15load
-	Node19datamem -> Node18load
-	Node22store -> Node23datamem
-	Node21add -> Node22store
-	Node27datamem -> Node26load
-	Node30datamem -> Node29load
-	Node33store -> Node34datamem
-	Node32add -> Node33store
-	Node38datamem -> Node37load
-	Node41datamem -> Node40load
-	Node44store -> Node45datamem
-	Node43add -> Node44store
-	Node50load -> Node0phi
-	Node43add -> Node0phi
-	Node46add -> Node2phi
+	Node17load -> Node0phi
+	Node10add -> Node0phi
+	Node13add -> Node2phi
 	Node2phi -> Node3getelementptr
 	Node3getelementptr -> Node4load
 	Node2phi -> Node6getelementptr
@@ -85,33 +40,6 @@ edge [color=red]
 	Node0phi -> Node10add
 	Node9mul -> Node10add
 	Node2phi -> Node13add
-	Node13add -> Node14getelementptr
-	Node14getelementptr -> Node15load
-	Node13add -> Node17getelementptr
-	Node17getelementptr -> Node18load
-	Node15load -> Node20mul
-	Node18load -> Node20mul
-	Node10add -> Node21add
-	Node20mul -> Node21add
-	Node13add -> Node24add
-	Node24add -> Node25getelementptr
-	Node25getelementptr -> Node26load
-	Node24add -> Node28getelementptr
-	Node28getelementptr -> Node29load
-	Node26load -> Node31mul
-	Node29load -> Node31mul
-	Node21add -> Node32add
-	Node31mul -> Node32add
-	Node24add -> Node35add
-	Node35add -> Node36getelementptr
-	Node36getelementptr -> Node37load
-	Node35add -> Node39getelementptr
-	Node39getelementptr -> Node40load
-	Node37load -> Node42mul
-	Node40load -> Node42mul
-	Node32add -> Node43add
-	Node42mul -> Node43add
-	Node35add -> Node46add
-	Node46add -> Node47cmp
-	Node47cmp -> Node48br
+	Node13add -> Node14cmp
+	Node14cmp -> Node15br
 }

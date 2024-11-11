@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lucas/Project/Hi-DPS/DFG_Generation
+CMAKE_SOURCE_DIR = /home/lucas/Project/Hi-DPS/CGRA-Modeling
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lucas/Project/Hi-DPS/DFG_Generation/build
+CMAKE_BINARY_DIR = /home/lucas/Project/Hi-DPS/CGRA-Modeling/build
 
 # Utility rule file for intrinsics_gen.
 
@@ -78,6 +78,6 @@ CMakeFiles/intrinsics_gen.dir/clean:
 .PHONY : CMakeFiles/intrinsics_gen.dir/clean
 
 CMakeFiles/intrinsics_gen.dir/depend:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lucas/Project/Hi-DPS/DFG_Generation /home/lucas/Project/Hi-DPS/DFG_Generation /home/lucas/Project/Hi-DPS/DFG_Generation/build /home/lucas/Project/Hi-DPS/DFG_Generation/build /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles/intrinsics_gen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lucas/Project/Hi-DPS/CGRA-Modeling /home/lucas/Project/Hi-DPS/CGRA-Modeling /home/lucas/Project/Hi-DPS/CGRA-Modeling/build /home/lucas/Project/Hi-DPS/CGRA-Modeling/build /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles/intrinsics_gen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/intrinsics_gen.dir/depend
 

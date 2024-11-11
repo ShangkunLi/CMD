@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 3.1)
 #  cmake_policy(SET CMP0025 NEW)
 #endif()
 
+project(cgra-modeling
+    VERSION 1.0
+    LANGUAGES CXX C
+)
+
 find_package(LLVM REQUIRED CONFIG)
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(AddLLVM)

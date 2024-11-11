@@ -1,7 +1,7 @@
-src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.o: \
- /home/lucas/Project/Hi-DPS/DFG_Generation/src/DFGNode.cpp \
+src/DFG_Generation/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o: \
+ /home/lucas/Project/Hi-DPS/CGRA-Modeling/src/DFG_Generation/DataMemNode.cpp \
  /usr/include/stdc-predef.h \
- /home/lucas/Project/Hi-DPS/DFG_Generation/include/DFGNode.h \
+ /home/lucas/Project/Hi-DPS/CGRA-Modeling/include/DataMemNode.h \
  /usr/local/include/llvm/IR/Value.h /usr/local/include/llvm-c/Types.h \
  /usr/local/include/llvm-c/DataTypes.h /usr/include/c++/9/cmath \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
@@ -271,7 +271,7 @@ src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.o: \
  /usr/local/include/llvm/Support/raw_ostream.h /usr/include/c++/9/list \
  /usr/include/c++/9/bits/stl_list.h /usr/include/c++/9/bits/list.tcc \
  /usr/include/c++/9/iostream \
- /home/lucas/Project/Hi-DPS/DFG_Generation/include/DFGEdge.h \
+ /home/lucas/Project/Hi-DPS/CGRA-Modeling/include/DFGEdge.h \
  /usr/local/include/llvm/Support/FileSystem.h \
  /usr/local/include/llvm/Support/Chrono.h \
  /usr/local/include/llvm/Support/FormatProviders.h \
@@ -288,4 +288,4 @@ src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.o: \
  /usr/local/include/llvm/Support/Format.h /usr/include/c++/9/stack \
  /usr/include/c++/9/deque /usr/include/c++/9/bits/stl_deque.h \
  /usr/include/c++/9/bits/deque.tcc /usr/include/c++/9/bits/stl_stack.h \
- /home/lucas/Project/Hi-DPS/DFG_Generation/include/DFGNode.h
+ /home/lucas/Project/Hi-DPS/CGRA-Modeling/include/DFGNode.h

@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lucas/Project/Hi-DPS/DFG_Generation
+CMAKE_SOURCE_DIR = /home/lucas/Project/Hi-DPS/CGRA-Modeling
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lucas/Project/Hi-DPS/DFG_Generation/build
+CMAKE_BINARY_DIR = /home/lucas/Project/Hi-DPS/CGRA-Modeling/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles /home/lucas/Project/Hi-DPS/DFG_Generation/build/src//CMakeFiles/progress.marks
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles 0
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src//CMakeFiles/progress.marks
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,152 +103,18 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
-
-# Convenience name for target.
-src/CMakeFiles/genDFGPass.dir/rule:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/genDFGPass.dir/rule
-.PHONY : src/CMakeFiles/genDFGPass.dir/rule
-
-# Convenience name for target.
-genDFGPass: src/CMakeFiles/genDFGPass.dir/rule
-.PHONY : genDFGPass
-
-# fast build rule for target.
-genDFGPass/fast:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/build
-.PHONY : genDFGPass/fast
-
-DFG.o: DFG.cpp.o
-.PHONY : DFG.o
-
-# target to build an object file
-DFG.cpp.o:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFG.cpp.o
-.PHONY : DFG.cpp.o
-
-DFG.i: DFG.cpp.i
-.PHONY : DFG.i
-
-# target to preprocess a source file
-DFG.cpp.i:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFG.cpp.i
-.PHONY : DFG.cpp.i
-
-DFG.s: DFG.cpp.s
-.PHONY : DFG.s
-
-# target to generate assembly for a file
-DFG.cpp.s:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFG.cpp.s
-.PHONY : DFG.cpp.s
-
-DFGEdge.o: DFGEdge.cpp.o
-.PHONY : DFGEdge.o
-
-# target to build an object file
-DFGEdge.cpp.o:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGEdge.cpp.o
-.PHONY : DFGEdge.cpp.o
-
-DFGEdge.i: DFGEdge.cpp.i
-.PHONY : DFGEdge.i
-
-# target to preprocess a source file
-DFGEdge.cpp.i:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGEdge.cpp.i
-.PHONY : DFGEdge.cpp.i
-
-DFGEdge.s: DFGEdge.cpp.s
-.PHONY : DFGEdge.s
-
-# target to generate assembly for a file
-DFGEdge.cpp.s:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGEdge.cpp.s
-.PHONY : DFGEdge.cpp.s
-
-DFGNode.o: DFGNode.cpp.o
-.PHONY : DFGNode.o
-
-# target to build an object file
-DFGNode.cpp.o:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.o
-.PHONY : DFGNode.cpp.o
-
-DFGNode.i: DFGNode.cpp.i
-.PHONY : DFGNode.i
-
-# target to preprocess a source file
-DFGNode.cpp.i:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.i
-.PHONY : DFGNode.cpp.i
-
-DFGNode.s: DFGNode.cpp.s
-.PHONY : DFGNode.s
-
-# target to generate assembly for a file
-DFGNode.cpp.s:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.s
-.PHONY : DFGNode.cpp.s
-
-DataMemNode.o: DataMemNode.cpp.o
-.PHONY : DataMemNode.o
-
-# target to build an object file
-DataMemNode.cpp.o:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o
-.PHONY : DataMemNode.cpp.o
-
-DataMemNode.i: DataMemNode.cpp.i
-.PHONY : DataMemNode.i
-
-# target to preprocess a source file
-DataMemNode.cpp.i:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.i
-.PHONY : DataMemNode.cpp.i
-
-DataMemNode.s: DataMemNode.cpp.s
-.PHONY : DataMemNode.s
-
-# target to generate assembly for a file
-DataMemNode.cpp.s:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.s
-.PHONY : DataMemNode.cpp.s
-
-genDFGPass.o: genDFGPass.cpp.o
-.PHONY : genDFGPass.o
-
-# target to build an object file
-genDFGPass.cpp.o:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/genDFGPass.cpp.o
-.PHONY : genDFGPass.cpp.o
-
-genDFGPass.i: genDFGPass.cpp.i
-.PHONY : genDFGPass.i
-
-# target to preprocess a source file
-genDFGPass.cpp.i:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/genDFGPass.cpp.i
-.PHONY : genDFGPass.cpp.i
-
-genDFGPass.s: genDFGPass.cpp.s
-.PHONY : genDFGPass.s
-
-# target to generate assembly for a file
-genDFGPass.cpp.s:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/genDFGPass.cpp.s
-.PHONY : genDFGPass.cpp.s
 
 # Help Target
 help:
@@ -258,22 +124,6 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... genDFGPass"
-	@echo "... DFG.o"
-	@echo "... DFG.i"
-	@echo "... DFG.s"
-	@echo "... DFGEdge.o"
-	@echo "... DFGEdge.i"
-	@echo "... DFGEdge.s"
-	@echo "... DFGNode.o"
-	@echo "... DFGNode.i"
-	@echo "... DFGNode.s"
-	@echo "... DataMemNode.o"
-	@echo "... DataMemNode.i"
-	@echo "... DataMemNode.s"
-	@echo "... genDFGPass.o"
-	@echo "... genDFGPass.i"
-	@echo "... genDFGPass.s"
 .PHONY : help
 
 
@@ -285,6 +135,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/lucas/Project/Hi-DPS/DFG_Generation/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

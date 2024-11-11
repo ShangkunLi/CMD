@@ -1,4 +1,4 @@
-# Install script for directory: /home/lucas/Project/Hi-DPS/DFG_Generation/src
+# Install script for directory: /home/lucas/Project/Hi-DPS/CGRA-Modeling/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,11 @@ endif()
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for each subdirectory.
+  include("/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/DFG_Generation/cmake_install.cmake")
+
 endif()
 

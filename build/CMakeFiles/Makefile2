@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lucas/Project/Hi-DPS/DFG_Generation
+CMAKE_SOURCE_DIR = /home/lucas/Project/Hi-DPS/CGRA-Modeling
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lucas/Project/Hi-DPS/DFG_Generation/build
+CMAKE_BINARY_DIR = /home/lucas/Project/Hi-DPS/CGRA-Modeling/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -79,16 +79,31 @@ clean: src/clean
 # Directory level rules for directory src
 
 # Recursive "all" directory target.
-src/all: src/CMakeFiles/genDFGPass.dir/all
+src/all: src/DFG_Generation/all
 .PHONY : src/all
 
 # Recursive "preinstall" directory target.
-src/preinstall:
+src/preinstall: src/DFG_Generation/preinstall
 .PHONY : src/preinstall
 
 # Recursive "clean" directory target.
-src/clean: src/CMakeFiles/genDFGPass.dir/clean
+src/clean: src/DFG_Generation/clean
 .PHONY : src/clean
+
+#=============================================================================
+# Directory level rules for directory src/DFG_Generation
+
+# Recursive "all" directory target.
+src/DFG_Generation/all: src/DFG_Generation/CMakeFiles/genDFGPass.dir/all
+.PHONY : src/DFG_Generation/all
+
+# Recursive "preinstall" directory target.
+src/DFG_Generation/preinstall:
+.PHONY : src/DFG_Generation/preinstall
+
+# Recursive "clean" directory target.
+src/DFG_Generation/clean: src/DFG_Generation/CMakeFiles/genDFGPass.dir/clean
+.PHONY : src/DFG_Generation/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/intrinsics_gen.dir
@@ -97,14 +112,14 @@ src/clean: src/CMakeFiles/genDFGPass.dir/clean
 CMakeFiles/intrinsics_gen.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/intrinsics_gen.dir/build.make CMakeFiles/intrinsics_gen.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/intrinsics_gen.dir/build.make CMakeFiles/intrinsics_gen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles --progress-num= "Built target intrinsics_gen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles --progress-num= "Built target intrinsics_gen"
 .PHONY : CMakeFiles/intrinsics_gen.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/intrinsics_gen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles 0
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/intrinsics_gen.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles 0
 .PHONY : CMakeFiles/intrinsics_gen.dir/rule
 
 # Convenience name for target.
@@ -117,30 +132,30 @@ CMakeFiles/intrinsics_gen.dir/clean:
 .PHONY : CMakeFiles/intrinsics_gen.dir/clean
 
 #=============================================================================
-# Target rules for target src/CMakeFiles/genDFGPass.dir
+# Target rules for target src/DFG_Generation/CMakeFiles/genDFGPass.dir
 
 # All Build rule for target.
-src/CMakeFiles/genDFGPass.dir/all:
-	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target genDFGPass"
-.PHONY : src/CMakeFiles/genDFGPass.dir/all
+src/DFG_Generation/CMakeFiles/genDFGPass.dir/all:
+	$(MAKE) $(MAKESILENT) -f src/DFG_Generation/CMakeFiles/genDFGPass.dir/build.make src/DFG_Generation/CMakeFiles/genDFGPass.dir/depend
+	$(MAKE) $(MAKESILENT) -f src/DFG_Generation/CMakeFiles/genDFGPass.dir/build.make src/DFG_Generation/CMakeFiles/genDFGPass.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target genDFGPass"
+.PHONY : src/DFG_Generation/CMakeFiles/genDFGPass.dir/all
 
 # Build rule for subdir invocation for target.
-src/CMakeFiles/genDFGPass.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles 6
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/genDFGPass.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/DFG_Generation/build/CMakeFiles 0
-.PHONY : src/CMakeFiles/genDFGPass.dir/rule
+src/DFG_Generation/CMakeFiles/genDFGPass.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/DFG_Generation/CMakeFiles/genDFGPass.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles 0
+.PHONY : src/DFG_Generation/CMakeFiles/genDFGPass.dir/rule
 
 # Convenience name for target.
-genDFGPass: src/CMakeFiles/genDFGPass.dir/rule
+genDFGPass: src/DFG_Generation/CMakeFiles/genDFGPass.dir/rule
 .PHONY : genDFGPass
 
 # clean rule for target.
-src/CMakeFiles/genDFGPass.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/clean
-.PHONY : src/CMakeFiles/genDFGPass.dir/clean
+src/DFG_Generation/CMakeFiles/genDFGPass.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src/DFG_Generation/CMakeFiles/genDFGPass.dir/build.make src/DFG_Generation/CMakeFiles/genDFGPass.dir/clean
+.PHONY : src/DFG_Generation/CMakeFiles/genDFGPass.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
