@@ -139,7 +139,7 @@ genDFGPass: cmake_check_build_system
 
 # fast build rule for target.
 genDFGPass/fast:
-	$(MAKE) $(MAKESILENT) -f src/DFG_Generation/CMakeFiles/genDFGPass.dir/build.make src/DFG_Generation/CMakeFiles/genDFGPass.dir/build
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/build
 .PHONY : genDFGPass/fast
 
 # Help Target

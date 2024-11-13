@@ -39,4 +39,5 @@ public:
   void setBypassConstraint(int);
   void setCtrlMemConstraint(int);
   void setRegConstraint(int);
+  void generateMRRG();
 };

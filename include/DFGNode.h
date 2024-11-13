@@ -74,6 +74,7 @@ public:
   void setPrecisionAware(bool);
   Value *getValue();
   void setValue(Value *);
+  void setInst(Instruction *);
   StringRef getStringRef();
   void setSringRef(StringRef);
   string getOpcodeName();

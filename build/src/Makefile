@@ -116,6 +116,212 @@ depend:
 	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+# Convenience name for target.
+src/CMakeFiles/genDFGPass.dir/rule:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/genDFGPass.dir/rule
+.PHONY : src/CMakeFiles/genDFGPass.dir/rule
+
+# Convenience name for target.
+genDFGPass: src/CMakeFiles/genDFGPass.dir/rule
+.PHONY : genDFGPass
+
+# fast build rule for target.
+genDFGPass/fast:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/build
+.PHONY : genDFGPass/fast
+
+CGRA.o: CGRA.cpp.o
+.PHONY : CGRA.o
+
+# target to build an object file
+CGRA.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRA.cpp.o
+.PHONY : CGRA.cpp.o
+
+CGRA.i: CGRA.cpp.i
+.PHONY : CGRA.i
+
+# target to preprocess a source file
+CGRA.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRA.cpp.i
+.PHONY : CGRA.cpp.i
+
+CGRA.s: CGRA.cpp.s
+.PHONY : CGRA.s
+
+# target to generate assembly for a file
+CGRA.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRA.cpp.s
+.PHONY : CGRA.cpp.s
+
+CGRALink.o: CGRALink.cpp.o
+.PHONY : CGRALink.o
+
+# target to build an object file
+CGRALink.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRALink.cpp.o
+.PHONY : CGRALink.cpp.o
+
+CGRALink.i: CGRALink.cpp.i
+.PHONY : CGRALink.i
+
+# target to preprocess a source file
+CGRALink.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRALink.cpp.i
+.PHONY : CGRALink.cpp.i
+
+CGRALink.s: CGRALink.cpp.s
+.PHONY : CGRALink.s
+
+# target to generate assembly for a file
+CGRALink.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRALink.cpp.s
+.PHONY : CGRALink.cpp.s
+
+CGRANode.o: CGRANode.cpp.o
+.PHONY : CGRANode.o
+
+# target to build an object file
+CGRANode.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRANode.cpp.o
+.PHONY : CGRANode.cpp.o
+
+CGRANode.i: CGRANode.cpp.i
+.PHONY : CGRANode.i
+
+# target to preprocess a source file
+CGRANode.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRANode.cpp.i
+.PHONY : CGRANode.cpp.i
+
+CGRANode.s: CGRANode.cpp.s
+.PHONY : CGRANode.s
+
+# target to generate assembly for a file
+CGRANode.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/CGRANode.cpp.s
+.PHONY : CGRANode.cpp.s
+
+DFG.o: DFG.cpp.o
+.PHONY : DFG.o
+
+# target to build an object file
+DFG.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFG.cpp.o
+.PHONY : DFG.cpp.o
+
+DFG.i: DFG.cpp.i
+.PHONY : DFG.i
+
+# target to preprocess a source file
+DFG.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFG.cpp.i
+.PHONY : DFG.cpp.i
+
+DFG.s: DFG.cpp.s
+.PHONY : DFG.s
+
+# target to generate assembly for a file
+DFG.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFG.cpp.s
+.PHONY : DFG.cpp.s
+
+DFGEdge.o: DFGEdge.cpp.o
+.PHONY : DFGEdge.o
+
+# target to build an object file
+DFGEdge.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGEdge.cpp.o
+.PHONY : DFGEdge.cpp.o
+
+DFGEdge.i: DFGEdge.cpp.i
+.PHONY : DFGEdge.i
+
+# target to preprocess a source file
+DFGEdge.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGEdge.cpp.i
+.PHONY : DFGEdge.cpp.i
+
+DFGEdge.s: DFGEdge.cpp.s
+.PHONY : DFGEdge.s
+
+# target to generate assembly for a file
+DFGEdge.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGEdge.cpp.s
+.PHONY : DFGEdge.cpp.s
+
+DFGNode.o: DFGNode.cpp.o
+.PHONY : DFGNode.o
+
+# target to build an object file
+DFGNode.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.o
+.PHONY : DFGNode.cpp.o
+
+DFGNode.i: DFGNode.cpp.i
+.PHONY : DFGNode.i
+
+# target to preprocess a source file
+DFGNode.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.i
+.PHONY : DFGNode.cpp.i
+
+DFGNode.s: DFGNode.cpp.s
+.PHONY : DFGNode.s
+
+# target to generate assembly for a file
+DFGNode.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DFGNode.cpp.s
+.PHONY : DFGNode.cpp.s
+
+DataMemNode.o: DataMemNode.cpp.o
+.PHONY : DataMemNode.o
+
+# target to build an object file
+DataMemNode.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.o
+.PHONY : DataMemNode.cpp.o
+
+DataMemNode.i: DataMemNode.cpp.i
+.PHONY : DataMemNode.i
+
+# target to preprocess a source file
+DataMemNode.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.i
+.PHONY : DataMemNode.cpp.i
+
+DataMemNode.s: DataMemNode.cpp.s
+.PHONY : DataMemNode.s
+
+# target to generate assembly for a file
+DataMemNode.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/DataMemNode.cpp.s
+.PHONY : DataMemNode.cpp.s
+
+genDFGPass.o: genDFGPass.cpp.o
+.PHONY : genDFGPass.o
+
+# target to build an object file
+genDFGPass.cpp.o:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/genDFGPass.cpp.o
+.PHONY : genDFGPass.cpp.o
+
+genDFGPass.i: genDFGPass.cpp.i
+.PHONY : genDFGPass.i
+
+# target to preprocess a source file
+genDFGPass.cpp.i:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/genDFGPass.cpp.i
+.PHONY : genDFGPass.cpp.i
+
+genDFGPass.s: genDFGPass.cpp.s
+.PHONY : genDFGPass.s
+
+# target to generate assembly for a file
+genDFGPass.cpp.s:
+	cd /home/lucas/Project/Hi-DPS/CGRA-Modeling/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/genDFGPass.dir/build.make src/CMakeFiles/genDFGPass.dir/genDFGPass.cpp.s
+.PHONY : genDFGPass.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -124,6 +330,31 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... genDFGPass"
+	@echo "... CGRA.o"
+	@echo "... CGRA.i"
+	@echo "... CGRA.s"
+	@echo "... CGRALink.o"
+	@echo "... CGRALink.i"
+	@echo "... CGRALink.s"
+	@echo "... CGRANode.o"
+	@echo "... CGRANode.i"
+	@echo "... CGRANode.s"
+	@echo "... DFG.o"
+	@echo "... DFG.i"
+	@echo "... DFG.s"
+	@echo "... DFGEdge.o"
+	@echo "... DFGEdge.i"
+	@echo "... DFGEdge.s"
+	@echo "... DFGNode.o"
+	@echo "... DFGNode.i"
+	@echo "... DFGNode.s"
+	@echo "... DataMemNode.o"
+	@echo "... DataMemNode.i"
+	@echo "... DataMemNode.s"
+	@echo "... genDFGPass.o"
+	@echo "... genDFGPass.i"
+	@echo "... genDFGPass.s"
 .PHONY : help
 
 

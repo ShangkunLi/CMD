@@ -1,8 +1,6 @@
 /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles/intrinsics_gen.dir
 /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles/edit_cache.dir
 /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/CMakeFiles/rebuild_cache.dir
+/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/CMakeFiles/genDFGPass.dir
 /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/CMakeFiles/edit_cache.dir
 /home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/CMakeFiles/rebuild_cache.dir
-/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/DFG_Generation/CMakeFiles/genDFGPass.dir
-/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/DFG_Generation/CMakeFiles/edit_cache.dir
-/home/lucas/Project/Hi-DPS/CGRA-Modeling/build/src/DFG_Generation/CMakeFiles/rebuild_cache.dir
