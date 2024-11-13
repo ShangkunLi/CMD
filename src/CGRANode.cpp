@@ -22,6 +22,7 @@
 //   m_canStore = false;
 //   m_canLoad = false;
 // }
+CGRANode::CGRANode() {}
 
 CGRANode::CGRANode(int t_id, int t_x, int t_y)
 {
@@ -728,4 +729,9 @@ bool CGRANode::getIsMem()
 void CGRANode::setIsMem(bool t_isMem)
 {
   m_isMem = t_isMem;
+}
+
+void CGRANode::setDisabled(bool t_disabled)
+{
+  m_disabled = t_disabled;
 }

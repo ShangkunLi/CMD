@@ -306,6 +306,19 @@ CGRA::CGRA(int t_rows, int t_columns, bool t_diagonalVectorization,
   */
 }
 
+CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, bool t_diagonalVectorization,
+           bool t_heterogeneity, bool t_parameterizableCGRA,
+           map<string, list<int> *> *t_additionalFunc)
+{
+  m_rows = t_rows;
+  m_columns = t_columns;
+  m_FUCount = t_rows * t_columns;
+  nodes = new CGRANode **[t_rows];
+
+
+
+}
+
 void CGRA::disableSpecificConnections()
 {
   //  nodes[0][0]->disable();
@@ -382,24 +395,32 @@ CGRALink *CGRA::getLink(CGRANode *t_n1, CGRANode *t_n2)
 
 void CGRA::generateMRRG()
 {
-  // Generate MRRG in txt format
-  std::ofstream txtFile("mrrg.txt");
+  // // Generate MRRG in json format
+  // json jsonFile;
 
-  // Add nodes to the txt file
-  for (int i = 0; i < m_rows; ++i)
-  {
-    for (int j = 0; j < m_columns; ++j)
-    {
-      txtFile << "Node " << nodes[i][j]->getID() << ":   ";
-    }
-    txtFile << std::endl;
-  }
+  // // Add nodes to the json file
+  // for (int i = 0; i < m_rows; ++i)
+  // {
+  //   for (int j = 0; j < m_columns; ++j)
+  //   {
+  //     json node;
+  //     node["id"] = this->nodes[i][j]->getID();
+  //     node["type"] = this->nodes[i][j]->getType();
+  //     node["operations"] = nodes[i][j]->getSupportedOperations();
+  //     jsonFile["nodes"].push_back(node);
+  //   }
+  // }
 
-  // Add links to the txt file
-  for (int i = 0; i < m_LinkCount; ++i)
-  {
-    txtFile << "Node " << links[i]->getSrc()->getID() << " -> Node " << links[i]->getDst()->getID() << std::endl;
-  }
+  // // Add links to the json file
+  // for (int i = 0; i < m_LinkCount; ++i)
+  // {
+  //   json link;
+  //   link["src"] = links[i]->getSrc()->getID();
+  //   link["dst"] = links[i]->getDst()->getID();
+  //   jsonFile["links"].push_back(link);
+  // }
 
-  txtFile.close();
+  // std::ofstream outFile("mrrg.json");
+  // outFile << jsonFile.dump(4);
+  // outFile.close();
 }

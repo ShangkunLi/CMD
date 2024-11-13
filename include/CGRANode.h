@@ -75,6 +75,7 @@ private:
   vector<list<pair<DFGNode *, int>> *> m_dfgNodesWithOccupyStatus;
 
 public:
+  CGRANode();
   CGRANode(int, int, int);
   //    CGRANode(int, int, int, int, int);
   void setRegConstraint(int);
@@ -145,6 +146,7 @@ public:
   void allocateReg(int, int, int, int);
   int *getRegsAllocation(int);
   void disable();
+  void setDisabled(bool);
   bool isDisabled();
   void disableAllFUs();
 };

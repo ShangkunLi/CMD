@@ -15,10 +15,10 @@
 #include "DFGNode.h"
 #include "CGRANode.h"
 #include <iostream>
-//#include <llvm/IR/Function.h>
-//#include <llvm/IR/Value.h>
-//#include <llvm/Support/raw_ostream.h>
-//#include <llvm/Support/FileSystem.h>
+// #include <llvm/IR/Function.h>
+// #include <llvm/IR/Value.h>
+// #include <llvm/Support/raw_ostream.h>
+// #include <llvm/Support/FileSystem.h>
 #include <list>
 #include <string>
 
@@ -29,13 +29,20 @@ class CGRALink;
 class DFGNode;
 class CGRAMem;
 
-class CGRAMem : public CGRANode {
+class CGRAMem : public CGRANode
+{
 private:
-  int m_memorySize;  // memory size in bytes
+  int m_memorySize; // memory size in bytes
+  int m_numPorts;   // number of ports
+  list<CGRANode *> m_CGRANodeCluster;
 
 public:
+  CGRAMem(int t_id, int t_x, int t_y, int t_memorySize, int t_numPorts);
   void setMemorySize(int);
   int getMemorySize();
+  void setNumPorts(int);
+  int getNumPorts();
+  void addCGRANode(CGRANode *);
 };
 
 #endif
