@@ -11,3 +11,12 @@
 #include "CGRAMem.h"
 #include <stdio.h>
 
+void CGRAMem::setMemorySize(int t_memorySize)
+{
+  m_memorySize = t_memorySize;
+}
+
+int CGRAMem::getMemorySize()
+{
+  return m_memorySize;
+}

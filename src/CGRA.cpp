@@ -382,25 +382,24 @@ CGRALink *CGRA::getLink(CGRANode *t_n1, CGRANode *t_n2)
 
 void CGRA::generateMRRG()
 {
-  // Generate MRRG in dot format
-  std::ofstream dotFile("mrrg.dot");
-  dotFile << "digraph MRRG {" << std::endl;
+  // Generate MRRG in txt format
+  std::ofstream txtFile("mrrg.txt");
 
-  // Add nodes to the dot file
+  // Add nodes to the txt file
   for (int i = 0; i < m_rows; ++i)
   {
     for (int j = 0; j < m_columns; ++j)
     {
-      dotFile << "  node" << nodes[i][j]->getID() << " [label=\"Node " << nodes[i][j]->getID() << "\"];" << std::endl;
+      txtFile << "Node " << nodes[i][j]->getID() << ":   ";
     }
+    txtFile << std::endl;
   }
 
-  // Add links to the dot file
+  // Add links to the txt file
   for (int i = 0; i < m_LinkCount; ++i)
   {
-    dotFile << "  node" << links[i]->getSrc()->getID() << " -> node" << links[i]->getDst()->getID() << ";" << std::endl;
+    txtFile << "Node " << links[i]->getSrc()->getID() << " -> Node " << links[i]->getDst()->getID() << std::endl;
   }
 
-  dotFile << "}" << std::endl;
-  dotFile.close();
+  txtFile.close();
 }
