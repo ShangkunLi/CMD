@@ -1,0 +1,72 @@
+digraph "DFG for'kernel' function" {
+	Node0phi[shape=record, label="(0) phi"];
+	Node1br[shape=record, label="(1) br"];
+	Node2phi[shape=record, label="(2) phi"];
+	Node3getelementptr[shape=record, label="(3) getelementptr"];
+	Node4alloca[shape=record, label="(4) alloca"];
+	Node5load[shape=oval, color=darkorange, style=filled, label="(5) load"];
+	Node6datamem[shape=record, color=lightblue, style=filled, label="(6) datamem"];
+	Node7add[shape=record, label="(7) add"];
+	Node8add[shape=record, label="(8) add"];
+	Node9cmp[shape=record, label="(9) cmp"];
+	Node10br[shape=record, label="(10) br"];
+	Node11call[shape=record, label="(11) call"];
+	Node12cmp[shape=record, label="(12) cmp"];
+	Node13bitcast[shape=record, label="(13) bitcast"];
+	Node14add[shape=record, label="(14) add"];
+	Node15phi[shape=record, label="(15) phi"];
+	Node16br[shape=record, label="(16) br"];
+	Node17getelementptr[shape=record, label="(17) getelementptr"];
+	Node18alloca[shape=record, label="(18) alloca"];
+	Node19load[shape=oval, color=darkorange, style=filled, label="(19) load"];
+	Node20datamem[shape=record, color=lightblue, style=filled, label="(20) datamem"];
+	Node21getelementptr[shape=record, label="(21) getelementptr"];
+	Node22alloca[shape=record, label="(22) alloca"];
+	Node23load[shape=oval, color=darkorange, style=filled, label="(23) load"];
+	Node24datamem[shape=record, color=lightblue, style=filled, label="(24) datamem"];
+	Node25add[shape=record, label="(25) add"];
+	Node26getelementptr[shape=record, label="(26) getelementptr"];
+	Node27store[shape=oval, color=darkorange, style=filled, label="(27) store"];
+	Node28datamem[shape=record, color=lightblue, style=filled, label="(28) datamem"];
+edge [color=blue]
+	Node1br -> Node0phi
+	Node1br -> Node2phi
+	Node10br -> Node11call
+	Node10br -> Node0phi
+	Node10br -> Node2phi
+	Node16br -> Node15phi
+	Node1br -> Node15phi
+edge [color=red]
+	Node4alloca -> Node3getelementptr
+	Node6datamem -> Node5load
+	Node8add -> Node0phi
+	Node12cmp -> Node1br
+	Node7add -> Node2phi
+	Node0phi -> Node3getelementptr
+	Node3getelementptr -> Node5load
+	Node5load -> Node7add
+	Node2phi -> Node7add
+	Node0phi -> Node8add
+	Node8add -> Node9cmp
+	Node9cmp -> Node10br
+	Node13bitcast -> Node11call
+	Node14add -> Node12cmp
+	Node4alloca -> Node13bitcast
+	Node15phi -> Node14add
+	Node14add -> Node15phi
+	Node18alloca -> Node17getelementptr
+	Node20datamem -> Node19load
+	Node22alloca -> Node21getelementptr
+	Node24datamem -> Node23load
+	Node4alloca -> Node26getelementptr
+	Node27store -> Node28datamem
+	Node25add -> Node27store
+	Node15phi -> Node17getelementptr
+	Node17getelementptr -> Node19load
+	Node15phi -> Node21getelementptr
+	Node21getelementptr -> Node23load
+	Node23load -> Node25add
+	Node19load -> Node25add
+	Node15phi -> Node26getelementptr
+	Node26getelementptr -> Node27store
+}

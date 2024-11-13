@@ -49,7 +49,7 @@ private:
   list<DFGEdge *> m_DFGEdges;
   list<DFGEdge *> m_ctrlEdges;
 
-  string changeIns2Str(Instruction *ins);
+  string changeVal2Str(Value *ins);
   // get value's name or inst's content
   StringRef getValueName(Value *v);
   void DFS_on_DFG(DFGNode *, DFGNode *, list<DFGNode *> *, list<DFGEdge *> *,

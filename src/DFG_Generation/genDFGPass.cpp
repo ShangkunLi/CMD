@@ -37,7 +37,8 @@ namespace
             bool targetEntireFunction = false;
             bool precisionAware = false;
             bool heterogeneity = false;
-            bool isTrimmedDemo = true;
+            bool isTrimmedDemo = false;
+            // bool isTrimmedDemo = true;
 
             map<string, int> *execLatency = new map<string, int>();
             execLatency->insert(pair<string, int>("load", 2));

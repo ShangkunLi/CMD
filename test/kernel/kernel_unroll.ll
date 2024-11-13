@@ -24,8 +24,8 @@ entry:
   br label %for.body
 
 for.body:                                         ; preds = %for.body, %entry
-  %0 = phi float [ %.pre, %entry ], [ %add.3, %for.body ]
-  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next.3, %for.body ]
+  %0 = phi float [ %.pre, %entry ], [ %add.1, %for.body ]
+  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next.1, %for.body ]
   %arrayidx = getelementptr inbounds float, float* %coefficient1, i64 %indvars.iv
   %1 = load float, float* %arrayidx, align 4, !tbaa !2
   %arrayidx2 = getelementptr inbounds float, float* %input1, i64 %indvars.iv
@@ -33,7 +33,7 @@ for.body:                                         ; preds = %for.body, %entry
   %mul = fmul float %1, %2
   %add = fadd float %0, %mul
   store float %add, float* %output, align 4, !tbaa !2
-  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1
+  %indvars.iv.next = or i64 %indvars.iv, 1
   %arrayidx.1 = getelementptr inbounds float, float* %coefficient1, i64 %indvars.iv.next
   %3 = load float, float* %arrayidx.1, align 4, !tbaa !2
   %arrayidx2.1 = getelementptr inbounds float, float* %input1, i64 %indvars.iv.next
@@ -41,25 +41,9 @@ for.body:                                         ; preds = %for.body, %entry
   %mul.1 = fmul float %3, %4
   %add.1 = fadd float %add, %mul.1
   store float %add.1, float* %output, align 4, !tbaa !2
-  %indvars.iv.next.1 = add nuw nsw i64 %indvars.iv.next, 1
-  %arrayidx.2 = getelementptr inbounds float, float* %coefficient1, i64 %indvars.iv.next.1
-  %5 = load float, float* %arrayidx.2, align 4, !tbaa !2
-  %arrayidx2.2 = getelementptr inbounds float, float* %input1, i64 %indvars.iv.next.1
-  %6 = load float, float* %arrayidx2.2, align 4, !tbaa !2
-  %mul.2 = fmul float %5, %6
-  %add.2 = fadd float %add.1, %mul.2
-  store float %add.2, float* %output, align 4, !tbaa !2
-  %indvars.iv.next.2 = add nuw nsw i64 %indvars.iv.next.1, 1
-  %arrayidx.3 = getelementptr inbounds float, float* %coefficient1, i64 %indvars.iv.next.2
-  %7 = load float, float* %arrayidx.3, align 4, !tbaa !2
-  %arrayidx2.3 = getelementptr inbounds float, float* %input1, i64 %indvars.iv.next.2
-  %8 = load float, float* %arrayidx2.3, align 4, !tbaa !2
-  %mul.3 = fmul float %7, %8
-  %add.3 = fadd float %add.2, %mul.3
-  store float %add.3, float* %output, align 4, !tbaa !2
-  %indvars.iv.next.3 = add nuw nsw i64 %indvars.iv.next.2, 1
-  %exitcond.3 = icmp eq i64 %indvars.iv.next.3, 32
-  br i1 %exitcond.3, label %for.end, label %for.body, !llvm.loop !6
+  %indvars.iv.next.1 = add nuw nsw i64 %indvars.iv, 2
+  %exitcond.1 = icmp eq i64 %indvars.iv.next.1, 32
+  br i1 %exitcond.1, label %for.end, label %for.body, !llvm.loop !6
 
 for.end:                                          ; preds = %for.body
   ret void

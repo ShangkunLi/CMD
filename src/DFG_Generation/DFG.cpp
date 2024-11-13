@@ -74,6 +74,7 @@ DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
     cout << "==================================\n";
   }
   connectDFGNodes();
+  reorderInLongest();
 }
 
 // FIXME: only combine operations of mul+alu and alu+cmp for now,
@@ -766,7 +767,7 @@ bool DFG::constructWithDataMem(Loop *L)
       assert(node->getInst() == curII);
 
       // Only consider the control dependencies for nodes in current BB
-      if(BBInsts.find(curII->getParent()) == BBInsts.end())
+      if (BBInsts.find(curII->getParent()) == BBInsts.end())
       {
         continue;
       }
@@ -803,7 +804,7 @@ bool DFG::constructWithDataMem(Loop *L)
               errs() << "Control Edge does not exist.\n";
               ctrlEdge = new DFGEdge(m_ctrledgeCount++, ctrlNode, node, true);
               this->m_ctrlEdges.push_back(ctrlEdge);
-              errs()<< "Control Edge: " << ctrlEdge->getID() << " " << ctrlEdge->getSrc()->getID() << " -> " << ctrlEdge->getDst()->getID() << "\n";
+              errs() << "Control Edge: " << ctrlEdge->getID() << " " << ctrlEdge->getSrc()->getID() << " -> " << ctrlEdge->getDst()->getID() << "\n";
             }
           }
         }
@@ -1333,7 +1334,7 @@ void DFG::reorderInLongest()
   for (DFGNode *node : tempNodes)
   {
     nodes.push_back(node);
-    errs() << "(" << node->getID() << ") " << *(node->getInst()) << ", level: " << node->getLevel() << "\n";
+    errs() << "(" << node->getID() << ") " << *(node->getValue()) << ", level: " << node->getLevel() << "\n";
   }
 }
 
@@ -1733,7 +1734,8 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
       {
         file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=oval, color=darkorange, style=filled, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
       }
-      else if(node->getOpcodeName()=="datamem"){
+      else if (node->getOpcodeName() == "datamem")
+      {
         file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=record, color=lightblue, style=filled, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
       }
       else
@@ -1745,11 +1747,15 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
     {
       if (node->getOpcodeName() == "load" || node->getOpcodeName() == "store")
       {
-        file << "\tNode" << node->getInst() << "[shape=oval, color=darkorange, style=filled, label=\"" << changeIns2Str(node->getInst()) << "\"];\n";
+        file << "\tNode" << node->getInst() << "[shape=oval, color=darkorange, style=filled, label=\"" << changeVal2Str(node->getInst()) << "\"];\n";
+      }
+      else if(node->getOpcodeName() == "datamem")
+      {
+        file << "\tNode" << node->getValue() << "[shape=record, color=lightblue, style=filled, label=\"" << changeVal2Str(node->getValue()) << "\"];\n";
       }
       else
       {
-        file << "\tNode" << node->getInst() << "[shape=record, label=\"" << changeIns2Str(node->getInst()) << "\"];\n";
+        file << "\tNode" << node->getValue() << "[shape=record, label=\"" << changeVal2Str(node->getValue()) << "\"];\n";
       }
     }
   }
@@ -1776,7 +1782,7 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
       }
       else
       {
-        file << "\tNode" << edge->getSrc()->getInst() << " -> Node" << edge->getDst()->getInst() << "\n";
+        file << "\tNode" << edge->getSrc()->getValue() << " -> Node" << edge->getDst()->getValue() << "\n";
       }
     }
   }
@@ -1794,7 +1800,7 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
       }
       else
       {
-        file << "\tNode" << edge->getSrc()->getInst() << " -> Node" << edge->getDst()->getInst() << "\n";
+        file << "\tNode" << edge->getSrc()->getValue() << " -> Node" << edge->getDst()->getValue() << "\n";
       }
     }
   }
@@ -2039,7 +2045,7 @@ bool DFG::hasDFGEdge(DFGNode *t_src, DFGNode *t_dst)
   return false;
 }
 
-string DFG::changeIns2Str(Instruction *t_ins)
+string DFG::changeVal2Str(Value *t_ins)
 {
   string temp_str;
   raw_string_ostream os(temp_str);

@@ -1,0 +1,45 @@
+digraph "DFG for'_Z6kernelPfS_S_S_S_' function" {
+	Node0x5e1fa878ba28[shape=record, label="  br label %for.body"];
+	Node0x5e1fa8784db0[shape=record, color=lightblue, style=filled, label="float* %coefficient1"];
+	Node0x5e1fa8784d60[shape=record, color=lightblue, style=filled, label="float* %input1"];
+	Node0x5e1fa87850d0[shape=record, label="  %indvars.iv.next = add nuw nsw i64 %indvars.iv, 1"];
+	Node0x5e1fa878b9c8[shape=oval, color=darkorange, style=filled, label="  %.pre = load float, float* %output, align 4, !tbaa !2"];
+	Node0x5e1fa8785140[shape=record, label="  %exitcond = icmp eq i64 %indvars.iv.next, 32"];
+	Node0x5e1fa878a728[shape=record, label="  br i1 %exitcond, label %for.end, label %for.body"];
+	Node0x5e1fa878baa8[shape=record, label="  %indvars.iv = phi i64 [ 0, %entry ], [ %indvars.iv.next, %for.body ]"];
+	Node0x5e1fa878bdb0[shape=record, label="  ret void"];
+	Node0x5e1fa878bba0[shape=record, label="  %arrayidx = getelementptr inbounds float, float* %coefficient1, i64 %indvars.iv"];
+	Node0x5e1fa878bc80[shape=record, label="  %arrayidx2 = getelementptr inbounds float, float* %input1, i64 %indvars.iv"];
+	Node0x5e1fa878bc08[shape=oval, color=darkorange, style=filled, label="  %1 = load float, float* %arrayidx, align 4, !tbaa !2"];
+	Node0x5e1fa878bce8[shape=oval, color=darkorange, style=filled, label="  %2 = load float, float* %arrayidx2, align 4, !tbaa !2"];
+	Node0x5e1fa87853b0[shape=record, label="  %mul = fmul float %1, %2"];
+	Node0x5e1fa8785060[shape=record, label="  %add = fadd float %0, %mul"];
+	Node0x5e1fa878af68[shape=record, label="  %0 = phi float [ %.pre, %entry ], [ %add, %for.body ]"];
+	Node0x5e1fa878bd60[shape=oval, color=darkorange, style=filled, label="  store float %add, float* %output, align 4, !tbaa !2"];
+	Node0x5e1fa8784d88[shape=record, color=lightblue, style=filled, label="float* %output"];
+edge [color=blue]
+	Node0x5e1fa878ba28 -> Node0x5e1fa878af68
+	Node0x5e1fa878ba28 -> Node0x5e1fa878baa8
+	Node0x5e1fa878a728 -> Node0x5e1fa878bdb0
+	Node0x5e1fa878a728 -> Node0x5e1fa878af68
+	Node0x5e1fa878a728 -> Node0x5e1fa878baa8
+edge [color=red]
+	Node0x0 -> Node0x5e1fa878bc08
+	Node0x0 -> Node0x5e1fa878bce8
+	Node0x5e1fa878bd60 -> Node0x0
+	Node0x5e1fa8785060 -> Node0x5e1fa878bd60
+	Node0x5e1fa878b9c8 -> Node0x5e1fa878af68
+	Node0x5e1fa8785060 -> Node0x5e1fa878af68
+	Node0x5e1fa87850d0 -> Node0x5e1fa878baa8
+	Node0x5e1fa878baa8 -> Node0x5e1fa878bba0
+	Node0x5e1fa878bba0 -> Node0x5e1fa878bc08
+	Node0x5e1fa878baa8 -> Node0x5e1fa878bc80
+	Node0x5e1fa878bc80 -> Node0x5e1fa878bce8
+	Node0x5e1fa878bc08 -> Node0x5e1fa87853b0
+	Node0x5e1fa878bce8 -> Node0x5e1fa87853b0
+	Node0x5e1fa878af68 -> Node0x5e1fa8785060
+	Node0x5e1fa87853b0 -> Node0x5e1fa8785060
+	Node0x5e1fa878baa8 -> Node0x5e1fa87850d0
+	Node0x5e1fa87850d0 -> Node0x5e1fa8785140
+	Node0x5e1fa8785140 -> Node0x5e1fa878a728
+}
