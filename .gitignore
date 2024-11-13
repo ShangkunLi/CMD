@@ -1,0 +1,5 @@
+*.dot
+*.ll
+*.bc
+build/
+.vscode/
