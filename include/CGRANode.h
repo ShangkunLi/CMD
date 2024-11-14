@@ -69,6 +69,7 @@ private:
   bool m_canBr;
   bool m_supportComplex;
   bool m_supportVectorization;
+  
   int **m_regs_duration;
   int **m_regs_timing;
   // Denote the occupied status of each DFG node in each cycle

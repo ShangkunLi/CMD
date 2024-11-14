@@ -306,17 +306,170 @@ CGRA::CGRA(int t_rows, int t_columns, bool t_diagonalVectorization,
   */
 }
 
+// Generate CGRA with distributed memory.
 CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, bool t_diagonalVectorization,
            bool t_heterogeneity, bool t_parameterizableCGRA,
            map<string, list<int> *> *t_additionalFunc)
 {
-  m_rows = t_rows;
-  m_columns = t_columns;
-  m_FUCount = t_rows * t_columns;
-  nodes = new CGRANode **[t_rows];
+  this->m_rows = t_rows;
+  this->m_columns = t_columns;
+  this->m_FUCount = t_rows * t_columns;
+  this->m_clusterSize = t_cgraClusterSize;
+  this->m_MemCount = t_rows * t_columns / t_cgraClusterSize;
+  if (((t_rows * t_columns) % t_cgraClusterSize != 0) || (t_rows % t_cgraClusterSize != 0) || (t_columns % t_cgraClusterSize != 0))
+  {
+    errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
+    return;
+  }
+  this->nodes = new CGRANode **[t_rows];
 
+  if (t_parameterizableCGRA)
+  {
+    errs() << "Parameterizable CGRA with distributed memory is not supported yet.\n";
+    return;
+  }
+  else
+  {
+    int FU_id = 0;
 
+    // Create CGRA PE nodes
+    for (int i = 0; i < t_rows; ++i)
+    {
+      this->nodes[i] = new CGRANode *[t_columns];
+      for (int j = 0; j < t_columns; ++j)
+      {
+        this->nodes[i][j] = new CGRANode(FU_id++, j, i);
+      }
+    }
 
+    this->createMemNodes(t_memorySize);
+
+    this->m_LinkCount = 2 * (t_rows * (t_columns - 1) + (t_rows - 1) * t_columns) + 2 * t_rows * t_columns;
+    this->links = new CGRALink *[m_LinkCount];
+
+    // Enable the load/store on specific CGRA nodes based on cgra cluster
+    int loadCount = 0;
+    int storeCount = 0;
+    if (loadCount == 0)
+    {
+      cout << "Without customization in param.json, we enable load functionality on all cgra tiles" << endl;
+      for (int r = 0; r < t_rows; ++r)
+      {
+        for (int c = 0; c < t_columns; ++c)
+        {
+          nodes[r][c]->enableLoad();
+        }
+      }
+    }
+    if (storeCount == 0)
+    {
+      cout << "Without customization in param.json, we enable store functionality on all cgra tiles" << endl;
+      for (int r = 0; r < t_rows; ++r)
+      {
+        for (int c = 0; c < t_columns; ++c)
+        {
+          nodes[r][c]->enableStore();
+        }
+      }
+    }
+
+    // Some other basic operations that can be indicated in the param.json:
+    // Enable the specialized 'call' functionality.
+    for (int r = 0; r < t_rows; ++r)
+    {
+      for (int c = 0; c < t_columns; ++c)
+      {
+        nodes[r][c]->enableCall();
+      }
+    }
+
+    // Enable the vectorization.
+    if (t_diagonalVectorization)
+    {
+      for (int r = 0; r < t_rows; ++r)
+      {
+        for (int c = 0; c < t_columns; ++c)
+        {
+          if ((r + c) % 2 == 0)
+            nodes[r][c]->enableVectorization();
+        }
+      }
+    }
+    else
+    {
+      for (int r = 0; r < t_rows; ++r)
+      {
+        for (int c = 0; c < t_columns; ++c)
+        {
+          nodes[r][c]->enableVectorization();
+        }
+      }
+    }
+
+    // Enable the heterogeneity.
+    if (t_heterogeneity)
+    {
+      for (int r = 0; r < t_rows; ++r)
+      {
+        for (int c = 0; c < t_columns; ++c)
+        {
+          if (r % 2 == 1 and c % 2 == 1)
+            nodes[r][c]->enableComplex();
+        }
+      }
+    }
+
+    for (int r = 0; r < t_rows; ++r)
+    {
+      for (int c = 0; c < t_columns; ++c)
+      {
+        nodes[r][c]->enableReturn();
+      }
+    }
+
+    // Connect the CGRA nodes with links.
+    int link_id = 0;
+    for (int i = 0; i < t_rows; ++i)
+    {
+      for (int j = 0; j < t_columns; ++j)
+      {
+        if (i < t_rows - 1)
+        {
+          links[link_id] = new CGRALink(link_id);
+          nodes[i][j]->attachOutLink(links[link_id]);
+          nodes[i + 1][j]->attachInLink(links[link_id]);
+          links[link_id]->connect(nodes[i][j], nodes[i + 1][j]);
+          ++link_id;
+        }
+        if (i > 0)
+        {
+          links[link_id] = new CGRALink(link_id);
+          nodes[i][j]->attachOutLink(links[link_id]);
+          nodes[i - 1][j]->attachInLink(links[link_id]);
+          links[link_id]->connect(nodes[i][j], nodes[i - 1][j]);
+          ++link_id;
+        }
+        if (j < t_columns - 1)
+        {
+          links[link_id] = new CGRALink(link_id);
+          nodes[i][j]->attachOutLink(links[link_id]);
+          nodes[i][j + 1]->attachInLink(links[link_id]);
+          links[link_id]->connect(nodes[i][j], nodes[i][j + 1]);
+          ++link_id;
+        }
+        if (j > 0)
+        {
+          links[link_id] = new CGRALink(link_id);
+          nodes[i][j]->attachOutLink(links[link_id]);
+          nodes[i][j - 1]->attachInLink(links[link_id]);
+          links[link_id]->connect(nodes[i][j], nodes[i][j - 1]);
+          ++link_id;
+        }
+      }
+    }
+
+    disableSpecificConnections();
+  }
 }
 
 void CGRA::disableSpecificConnections()
@@ -423,4 +576,78 @@ void CGRA::generateMRRG()
   // std::ofstream outFile("mrrg.json");
   // outFile << jsonFile.dump(4);
   // outFile.close();
+}
+
+void CGRA::createMemNodes(int t_memorySize)
+{
+  list<CGRANode *> singleCluster;
+  int mem_id = 0;
+
+  if (this->m_clusterSize == 1)
+  {
+    singleCluster.clear();
+    mem_id = 0;
+    for (int i = 0; i < this->m_rows; ++i)
+    {
+      for (int j = 0; j < this->m_columns; ++j)
+      {
+        singleCluster.push_back(this->nodes[i][j]);
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize, singleCluster);
+        this->MemNodes[mem_id] = memNode;
+        mem_id++;
+      }
+    }
+  }
+  else if (this->m_clusterSize == 2)
+  {
+    singleCluster.clear();
+    mem_id = 0;
+    for (int j = 0; j < this->m_columns; j += 2)
+    {
+      for (int i = 0; i < this->m_rows; ++i)
+      {
+        if (j + 1 < this->m_columns)
+        {
+          singleCluster.push_back(this->nodes[i][j]);
+          singleCluster.push_back(this->nodes[i][j + 1]);
+        }
+        else
+        {
+          errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
+        }
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize, singleCluster);
+        this->MemNodes[mem_id] = memNode;
+        mem_id++;
+      }
+    }
+  }
+  else if (this->m_clusterSize == 4)
+  {
+    singleCluster.clear();
+    mem_id = 0;
+    for (int i = 0; i < this->m_rows; i += 2)
+    {
+      for (int j = 0; j < this->m_columns; j += 2)
+      {
+        if (i + 1 < this->m_rows && j + 1 < this->m_columns)
+        {
+          singleCluster.push_back(this->nodes[i][j]);
+          singleCluster.push_back(this->nodes[i][j + 1]);
+          singleCluster.push_back(this->nodes[i + 1][j]);
+          singleCluster.push_back(this->nodes[i + 1][j + 1]);
+        }
+        else
+        {
+          errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
+        }
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize, singleCluster);
+        this->MemNodes[mem_id] = memNode;
+        mem_id++;
+      }
+    }
+  }
+  else
+  {
+    errs() << "The cluster size should be 1, 2, or 4.\n";
+  }
 }

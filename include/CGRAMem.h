@@ -33,15 +33,12 @@ class CGRAMem : public CGRANode
 {
 private:
   int m_memorySize; // memory size in bytes
-  int m_numPorts;   // number of ports
   list<CGRANode *> m_CGRANodeCluster;
 
 public:
-  CGRAMem(int t_id, int t_x, int t_y, int t_memorySize, int t_numPorts);
+  CGRAMem(int t_id, int t_x, int t_y, int t_memorySize, list<CGRANode *> t_CGRANodeCluster);
   void setMemorySize(int);
   int getMemorySize();
-  void setNumPorts(int);
-  int getNumPorts();
   void addCGRANode(CGRANode *);
 };
 

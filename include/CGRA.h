@@ -25,6 +25,7 @@ private:
   int m_rows;      // number of rows
   int m_columns;   // number of columns
   int m_MemCount;  // number of memory tiles
+  int m_clusterSize;
   void disableSpecificConnections();
 
 public:
@@ -33,8 +34,8 @@ public:
   CGRANode ***nodes;                     // 2D array of CGRANode pointers
   CGRALink **links;                      // 1D array of CGRALink pointers
   int getFUCount() { return m_FUCount; } // get the number of functional units
-  CGRAMem ***MemNodes;                       // 2D array of CGRAMem pointers
-  CGRANode ***TileNodes;                       // 2D array of all tile level nodes
+  map<int, CGRAMem *> MemNodes;          // 2D array of CGRAMem pointers
+  CGRANode ***TileNodes;                 // 2D array of all tile level nodes
   int getLinkCount() { return m_LinkCount; }
   int getMemCount() { return m_MemCount; }
   void getRoutingResource();
@@ -46,4 +47,5 @@ public:
   void setCtrlMemConstraint(int);
   void setRegConstraint(int);
   void generateMRRG();
+  void createMemNodes(int);
 };

@@ -11,26 +11,15 @@
 #include "CGRAMem.h"
 #include <stdio.h>
 
-CGRAMem::CGRAMem(int t_id, int t_x, int t_y, int t_memorySize, int t_numPorts)
+CGRAMem::CGRAMem(int t_id, int t_x, int t_y, int t_memorySize, list<CGRANode *> t_CGRANodeCluster)
     : CGRANode()
 {
     setID(t_id);
     setLocation(t_x, t_y);
     setMemorySize(t_memorySize);
-    setNumPorts(t_numPorts);
     setIsMem(true);
     setDisabled(false);
-    m_CGRANodeCluster= list<CGRANode *>();
-}
-
-void CGRAMem::setNumPorts(int t_numPorts)
-{
-    m_numPorts = t_numPorts;
-}
-
-int CGRAMem::getNumPorts()
-{
-    return m_numPorts;
+    m_CGRANodeCluster = t_CGRANodeCluster;
 }
 
 void CGRAMem::setMemorySize(int t_memorySize)
@@ -41,9 +30,4 @@ void CGRAMem::setMemorySize(int t_memorySize)
 int CGRAMem::getMemorySize()
 {
     return m_memorySize;
-}
-
-void CGRAMem::addCGRANode(CGRANode *t_CGRANode)
-{
-    m_CGRANodeCluster.push_back(t_CGRANode);
 }
