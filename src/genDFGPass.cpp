@@ -40,6 +40,9 @@ namespace
             // Initializes input parameters.
             int rows = 4;
             int columns = 4;
+            int clusterSize = 1;
+            int memorySize = 1024;
+            bool supportMemory = false;
             bool targetEntireFunction = false;
             bool targetNested = false;
             bool doCGRAMapping = true;
@@ -97,6 +100,9 @@ namespace
                 paramKeys.insert("heuristicMapping");
                 paramKeys.insert("parameterizableCGRA");
                 paramKeys.insert("incrementalMapping");
+                paramKeys.insert("clusterSize");
+                paramKeys.insert("memorySize");
+                paramKeys.insert("supportMemory");
 
                 try
                 {
@@ -137,6 +143,10 @@ namespace
                 heuristicMapping = param["heuristicMapping"];
                 parameterizableCGRA = param["parameterizableCGRA"];
                 incrementalMapping = param["incrementalMapping"];
+                clusterSize = param["clusterSize"];
+                memorySize = param["memorySize"];
+                supportMemory = param["supportMemory"];
+
                 cout << "Initialize opt latency for DFG nodes: " << endl;
                 for (auto &opt : param["optLatency"].items())
                 {
@@ -197,11 +207,6 @@ namespace
             cout << "==================================\n";
             DFG *dfg2 = new DFG(innermostLoops, targetEntireFunction, precisionAware,
                                 heterogeneity, execLatency, pipelinedOpt);
-            CGRA *cgra = new CGRA(rows, columns, diagonalVectorization, heterogeneity,
-                                  parameterizableCGRA, additionalFunc);
-            cgra->setRegConstraint(regConstraint);
-            cgra->setCtrlMemConstraint(ctrlMemConstraint);
-            cgra->setBypassConstraint(bypassConstraint);
 
             // Show the count of different opcodes (IRs).
             cout << "==================================\n";
@@ -213,10 +218,26 @@ namespace
             cout << "[generate dot for DFG]\n";
             dfg2->generateDot(t_F, isTrimmedDemo);
 
+            // Generate the CGRA Architecture.
+            cout << "==================================\n";
+            cout << "[generate CGRA Architecture]\n";
+            CGRA *cgra2 = new CGRA(rows, columns, clusterSize, memorySize, diagonalVectorization, heterogeneity,
+                                   parameterizableCGRA, additionalFunc);
+            cgra2->setRegConstraint(regConstraint);
+            cgra2->setCtrlMemConstraint(ctrlMemConstraint);
+            cgra2->setBypassConstraint(bypassConstraint);
+            // CGRA *cgra = new CGRA(rows, columns, diagonalVectorization, heterogeneity,
+            //                       parameterizableCGRA, additionalFunc);
+            // cgra->setRegConstraint(regConstraint);
+            // cgra->setCtrlMemConstraint(ctrlMemConstraint);
+            // cgra->setBypassConstraint(bypassConstraint);
+
             // Generate the MRRG dot file.
             cout << "==================================\n";
             cout << "[generate dot for MRRG]\n";
-            cgra->generateMRRG();
+            cgra2->generateMRRG(supportMemory);
+            // cgra->generateMRRG(supportMemory);
+            return true;
         }
 
         /*

@@ -16,14 +16,6 @@
 #define END_PIPE_OCCUPY 2   // A multi-cycle opt ends in the FU
 #define IN_PIPE_OCCUPY 3    // A multi-cycle opt is occupying the FU
 
-// CGRANode::CGRANode(int t_id) {
-//   m_id = t_id;
-//   m_currentCtrlMemItems = 0;
-//   m_canStore = false;
-//   m_canLoad = false;
-// }
-CGRANode::CGRANode() {}
-
 CGRANode::CGRANode(int t_id, int t_x, int t_y)
 {
   m_id = t_id;
@@ -57,6 +49,8 @@ CGRANode::CGRANode(int t_id, int t_x, int t_y)
   m_canReturn = true;
   m_isMem = false;
 }
+
+CGRANode::CGRANode() {}
 
 // FIXME: should handle the case that the data is maintained in the registers
 //        for multiple cycles.
@@ -734,4 +728,14 @@ void CGRANode::setIsMem(bool t_isMem)
 void CGRANode::setDisabled(bool t_disabled)
 {
   m_disabled = t_disabled;
+}
+
+void CGRANode::setClusterId(int t_clusterId)
+{
+  m_clusterId = t_clusterId;
+}
+
+int CGRANode::getClusterId()
+{
+  return m_clusterId;
 }

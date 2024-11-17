@@ -47,6 +47,7 @@ private:
   list<CGRANode *> *m_neighbors;
 
   bool m_isMem;
+  int m_clusterId;
 
   // functional unit occupied with cycle going on
   int m_cycleBoundary;
@@ -69,16 +70,15 @@ private:
   bool m_canBr;
   bool m_supportComplex;
   bool m_supportVectorization;
-  
+
   int **m_regs_duration;
   int **m_regs_timing;
   // Denote the occupied status of each DFG node in each cycle
   vector<list<pair<DFGNode *, int>> *> m_dfgNodesWithOccupyStatus;
 
 public:
-  CGRANode();
   CGRANode(int, int, int);
-  //    CGRANode(int, int, int, int, int);
+  CGRANode();
   void setRegConstraint(int);
   void setCtrlMemConstraint(int);
   void setID(int);
@@ -150,6 +150,8 @@ public:
   void setDisabled(bool);
   bool isDisabled();
   void disableAllFUs();
+  void setClusterId(int);
+  int getClusterId();
 };
 
 #endif

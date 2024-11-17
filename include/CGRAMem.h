@@ -11,16 +11,17 @@
 #ifndef CGRAMem_H
 #define CGRAMem_H
 
+#include <iostream>
+#include <llvm/IR/Function.h>
+#include <llvm/IR/Value.h>
+#include <llvm/Support/raw_ostream.h>
+#include <llvm/Support/FileSystem.h>
+#include <list>
+#include <string>
+
 #include "CGRALink.h"
 #include "DFGNode.h"
 #include "CGRANode.h"
-#include <iostream>
-// #include <llvm/IR/Function.h>
-// #include <llvm/IR/Value.h>
-// #include <llvm/Support/raw_ostream.h>
-// #include <llvm/Support/FileSystem.h>
-#include <list>
-#include <string>
 
 using namespace std;
 using namespace llvm;
@@ -36,10 +37,12 @@ private:
   list<CGRANode *> m_CGRANodeCluster;
 
 public:
-  CGRAMem(int t_id, int t_x, int t_y, int t_memorySize, list<CGRANode *> t_CGRANodeCluster);
+  CGRAMem(int t_id, int t_x, int t_y, int t_memorySize);
   void setMemorySize(int);
   int getMemorySize();
-  void addCGRANode(CGRANode *);
+  bool isInCluster(CGRANode *);
+  list<CGRANode *> getCluster();
+  void addNodeToCluster(CGRANode *);
 };
 
 #endif

@@ -35,7 +35,6 @@ public:
   CGRALink **links;                      // 1D array of CGRALink pointers
   int getFUCount() { return m_FUCount; } // get the number of functional units
   map<int, CGRAMem *> MemNodes;          // 2D array of CGRAMem pointers
-  CGRANode ***TileNodes;                 // 2D array of all tile level nodes
   int getLinkCount() { return m_LinkCount; }
   int getMemCount() { return m_MemCount; }
   void getRoutingResource();
@@ -46,6 +45,6 @@ public:
   void setBypassConstraint(int);
   void setCtrlMemConstraint(int);
   void setRegConstraint(int);
-  void generateMRRG();
+  void generateMRRG(bool);
   void createMemNodes(int);
 };

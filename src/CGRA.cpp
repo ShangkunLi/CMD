@@ -316,7 +316,7 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
   this->m_FUCount = t_rows * t_columns;
   this->m_clusterSize = t_cgraClusterSize;
   this->m_MemCount = t_rows * t_columns / t_cgraClusterSize;
-  if (((t_rows * t_columns) % t_cgraClusterSize != 0) || (t_rows % t_cgraClusterSize != 0) || (t_columns % t_cgraClusterSize != 0))
+  if (((t_rows * t_columns) % t_cgraClusterSize != 0))
   {
     errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
     return;
@@ -330,9 +330,12 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
   }
   else
   {
+    errs() << "Generate CGRA with distributed memory in default setting.\n";
     int FU_id = 0;
 
     // Create CGRA PE nodes
+    errs() << "----------------\n";
+    errs() << "Create CGRA PE nodes\n";
     for (int i = 0; i < t_rows; ++i)
     {
       this->nodes[i] = new CGRANode *[t_columns];
@@ -342,7 +345,23 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
       }
     }
 
+    // Print out all the PE nodes generated
+    for (int i = 0; i < t_rows; ++i)
+    {
+      for (int j = 0; j < t_columns; ++j)
+      {
+        cout << "PE Node ID: " << nodes[i][j]->getID() << " at (row: " << i << ", col: " << j << ")" << endl;
+      }
+    }
+
+    errs() << "----------------\n";
+    errs() << "Create CGRA memory nodes\n";
     this->createMemNodes(t_memorySize);
+    // Print out all the memory nodes generated
+    for (auto const &memNode : MemNodes)
+    {
+      cout << "Memory Node ID: " << memNode.first << " at (row: " << memNode.second->getY() << ", col: " << memNode.second->getX() << ")" << endl;
+    }
 
     this->m_LinkCount = 2 * (t_rows * (t_columns - 1) + (t_rows - 1) * t_columns) + 2 * t_rows * t_columns;
     this->links = new CGRALink *[m_LinkCount];
@@ -465,8 +484,27 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
           links[link_id]->connect(nodes[i][j], nodes[i][j - 1]);
           ++link_id;
         }
+        for (map<int, CGRAMem *>::iterator memnode = MemNodes.begin(); memnode != MemNodes.end(); ++memnode)
+        {
+          if (memnode->second->isInCluster(nodes[i][j]))
+          {
+            links[link_id] = new CGRALink(link_id);
+            nodes[i][j]->attachOutLink(links[link_id]);
+            memnode->second->attachInLink(links[link_id]);
+            links[link_id]->connect(nodes[i][j], memnode->second);
+            ++link_id;
+            links[link_id] = new CGRALink(link_id);
+            memnode->second->attachOutLink(links[link_id]);
+            nodes[i][j]->attachInLink(links[link_id]);
+            links[link_id]->connect(memnode->second, nodes[i][j]);
+            ++link_id;
+            nodes[i][j]->setClusterId(memnode->first);
+          }
+        }
       }
     }
+    errs() << "link id: " << link_id << "\n";
+    errs() << "m_LinkCount: " << this->m_LinkCount << "\n";
 
     disableSpecificConnections();
   }
@@ -546,102 +584,201 @@ CGRALink *CGRA::getLink(CGRANode *t_n1, CGRANode *t_n2)
   return NULL;
 }
 
-void CGRA::generateMRRG()
+void CGRA::generateMRRG(bool t_supportMemory)
 {
-  // // Generate MRRG in json format
-  // json jsonFile;
+  // Generate MRRG in json format
+  json jsonFile;
+  // Add nodes to the json file
+  for (int i = 0; i < this->m_rows; ++i)
+  {
+    for (int j = 0; j < this->m_columns; ++j)
+    {
+      json node;
+      node["id"] = this->nodes[i][j]->getID();
+      node["x coordinate"] = this->nodes[i][j]->getX();
+      node["y coordinate"] = this->nodes[i][j]->getY();
+      if (!nodes[i][j]->getIsMem())
+      {
+        node["node type"] = "PE";
+      }
+      else
+      {
+        errs() << "There should not be any memory nodes in the nodes.\n";
+        return;
+      }
+      if (t_supportMemory)
+      {
+        node["cluster id"] = nodes[i][j]->getClusterId();
+      }
+      json suppotedFUs;
+      if (nodes[i][j]->canReturn())
+        suppotedFUs.push_back("return");
+      if (nodes[i][j]->canCall())
+        suppotedFUs.push_back("call");
+      if (nodes[i][j]->canLoad())
+        suppotedFUs.push_back("load");
+      if (nodes[i][j]->canStore())
+        suppotedFUs.push_back("store");
+      if (nodes[i][j]->canAdd())
+        suppotedFUs.push_back("add");
+      if (nodes[i][j]->canBr())
+        suppotedFUs.push_back("br");
+      if (nodes[i][j]->canCmp())
+        suppotedFUs.push_back("cmp");
+      if (nodes[i][j]->canMul())
+        suppotedFUs.push_back("mul");
+      if (nodes[i][j]->canPhi())
+        suppotedFUs.push_back("phi");
+      if (nodes[i][j]->canSel())
+        suppotedFUs.push_back("sel");
+      if (nodes[i][j]->canMAC())
+        suppotedFUs.push_back("mac");
+      if (nodes[i][j]->canLogic())
+        suppotedFUs.push_back("logic");
+      if (nodes[i][j]->canShift())
+        suppotedFUs.push_back("shift");
 
-  // // Add nodes to the json file
-  // for (int i = 0; i < m_rows; ++i)
-  // {
-  //   for (int j = 0; j < m_columns; ++j)
-  //   {
-  //     json node;
-  //     node["id"] = this->nodes[i][j]->getID();
-  //     node["type"] = this->nodes[i][j]->getType();
-  //     node["operations"] = nodes[i][j]->getSupportedOperations();
-  //     jsonFile["nodes"].push_back(node);
-  //   }
-  // }
+      node["supported FUs"] = suppotedFUs;
+      node["vectorization"] = nodes[i][j]->supportVectorization();
+      node["complex"] = nodes[i][j]->supportComplex();
+      jsonFile["PE Nodes"].push_back(node);
+    }
+  }
+  if (t_supportMemory)
+  {
+    for (map<int, CGRAMem *>::iterator mem = MemNodes.begin(); mem != MemNodes.end(); mem++)
+    {
+      json memnode;
+      memnode["id"] = mem->first;
+      if (mem->second->getIsMem())
+      {
+        memnode["node type"] = "Mem";
+      }
+      else
+      {
+        errs() << "There should not be any PE nodes in the memory nodes.\n";
+        return;
+      }
+      memnode["cluster id"] = mem->first;
+      memnode["memory size"] = mem->second->getMemorySize();
+      memnode["x coordinate"] = mem->second->getX();
+      memnode["y coordinate"] = mem->second->getY();
+      json cluster;
+      for (CGRANode *node : (mem->second->getCluster()))
+      {
+        cluster.push_back(node->getID());
+      }
+      memnode["cluster"] = cluster;
+      jsonFile["Mem Nodes"].push_back(memnode);
+    }
+  }
 
-  // // Add links to the json file
-  // for (int i = 0; i < m_LinkCount; ++i)
-  // {
-  //   json link;
-  //   link["src"] = links[i]->getSrc()->getID();
-  //   link["dst"] = links[i]->getDst()->getID();
-  //   jsonFile["links"].push_back(link);
-  // }
+  // Add links to the json file
+  for (int i = 0; i < m_LinkCount; ++i)
+  {
+    json link;
+    link["id"] = links[i]->getID();
+    if (links[i]->getSrc()->getIsMem())
+    {
+      link["src type"] = "Mem";
+    }
+    else
+    {
+      link["src type"] = "PE";
+    }
+    if (links[i]->getDst()->getIsMem())
+    {
+      link["dst type"] = "Mem";
+    }
+    else
+    {
+      link["dst type"] = "PE";
+    }
+    link["src"] = links[i]->getSrc()->getID();
+    link["dst"] = links[i]->getDst()->getID();
+    jsonFile["links"].push_back(link);
+  }
 
-  // std::ofstream outFile("mrrg.json");
-  // outFile << jsonFile.dump(4);
-  // outFile.close();
+  std::ofstream outFile("mrrg.json");
+  outFile << jsonFile.dump(4);
+  outFile.close();
 }
 
 void CGRA::createMemNodes(int t_memorySize)
 {
-  list<CGRANode *> singleCluster;
+  list<CGRANode *> *singleCluster = new list<CGRANode *>();
   int mem_id = 0;
 
   if (this->m_clusterSize == 1)
   {
-    singleCluster.clear();
+    errs() << "cluster size: " << this->m_clusterSize << "\n";
     mem_id = 0;
     for (int i = 0; i < this->m_rows; ++i)
     {
       for (int j = 0; j < this->m_columns; ++j)
       {
-        singleCluster.push_back(this->nodes[i][j]);
-        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize, singleCluster);
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize);
         this->MemNodes[mem_id] = memNode;
+        memNode->addNodeToCluster(this->nodes[i][j]);
         mem_id++;
+        errs() << "Memory Node ID: " << memNode->getID() << " at (row: " << memNode->getY() << ", col: " << memNode->getX() << ")\n";
       }
     }
   }
   else if (this->m_clusterSize == 2)
   {
-    singleCluster.clear();
     mem_id = 0;
+    singleCluster->clear();
     for (int j = 0; j < this->m_columns; j += 2)
     {
       for (int i = 0; i < this->m_rows; ++i)
       {
+        singleCluster->clear();
         if (j + 1 < this->m_columns)
         {
-          singleCluster.push_back(this->nodes[i][j]);
-          singleCluster.push_back(this->nodes[i][j + 1]);
+          singleCluster->push_back(this->nodes[i][j]);
+          singleCluster->push_back(this->nodes[i][j + 1]);
         }
         else
         {
           errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
         }
-        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize, singleCluster);
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize);
         this->MemNodes[mem_id] = memNode;
+        for (CGRANode *node : *singleCluster)
+        {
+          memNode->addNodeToCluster(node);
+        }
         mem_id++;
       }
     }
   }
   else if (this->m_clusterSize == 4)
   {
-    singleCluster.clear();
+    singleCluster->clear();
     mem_id = 0;
     for (int i = 0; i < this->m_rows; i += 2)
     {
       for (int j = 0; j < this->m_columns; j += 2)
       {
+        singleCluster->clear();
         if (i + 1 < this->m_rows && j + 1 < this->m_columns)
         {
-          singleCluster.push_back(this->nodes[i][j]);
-          singleCluster.push_back(this->nodes[i][j + 1]);
-          singleCluster.push_back(this->nodes[i + 1][j]);
-          singleCluster.push_back(this->nodes[i + 1][j + 1]);
+          singleCluster->push_back(this->nodes[i][j]);
+          singleCluster->push_back(this->nodes[i][j + 1]);
+          singleCluster->push_back(this->nodes[i + 1][j]);
+          singleCluster->push_back(this->nodes[i + 1][j + 1]);
         }
         else
         {
           errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
         }
-        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize, singleCluster);
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize);
         this->MemNodes[mem_id] = memNode;
+        for (CGRANode *node : *singleCluster)
+        {
+          memNode->addNodeToCluster(node);
+        }
         mem_id++;
       }
     }
@@ -649,5 +786,9 @@ void CGRA::createMemNodes(int t_memorySize)
   else
   {
     errs() << "The cluster size should be 1, 2, or 4.\n";
+  }
+  for (auto const &memNode : this->MemNodes)
+  {
+    cout << "Memory Node ID: " << memNode.first << " at (row: " << memNode.second->getY() << ", col: " << memNode.second->getX() << ")" << endl;
   }
 }
