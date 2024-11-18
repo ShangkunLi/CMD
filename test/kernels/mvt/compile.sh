@@ -1,4 +1,4 @@
-clang-12 -emit-llvm -O3 -fno-unroll-loops -o kernel.bc -c mvt.c
-llvm-dis-12 kernel.bc -o kernel.ll
-opt-12 --loop-unroll --unroll-count=4 kernel.bc -o kernel_unroll.bc
-llvm-dis-12 kernel_unroll.bc -o kernel_unroll.ll
+clang -emit-llvm -O3 -fno-unroll-loops -fno-vectorize -o mvt.bc -c mvt.c
+llvm-dis mvt.bc -o mvt.ll
+opt --loop-unroll --unroll-count=4 mvt.bc -o mvt_unroll.bc
+llvm-dis mvt_unroll.bc -o mvt_unroll.ll

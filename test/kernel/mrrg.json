@@ -1,23 +1,6 @@
 {
-    "Mem Nodes": [
-        {
-            "cluster": [
-                0,
-                1,
-                2,
-                3
-            ],
-            "cluster id": 0,
-            "id": 0,
-            "memory size": 1024,
-            "node type": "Mem",
-            "x coordinate": 0,
-            "y coordinate": 0
-        }
-    ],
     "PE Nodes": [
         {
-            "cluster id": 0,
             "complex": false,
             "id": 0,
             "node type": "PE",
@@ -41,14 +24,12 @@
             "y coordinate": 0
         },
         {
-            "cluster id": 0,
             "complex": false,
             "id": 1,
             "node type": "PE",
             "supported FUs": [
                 "return",
                 "call",
-                "load",
                 "store",
                 "add",
                 "br",
@@ -65,7 +46,6 @@
             "y coordinate": 0
         },
         {
-            "cluster id": 0,
             "complex": false,
             "id": 2,
             "node type": "PE",
@@ -89,14 +69,12 @@
             "y coordinate": 1
         },
         {
-            "cluster id": 0,
             "complex": false,
             "id": 3,
             "node type": "PE",
             "supported FUs": [
                 "return",
                 "call",
-                "load",
                 "store",
                 "add",
                 "br",
@@ -129,102 +107,46 @@
             "src type": "PE"
         },
         {
-            "dst": 0,
-            "dst type": "Mem",
+            "dst": 3,
+            "dst type": "PE",
             "id": 2,
-            "src": 0,
+            "src": 1,
             "src type": "PE"
         },
         {
             "dst": 0,
             "dst type": "PE",
             "id": 3,
-            "src": 0,
-            "src type": "Mem"
+            "src": 1,
+            "src type": "PE"
         },
         {
-            "dst": 3,
+            "dst": 0,
             "dst type": "PE",
             "id": 4,
-            "src": 1,
+            "src": 2,
             "src type": "PE"
         },
         {
-            "dst": 0,
+            "dst": 3,
             "dst type": "PE",
             "id": 5,
-            "src": 1,
-            "src type": "PE"
-        },
-        {
-            "dst": 0,
-            "dst type": "Mem",
-            "id": 6,
-            "src": 1,
+            "src": 2,
             "src type": "PE"
         },
         {
             "dst": 1,
+            "dst type": "PE",
+            "id": 6,
+            "src": 3,
+            "src type": "PE"
+        },
+        {
+            "dst": 2,
             "dst type": "PE",
             "id": 7,
-            "src": 0,
-            "src type": "Mem"
-        },
-        {
-            "dst": 0,
-            "dst type": "PE",
-            "id": 8,
-            "src": 2,
-            "src type": "PE"
-        },
-        {
-            "dst": 3,
-            "dst type": "PE",
-            "id": 9,
-            "src": 2,
-            "src type": "PE"
-        },
-        {
-            "dst": 0,
-            "dst type": "Mem",
-            "id": 10,
-            "src": 2,
-            "src type": "PE"
-        },
-        {
-            "dst": 2,
-            "dst type": "PE",
-            "id": 11,
-            "src": 0,
-            "src type": "Mem"
-        },
-        {
-            "dst": 1,
-            "dst type": "PE",
-            "id": 12,
             "src": 3,
             "src type": "PE"
-        },
-        {
-            "dst": 2,
-            "dst type": "PE",
-            "id": 13,
-            "src": 3,
-            "src type": "PE"
-        },
-        {
-            "dst": 0,
-            "dst type": "Mem",
-            "id": 14,
-            "src": 3,
-            "src type": "PE"
-        },
-        {
-            "dst": 3,
-            "dst type": "PE",
-            "id": 15,
-            "src": 0,
-            "src type": "Mem"
         }
     ]
 }

@@ -19,6 +19,7 @@ add_library(genDFGPass MODULE
     CGRALink.cpp
     CGRANode.cpp
     CGRAMem.cpp
+    Mapper.cpp
     json.hpp
 )
 

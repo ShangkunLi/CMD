@@ -30,6 +30,7 @@ private:
 
 public:
   CGRA(int, int, bool, bool, bool, map<string, list<int> *> *);
+  CGRA(int, int, bool, bool, bool, map<string, list<int> *> *, bool);
   CGRA(int, int, int, int, bool, bool, bool, map<string, list<int> *> *);
   CGRANode ***nodes;                     // 2D array of CGRANode pointers
   CGRALink **links;                      // 1D array of CGRALink pointers

@@ -7,8 +7,9 @@
 #include <iostream>
 #include <set>
 
-#include "DFG.h"
-#include "CGRA.h"
+// #include "DFG.h"
+// #include "CGRA.h"
+#include "Mapper.h"
 #include "json.hpp"
 
 using namespace llvm;
@@ -23,6 +24,7 @@ namespace
     struct genDFGPass : public FunctionPass
     {
         static char ID;
+        Mapper *mapper;
         genDFGPass() : FunctionPass(ID) {}
 
         void getAnalysisUsage(AnalysisUsage &AU) const override
@@ -182,62 +184,161 @@ namespace
             cout << "==================================\n";
             cout << "[function \'" << t_F.getName().str() << "\' is one of our targets]\n";
 
-            // list<Loop *> *targetLoops = getTargetLoops(t_F, functionWithLoop, targetNested);
-            // DFG *dfg = new DFG(t_F, targetLoops, targetEntireFunction, precisionAware,
-            //                    heterogeneity, execLatency, pipelinedOpt);
-
-            // // Show the count of different opcodes (IRs).
+            // Generate DFG with memory information.
+            // list<Loop *> *innermostLoops = getInnermostLoops(t_F, functionWithLoop, targetNested);
             // cout << "==================================\n";
-            // cout << "[show opcode count]\n";
-            // dfg->showOpcodeDistribution();
-
-            // // Generate the DFG dot file.
+            // cout << "number of innermost loops: " << innermostLoops->size() << "\n";
             // cout << "==================================\n";
-            // cout << "[generate dot for DFG]\n";
-            // dfg->generateDot(t_F, isTrimmedDemo);
+            // DFG *dfg2 = new DFG(innermostLoops, targetEntireFunction, precisionAware,
+            //                     heterogeneity, execLatency, pipelinedOpt);
 
-            // // Generate the DFG dot file.
-            // cout << "==================================\n";
-            // cout << "[generate JSON for DFG]\n";
-            // dfg->generateJSON();
-
-            list<Loop *> *innermostLoops = getInnermostLoops(t_F, functionWithLoop, targetNested);
-            cout << "==================================\n";
-            cout << "number of innermost loops: " << innermostLoops->size() << "\n";
-            cout << "==================================\n";
-            DFG *dfg2 = new DFG(innermostLoops, targetEntireFunction, precisionAware,
-                                heterogeneity, execLatency, pipelinedOpt);
+            // Generate DFG without memory information.
+            list<Loop *> *targetLoops = getTargetLoops(t_F, functionWithLoop, targetNested);
+            DFG *dfg = new DFG(t_F, targetLoops, targetEntireFunction, precisionAware,
+                               heterogeneity, execLatency, pipelinedOpt);
 
             // Show the count of different opcodes (IRs).
             cout << "==================================\n";
             cout << "[show opcode count]\n";
-            dfg2->showOpcodeDistribution();
+            // dfg2->showOpcodeDistribution();
+            dfg->showOpcodeDistribution();
 
             // Generate the DFG dot file.
             cout << "==================================\n";
             cout << "[generate dot for DFG]\n";
-            dfg2->generateDot(t_F, isTrimmedDemo);
+            // dfg2->generateDot(t_F, isTrimmedDemo);
+            dfg->generateDot(t_F, isTrimmedDemo);
 
             // Generate the CGRA Architecture.
             cout << "==================================\n";
             cout << "[generate CGRA Architecture]\n";
-            CGRA *cgra2 = new CGRA(rows, columns, clusterSize, memorySize, diagonalVectorization, heterogeneity,
-                                   parameterizableCGRA, additionalFunc);
-            cgra2->setRegConstraint(regConstraint);
-            cgra2->setCtrlMemConstraint(ctrlMemConstraint);
-            cgra2->setBypassConstraint(bypassConstraint);
+            // Genetrate CGRA with cluster-based memory.
+            // CGRA *cgra2 = new CGRA(rows, columns, clusterSize, memorySize, diagonalVectorization, heterogeneity,
+            //                        parameterizableCGRA, additionalFunc);
+            // cgra2->setRegConstraint(regConstraint);
+            // cgra2->setCtrlMemConstraint(ctrlMemConstraint);
+            // cgra2->setBypassConstraint(bypassConstraint);
+
+            // Generate CGRA with conventional architecture.
             // CGRA *cgra = new CGRA(rows, columns, diagonalVectorization, heterogeneity,
             //                       parameterizableCGRA, additionalFunc);
             // cgra->setRegConstraint(regConstraint);
             // cgra->setCtrlMemConstraint(ctrlMemConstraint);
             // cgra->setBypassConstraint(bypassConstraint);
 
+            // Generate CGRA with all supported ld/store operations.
+            CGRA *cgra3 = new CGRA(rows, columns, diagonalVectorization, heterogeneity,
+                                   parameterizableCGRA, additionalFunc, supportMemory);
+            cgra3->setRegConstraint(regConstraint);
+            cgra3->setCtrlMemConstraint(ctrlMemConstraint);
+            cgra3->setBypassConstraint(bypassConstraint);
+
             // Generate the MRRG dot file.
             cout << "==================================\n";
             cout << "[generate dot for MRRG]\n";
-            cgra2->generateMRRG(supportMemory);
+            // cgra2->generateMRRG(supportMemory);
             // cgra->generateMRRG(supportMemory);
-            return true;
+            cgra3->generateMRRG(!supportMemory);
+
+            // Initialize the mapper
+            mapper = new Mapper();
+            // Initialize the II.
+            int ResMII = mapper->getResMII(dfg, cgra3);
+            cout << "==================================\n";
+            cout << "[ResMII: " << ResMII << "]\n";
+            int RecMII = mapper->getRecMII(dfg);
+            cout << "==================================\n";
+            cout << "[RecMII: " << RecMII << "]\n";
+            // II = max(ResMII, RecMII)
+            int II = ResMII;
+            if (II < RecMII)
+                II = RecMII;
+            if (!doCGRAMapping)
+            {
+                cout << "==================================\n";
+                return false;
+            }
+            // Heuristic algorithm (hill climbing) to get a valid mapping within
+            // a acceptable II.
+            bool success = false;
+            if (!isStaticElasticCGRA)
+            {
+                cout << "==================================\n";
+                typedef std::chrono::high_resolution_clock Clock;
+                ofstream mappingTime("MappingTime.txt");
+                auto t1 = Clock::now();
+
+                if (heuristicMapping)
+                {
+                    if (supportMemory)
+                    {
+                        II = mapper->heuristicMapwithMemory(cgra3, dfg, II);
+                    }
+                    else
+                    {
+                        if (incrementalMapping)
+                        {
+                            II = mapper->incrementalMap(cgra3, dfg, II);
+                            cout << "[Incremental]\n";
+                        }
+                        else
+                        {
+                            cout << "[heuristic]\n";
+                            II = mapper->heuristicMap(cgra3, dfg, II, isStaticElasticCGRA);
+                        }
+                    }
+                }
+                else
+                {
+                    if (supportMemory)
+                    {
+                        cout << "[exhaustive]\n";
+                        II = mapper->exhaustiveMap(cgra3, dfg, II, isStaticElasticCGRA);
+                    }
+                    else
+                    {
+                        errs() << "Unsupport exhaustive map on CGRA with cluster-based memory.\n";
+                        return false;
+                    }
+                }
+
+                auto t2 = Clock::now();
+                int elapsedTime = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / 1000000;
+                mappingTime << "Mapping algorithm elapsed time=" << elapsedTime << "ms" << '\n';
+            }
+
+            // Partially exhaustive search to try to map the DFG onto
+            // the static elastic CGRA.
+
+            if (isStaticElasticCGRA and !success)
+            {
+                cout << "==================================\n";
+                cout << "[exhaustive]\n";
+                II = mapper->exhaustiveMap(cgra3, dfg, II, isStaticElasticCGRA);
+            }
+
+            // Show the mapping and routing results with JSON output.
+            if (II == -1)
+                cout << "[fail]\n";
+            else
+            {
+                mapper->showSchedule(cgra3, dfg, II, isStaticElasticCGRA, parameterizableCGRA);
+                cout << "==================================\n";
+                cout << "[Mapping Success]\n";
+                cout << "==================================\n";
+                mapper->generateJSON(cgra3, dfg, II, isStaticElasticCGRA);
+                cout << "[Output Json]\n";
+
+                // // save mapping results json file for possible incremental mapping
+                // if (!incrementalMapping)
+                // {
+                //     mapper->generateJSON4IncrementalMap(cgra3, dfg);
+                //     cout << "[Output Json for Incremental Mapping]\n";
+                // }
+            }
+            cout << "==================================" << endl;
+
+            return false;
         }
 
         /*

@@ -1,2 +1,2 @@
-clang -emit-llvm -O3 -fno-unroll-loops -o bf_test.bc -c bf_test.c
-llvm-dis bf_test.bc -o bf_test.ll
+clang -emit-llvm -O3 -fno-unroll-loops -fno-vectorize -o bf.bc -c bf_test.c
+llvm-dis bf.bc -o bf.ll

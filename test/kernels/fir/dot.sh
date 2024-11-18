@@ -1,1 +1,1 @@
-dot -Tpng _Z6kernelPfS_S_.dot -o fir.png
+dot -Tpng _Z3firPfS_S_.dot -o fir.png

@@ -587,6 +587,7 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
   // parameterizable CGRA, i.e., CGRA-Flow mapping demonstration).
   // tiles[tileID][cycleID][optID]
   // links[srcTileID][dstTileID][cycleID]
+  ofstream mappingResult("MappingResult.txt");
   map<string, map<string, vector<int>>> jsonTiles;
   map<string, map<string, vector<int>>> jsonLinks;
   map<string, map<string, map<string, vector<int>>>> jsonTilesLinks;
@@ -640,7 +641,7 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
       }
     }
 
-    cout << "--------------------------- cycle:" << cycle << " ---------------------------" << endl;
+    mappingResult << "--------------------------- cycle:" << cycle << " ---------------------------" << endl;
     for (int i = 0; i < t_cgra->getRows(); ++i)
     {
       for (int j = 0; j < t_cgra->getColumns(); ++j)
@@ -773,12 +774,12 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
     {
       for (int j = 0; j < displayColumns; ++j)
       {
-        cout << display[i][j];
+        mappingResult << display[i][j];
       }
     }
     ++cycle;
   }
-  cout << "[Mapping II: " << t_II << "]" << endl;
+  mappingResult << "[Mapping II: " << t_II << "]" << endl;
 
   if (t_parameterizableCGRA)
   {
@@ -1911,3 +1912,5 @@ int Mapper::incrementalMap(CGRA *t_cgra, DFG *t_dfg, int t_II)
 
   return -1;
 }
+
+int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II) {}
