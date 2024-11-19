@@ -1913,4 +1913,89 @@ int Mapper::incrementalMap(CGRA *t_cgra, DFG *t_dfg, int t_II)
   return -1;
 }
 
-int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II) {}
+int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_isStaticElasticCGRA)
+{
+  bool fail = false;
+  while (1)
+  {
+    cout << "----------------------------------------\n";
+    cout << "[DEBUG] start heuristic algorithm with II=" << t_II << "\n";
+    int cycle = 0;
+    // Clean existing mapping results.
+    constructMRRG(t_dfg, t_cgra, t_II);
+    fail = false;
+    for (list<DFGNode *>::iterator dfgNode = t_dfg->nodes.begin();
+         dfgNode != t_dfg->nodes.end(); ++dfgNode)
+    {
+      list<map<CGRANode *, int> *> paths;
+      // Calculate the cost of mapping dfgNode onto fu
+      for (int i = 0; i < t_cgra->getRows(); ++i)
+      {
+        for (int j = 0; j < t_cgra->getColumns(); ++j)
+        {
+          CGRANode *fu = t_cgra->nodes[i][j];
+          // Calculate the cost of mapping dfgNode onto fu
+          // Use the longest path from predecessors' CGRANodes to t_fu as the cost
+          map<CGRANode *, int> *tempPath =
+              calculateCost(t_cgra, t_dfg, t_II, *dfgNode, fu);
+          if (tempPath != NULL and tempPath->size() != 0)
+          {
+            paths.push_back(tempPath); // Add this path to the list
+          }
+          else
+          {
+            cout << "[DEBUG] no available path for DFG node " << (*dfgNode)->getID()
+                 << " on CGRA node " << fu->getID() << " within II " << t_II << "; path size: " << paths.size() << ".\n";
+          }
+        }
+      }
+      // Found some potential mappings.
+      if (paths.size() != 0)
+      {
+        map<CGRANode *, int> *optimalPath =
+            getPathWithMinCostAndConstraints(t_cgra, t_dfg, t_II, *dfgNode, &paths);
+        if (optimalPath->size() != 0)
+        {
+          if (!schedule(t_cgra, t_dfg, t_II, *dfgNode, optimalPath,
+                        t_isStaticElasticCGRA))
+          {
+            cout << "[DEBUG] fail1 in schedule() II: " << t_II << "\n";
+            for (map<CGRANode *, int>::iterator iter = optimalPath->begin();
+                 iter != optimalPath->end(); ++iter)
+            {
+              cout << "[DEBUG] the failed path -- cycle: " << (*iter).second << " CGRANode: " << (*iter).first->getID() << "\n";
+            }
+
+            fail = true;
+            break;
+          }
+          cout << "[DEBUG] success in schedule()\n";
+        }
+        else
+        {
+          cout << "[DEBUG] fail2 in schedule() II: " << t_II << "\n";
+          fail = true;
+          break;
+        }
+      }
+      else
+      {
+        fail = true;
+        cout << "[DEBUG] *else* no available path for DFG node " << (*dfgNode)->getID()
+             << " within II " << t_II << ".\n";
+        break;
+      }
+    }
+    if (!fail)
+      break;
+    else if (t_isStaticElasticCGRA)
+    {
+      break;
+    }
+    ++t_II;
+  }
+  if (!fail)
+    return t_II;
+  else
+    return -1;
+}

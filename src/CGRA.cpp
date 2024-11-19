@@ -861,6 +861,8 @@ void CGRA::constructMRRG(int t_II)
   for (int i = 0; i < m_rows; ++i)
     for (int j = 0; j < m_columns; ++j)
       nodes[i][j]->constructMRRG(m_FUCount, t_II);
+  for (map<int, CGRAMem *>::iterator mem = MemNodes.begin(); mem != MemNodes.end(); mem++)
+    mem->second->constructMRRG(m_FUCount, t_II);
   for (int i = 0; i < m_LinkCount; ++i)
     links[i]->constructMRRG(m_FUCount, t_II);
 }

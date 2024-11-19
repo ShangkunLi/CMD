@@ -39,7 +39,7 @@ class Mapper {
     int getRecMII(DFG*);
     void constructMRRG(DFG*, CGRA*, int);
     int heuristicMap(CGRA*, DFG*, int, bool);
-    int heuristicMapwithMemory(CGRA*, DFG*, int);
+    int heuristicMapwithMemory(CGRA*, DFG*, int, bool);
     int exhaustiveMap(CGRA*, DFG*, int, bool);
     map<CGRANode*, int>* calculateCost(CGRA*, DFG*, int, DFGNode*, CGRANode*);
     map<CGRANode*, int>* getPathWithMinCostAndConstraints(CGRA*, DFG*, int,

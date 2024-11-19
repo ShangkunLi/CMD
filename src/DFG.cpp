@@ -79,9 +79,9 @@ DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
   this->reorderInLongest();
   cout << "==================================\n";
   cout << "[Show cycle Lists]\n";
-  for(auto cyclelist : *m_cycleNodeLists)
+  for (auto cyclelist : *m_cycleNodeLists)
   {
-    for(auto node : *cyclelist)
+    for (auto node : *cyclelist)
     {
       cout << node->getID() << " ";
     }
@@ -554,11 +554,11 @@ bool DFG::constructWithDataMem(Loop *L)
           {
             DFGNode *loadNode = this->getNode(loadInst);
             DataMemNode *dataNode; // Use this node to store the array data
-            errs() << "LoadInst Operand: " << *loadInst->getOperand(0) << "\n";
+            errs() << "\t[Memory Node] LoadInst Operand: " << *loadInst->getOperand(0) << "\n";
             Instruction *gepInst = getParentGEP(loadInst);
             if (gepInst)
             {
-              errs() << "Parent GEP: " << *gepInst << "\n";
+              errs() << "\t[Memory Node] Parent GEP: " << *gepInst << "\n";
               DFGNode *gepNode;
               if (!this->hasNode(gepInst))
               {
@@ -567,17 +567,28 @@ bool DFG::constructWithDataMem(Loop *L)
                 this->nodes.push_back(gepNode);
                 cout << " (ID: " << dfgNode->getID() << ")\n";
               }
-              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName());
+
+              Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
+              errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
+              DataLayout DL = gepInst->getParent()->getModule()->getDataLayout();
+
+              Type *pointertype = dyn_cast<PointerType>(gepPtrOprandType)->getElementType();
+              errs() << "\t[Memory Node] Type of Array Type: " << *pointertype << "\n";
+              int datasize = DL.getTypeAllocSize(pointertype);
+              errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
+
+              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
               this->nodes.push_back(dataNode);
-              errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
+              errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
               cout << " (ID: " << dataNode->getID() << ")\n";
             }
             else
             {
-              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, loadInst->getOperand(0), loadInst->getOperand(0)->getName());
-              this->nodes.push_back(dataNode);
-              errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
-              cout << " (ID: " << dataNode->getID() << ")\n";
+              errs() << " gepInst is NULL\n";
+              // dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, loadInst->getOperand(0), loadInst->getOperand(0)->getName());
+              // this->nodes.push_back(dataNode);
+              // errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
+              // cout << " (ID: " << dataNode->getID() << ")\n";
             }
 
             DFGEdge *dataEdge; // Create data edge dataNode -> loadNode
@@ -608,7 +619,7 @@ bool DFG::constructWithDataMem(Loop *L)
             Instruction *gepInst = getParentGEP(storeInst);
             if (gepInst)
             {
-              errs() << "Parent GEP: " << *gepInst << "\n";
+              errs() << "\t[Memory Node] Parent GEP: " << *gepInst << "\n";
               DFGNode *gepNode;
               if (!this->hasNode(gepInst))
               {
@@ -617,17 +628,29 @@ bool DFG::constructWithDataMem(Loop *L)
                 this->nodes.push_back(gepNode);
                 cout << " (ID: " << dfgNode->getID() << ")\n";
               }
-              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName());
+
+              Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
+              errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
+              DataLayout DL = gepInst->getParent()->getModule()->getDataLayout();
+
+              Type *pointertype = dyn_cast<PointerType>(gepPtrOprandType)->getElementType();
+              errs() << "\t[Memory Node] Type of Array Type: " << *pointertype << "\n";
+              int datasize = DL.getTypeAllocSize(pointertype);
+              errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
+
+              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
               this->nodes.push_back(dataNode);
-              errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
+              errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
               cout << " (ID: " << dataNode->getID() << ")\n";
             }
             else
             {
-              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, storeInst->getOperand(1), storeInst->getOperand(1)->getName());
-              this->nodes.push_back(dataNode);
-              errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
-              cout << " (ID: " << dataNode->getID() << ")\n";
+              errs() << "[ERROR] storeInst is NULL\n";
+              return false;
+              // dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, storeInst->getOperand(1), storeInst->getOperand(1)->getName());
+              // this->nodes.push_back(dataNode);
+              // errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
+              // cout << " (ID: " << dataNode->getID() << ")\n";
             }
             // errs() << "DataMemNode Value: " << dataNode->getValue()->getName() << "\n";
             // errs() << "DataMemNode StringRef: " << dataNode->getStringRef() << "\n";
@@ -1761,7 +1784,7 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
       {
         file << "\tNode" << node->getInst() << "[shape=oval, color=darkorange, style=filled, label=\"" << changeVal2Str(node->getInst()) << "\"];\n";
       }
-      else if(node->getOpcodeName() == "datamem")
+      else if (node->getOpcodeName() == "datamem")
       {
         file << "\tNode" << node->getValue() << "[shape=record, color=lightblue, style=filled, label=\"" << changeVal2Str(node->getValue()) << "\"];\n";
       }

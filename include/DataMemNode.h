@@ -31,9 +31,17 @@ class DataMemNode;
 
 class DataMemNode : public DFGNode
 {
+private:
+    int m_size;      // Size in bytes.
+    Type *m_memtype; // Type of the data.
+
 public:
-    DataMemNode(int, bool, Value *, StringRef);
+    DataMemNode(int, bool, Value *, StringRef, int, Type *);
     void initType();
+    int getSize();
+    void setSize(int);
+    Type *getMemType();
+    void setMemType(Type *);
 };
 
 #endif

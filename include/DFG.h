@@ -13,6 +13,7 @@
 #include <llvm/IR/Value.h>
 #include <llvm/IR/Instruction.h>
 #include <llvm/IR/Instructions.h>
+#include "llvm/IR/GetElementPtrTypeIterator.h"
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/FileSystem.h>
 #include <llvm/IR/Use.h>
