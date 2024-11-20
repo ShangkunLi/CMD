@@ -1,16 +1,16 @@
 /*
  * ======================================================================
- * DataMemNode.cpp
+ * DataNode.cpp
  * ======================================================================
- * DataMemNode node implementation.
+ * DataNode node implementation.
  *
  * Author : Shangkun LI
  *   Date : Oct 31, 2024
  */
 
-#include "DataMemNode.h"
+#include "DataNode.h"
 
-DataMemNode::DataMemNode(int t_id, bool t_precisionAware, Value *t_operand,
+DataNode::DataNode(int t_id, bool t_precisionAware, Value *t_operand,
                          StringRef t_stringRef, int t_size, Type *t_memtype)
     : DFGNode() // Call the base class constructor
 {
@@ -38,10 +38,11 @@ DataMemNode::DataMemNode(int t_id, bool t_precisionAware, Value *t_operand,
     this->initPatternNodes();
     this->setSize(t_size);
     this->setMemType(t_memtype);
+    this->setParentNode(NULL);
     initType();
 }
 
-void DataMemNode::initType()
+void DataNode::initType()
 {
     if (getOpcodeName().compare("datamem") == 0)
     {
@@ -55,22 +56,32 @@ void DataMemNode::initType()
     }
 }
 
-void DataMemNode::setSize(int t_size)
+void DataNode::setSize(int t_size)
 {
     m_size = t_size;
 }
 
-int DataMemNode::getSize()
+int DataNode::getSize()
 {
     return m_size;
 }
 
-void DataMemNode::setMemType(Type *t_memtype)
+void DataNode::setMemType(Type *t_memtype)
 {
     m_memtype = t_memtype;
 }
 
-Type *DataMemNode::getMemType()
+Type *DataNode::getMemType()
 {
     return m_memtype;
+}
+
+DFGNode *DataNode::getParentNode()
+{
+    return m_ParentNode;
+}
+
+void DataNode::setParentNode(DFGNode *t_ParentNode)
+{
+    m_ParentNode = t_ParentNode;
 }

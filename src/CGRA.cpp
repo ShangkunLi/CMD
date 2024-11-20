@@ -306,6 +306,7 @@ CGRA::CGRA(int t_rows, int t_columns, bool t_diagonalVectorization,
   */
 }
 
+// This construct function is used for CGAR demo with infinite size of memory.
 CGRA::CGRA(int t_rows, int t_columns, bool t_diagonalVectorization,
            bool t_heterogeneity, bool t_parameterizableCGRA,
            map<string, list<int> *> *t_additionalFunc, bool t_supportMemory)
@@ -320,82 +321,84 @@ CGRA::CGRA(int t_rows, int t_columns, bool t_diagonalVectorization,
     if (t_parameterizableCGRA)
     {
 
-      int node_id = 0;
-      map<int, CGRANode *> id2Node;
-      for (int i = 0; i < t_rows; ++i)
-      {
-        nodes[i] = new CGRANode *[t_columns];
-        for (int j = 0; j < t_columns; ++j)
-        {
-          nodes[i][j] = new CGRANode(node_id, j, i);
-          // nodes[i][j]->disableAllFUs();
-          id2Node[node_id] = nodes[i][j];
-          node_id += 1;
-        }
-      }
+      // int node_id = 0;
+      // map<int, CGRANode *> id2Node;
+      // for (int i = 0; i < t_rows; ++i)
+      // {
+      //   nodes[i] = new CGRANode *[t_columns];
+      //   for (int j = 0; j < t_columns; ++j)
+      //   {
+      //     nodes[i][j] = new CGRANode(node_id, j, i);
+      //     // nodes[i][j]->disableAllFUs();
+      //     id2Node[node_id] = nodes[i][j];
+      //     node_id += 1;
+      //   }
+      // }
 
-      ifstream paramCGRA("./paramCGRA.json");
-      if (!paramCGRA.good())
-      {
-        cout << "Parameterizable CGRA design/mapping requires paramCGRA.json" << endl;
-        return;
-      }
-      json param;
-      paramCGRA >> param;
+      // ifstream paramCGRA("./paramCGRA.json");
+      // if (!paramCGRA.good())
+      // {
+      //   cout << "Parameterizable CGRA design/mapping requires paramCGRA.json" << endl;
+      //   return;
+      // }
+      // json param;
+      // paramCGRA >> param;
 
-      int numOfNodes = t_rows * t_columns;
-      for (int nodeID = 0; nodeID < numOfNodes; ++nodeID)
-      {
-        bool disabled = param["tiles"][to_string(nodeID)]["disabled"];
-        if (disabled)
-        {
-          id2Node[nodeID]->disable();
-        }
-        else
-        {
-          bool supportAllFUs = param["tiles"][to_string(nodeID)]["supportAllFUs"];
-          if (!supportAllFUs)
-          {
-            id2Node[nodeID]->disableAllFUs();
-          }
-          if (param["tiles"][to_string(nodeID)].contains("accessMem"))
-          {
-            if (param["tiles"][to_string(nodeID)]["accessMem"])
-            {
-              id2Node[nodeID]->enableLoad();
-              id2Node[nodeID]->enableStore();
-            }
-          }
+      // int numOfNodes = t_rows * t_columns;
+      // for (int nodeID = 0; nodeID < numOfNodes; ++nodeID)
+      // {
+      //   bool disabled = param["tiles"][to_string(nodeID)]["disabled"];
+      //   if (disabled)
+      //   {
+      //     id2Node[nodeID]->disable();
+      //   }
+      //   else
+      //   {
+      //     bool supportAllFUs = param["tiles"][to_string(nodeID)]["supportAllFUs"];
+      //     if (!supportAllFUs)
+      //     {
+      //       id2Node[nodeID]->disableAllFUs();
+      //     }
+      //     if (param["tiles"][to_string(nodeID)].contains("accessMem"))
+      //     {
+      //       if (param["tiles"][to_string(nodeID)]["accessMem"])
+      //       {
+      //         id2Node[nodeID]->enableLoad();
+      //         id2Node[nodeID]->enableStore();
+      //       }
+      //     }
 
-          // TODO: need to take care of supportedFUs:
-          //
-        }
-      }
+      //     // TODO: need to take care of supportedFUs:
+      //     //
+      //   }
+      // }
 
-      json paramLinks = param["links"];
-      m_LinkCount = paramLinks.size();
-      links = new CGRALink *[m_LinkCount];
+      // json paramLinks = param["links"];
+      // m_LinkCount = paramLinks.size();
+      // links = new CGRALink *[m_LinkCount];
 
-      for (int linkID = 0; linkID < paramLinks.size(); ++linkID)
-      {
-        int srcNodeID = paramLinks[linkID]["srcTile"];
-        int dstNodeID = paramLinks[linkID]["dstTile"];
+      // for (int linkID = 0; linkID < paramLinks.size(); ++linkID)
+      // {
+      //   int srcNodeID = paramLinks[linkID]["srcTile"];
+      //   int dstNodeID = paramLinks[linkID]["dstTile"];
 
-        links[linkID] = new CGRALink(linkID);
-        id2Node[srcNodeID]->attachOutLink(links[linkID]);
-        id2Node[dstNodeID]->attachInLink(links[linkID]);
-        links[linkID]->connect(id2Node[srcNodeID], id2Node[dstNodeID]);
-      }
+      //   links[linkID] = new CGRALink(linkID);
+      //   id2Node[srcNodeID]->attachOutLink(links[linkID]);
+      //   id2Node[dstNodeID]->attachInLink(links[linkID]);
+      //   links[linkID]->connect(id2Node[srcNodeID], id2Node[dstNodeID]);
+      // }
 
-      // need to perform disable() again, as it will disable the related links
-      for (int nodeID = 0; nodeID < numOfNodes; ++nodeID)
-      {
-        bool disabled = param["tiles"][to_string(nodeID)]["disabled"];
-        if (disabled)
-        {
-          id2Node[nodeID]->disable();
-        }
-      }
+      // // need to perform disable() again, as it will disable the related links
+      // for (int nodeID = 0; nodeID < numOfNodes; ++nodeID)
+      // {
+      //   bool disabled = param["tiles"][to_string(nodeID)]["disabled"];
+      //   if (disabled)
+      //   {
+      //     id2Node[nodeID]->disable();
+      //   }
+      // }
+      // TODO: support parameterizable CGRA with cluster-based memory
+      errs() << " Unable to support parameterizable CGRA with cluster-based memory for now." << "\n";
     }
     else
     {
@@ -645,7 +648,7 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
     {
       for (int j = 0; j < t_columns; ++j)
       {
-        cout << "PE Node ID: " << nodes[i][j]->getID() << " at (row: " << i << ", col: " << j << ")" << endl;
+        errs() << "PE Node ID: " << nodes[i][j]->getID() << " at (row: " << i << ", col: " << j << ")\n";
       }
     }
 
@@ -653,12 +656,12 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
     errs() << "Create CGRA memory nodes\n";
     this->createMemNodes(t_memorySize);
     // Print out all the memory nodes generated
-    for (auto const &memNode : MemNodes)
-    {
-      cout << "Memory Node ID: " << memNode.first << " at (row: " << memNode.second->getY() << ", col: " << memNode.second->getX() << ")" << endl;
-    }
+    // for (auto const &memNode : MemNodes)
+    // {
+    //   errs() << "Memory Node ID: " << memNode.first << " at (row: " << memNode.second->getY() << ", col: " << memNode.second->getX() << ")\n";
+    // }
 
-    this->m_LinkCount = 2 * (t_rows * (t_columns - 1) + (t_rows - 1) * t_columns) + 2 * t_rows * t_columns;
+    this->m_LinkCount = 2 * (t_rows * (t_columns - 1) + (t_rows - 1) * t_columns);
     this->links = new CGRALink *[m_LinkCount];
 
     // Enable the load/store on specific CGRA nodes based on cgra cluster
@@ -666,7 +669,7 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
     int storeCount = 0;
     if (loadCount == 0)
     {
-      cout << "Without customization in param.json, we enable load functionality on all cgra tiles" << endl;
+      errs() << "Without customization in param.json, we enable load functionality on all cgra tiles\n";
       for (int r = 0; r < t_rows; ++r)
       {
         for (int c = 0; c < t_columns; ++c)
@@ -677,7 +680,8 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
     }
     if (storeCount == 0)
     {
-      cout << "Without customization in param.json, we enable store functionality on all cgra tiles" << endl;
+      cout << "Without customization in param.json, we enable store functionality on all cgra tiles\n"
+           << endl;
       for (int r = 0; r < t_rows; ++r)
       {
         for (int c = 0; c < t_columns; ++c)
@@ -783,16 +787,16 @@ CGRA::CGRA(int t_rows, int t_columns, int t_cgraClusterSize, int t_memorySize, b
         {
           if (memnode->second->isInCluster(nodes[i][j]))
           {
-            links[link_id] = new CGRALink(link_id);
-            nodes[i][j]->attachOutLink(links[link_id]);
-            memnode->second->attachInLink(links[link_id]);
-            links[link_id]->connect(nodes[i][j], memnode->second);
-            ++link_id;
-            links[link_id] = new CGRALink(link_id);
-            memnode->second->attachOutLink(links[link_id]);
-            nodes[i][j]->attachInLink(links[link_id]);
-            links[link_id]->connect(memnode->second, nodes[i][j]);
-            ++link_id;
+            // links[link_id] = new CGRALink(link_id);
+            // nodes[i][j]->attachOutLink(links[link_id]);
+            // memnode->second->attachInLink(links[link_id]);
+            // links[link_id]->connect(nodes[i][j], memnode->second);
+            // ++link_id;
+            // links[link_id] = new CGRALink(link_id);
+            // memnode->second->attachOutLink(links[link_id]);
+            // nodes[i][j]->attachInLink(links[link_id]);
+            // links[link_id]->connect(memnode->second, nodes[i][j]);
+            // ++link_id;
             nodes[i][j]->setClusterId(memnode->first);
           }
         }
@@ -862,7 +866,7 @@ void CGRA::constructMRRG(int t_II)
     for (int j = 0; j < m_columns; ++j)
       nodes[i][j]->constructMRRG(m_FUCount, t_II);
   for (map<int, CGRAMem *>::iterator mem = MemNodes.begin(); mem != MemNodes.end(); mem++)
-    mem->second->constructMRRG(m_FUCount, t_II);
+    mem->second->constructMRRG();
   for (int i = 0; i < m_LinkCount; ++i)
     links[i]->constructMRRG(m_FUCount, t_II);
 }
@@ -1006,9 +1010,11 @@ void CGRA::createMemNodes(int t_memorySize)
   list<CGRANode *> *singleCluster = new list<CGRANode *>();
   int mem_id = 0;
 
+  errs() << "cluster size: " << this->m_clusterSize << "\n";
+  errs() << "----------------\n";
+
   if (this->m_clusterSize == 1)
   {
-    errs() << "cluster size: " << this->m_clusterSize << "\n";
     mem_id = 0;
     for (int i = 0; i < this->m_rows; ++i)
     {
@@ -1083,9 +1089,5 @@ void CGRA::createMemNodes(int t_memorySize)
   else
   {
     errs() << "The cluster size should be 1, 2, or 4.\n";
-  }
-  for (auto const &memNode : this->MemNodes)
-  {
-    cout << "Memory Node ID: " << memNode.first << " at (row: " << memNode.second->getY() << ", col: " << memNode.second->getX() << ")" << endl;
   }
 }

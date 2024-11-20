@@ -27,7 +27,7 @@
 
 #include "DFGNode.h"
 #include "DFGEdge.h"
-#include "DataMemNode.h"
+#include "DataNode.h"
 
 using namespace llvm;
 using namespace std;
@@ -100,7 +100,8 @@ public:
   DFG(list<Loop *> *, bool, bool, bool, map<string, int> *, list<string> *);
   list<list<DFGNode *> *> *m_cycleNodeLists;
   // initial ordering of insts
-  list<DFGNode *> nodes;
+  list<DFGNode *> nodes; // nodes of all instructions
+  list<DataNode *> dataNodes; // nodes of data
 
   list<Loop *> DFGLoops;
   map<Loop *, vector<BasicBlock *>> LoopBBs;
@@ -109,6 +110,8 @@ public:
   list<DFGNode *> *getBFSOrderedNodes();
   list<DFGNode *> *getDFSOrderedNodes();
   int getNodeCount();
+  int getDataNodeCount();
+  int getFuNodeCount();
   void construct(Function &);
   bool constructWithDataMem(Loop *);
   void setupCycles();
@@ -118,7 +121,7 @@ public:
   bool isLoad(DFGNode *);
   bool isStore(DFGNode *);
   void showOpcodeDistribution();
-  void generateDot(Function &, bool);
+  void generateDot(Function &, bool, bool);
   void generateJSON();
   bool isLiveInBasicBlock(BasicBlock *BB, Instruction *t_inst);
   Instruction *getInstNotInBasicBlock(BasicBlock *BB, Instruction *t_inst);

@@ -50,6 +50,7 @@ private:
   string m_optType;
   string m_fuType;
   bool m_combined;
+  bool m_hasmemory;
   bool m_isPatternRoot;
   bool m_critical;
   int m_level;
@@ -107,6 +108,8 @@ public:
   bool isOpt(string);
   bool isVectorized();
   bool hasCombined();
+  void sethasMemory(bool);
+  bool hasMemory();
   void setCombine(bool combined = true);
   void addPatternPartner(DFGNode *);
   void initPatternNodes();

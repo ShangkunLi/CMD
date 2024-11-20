@@ -1,15 +1,15 @@
 /*
  * ======================================================================
- * DataMemNode.cpp
+ * DataNode.h
  * ======================================================================
- * DataMem node implementation.
+ * DataNode implementation headfile.
  *
  * Author : Shangkun LI
  *   Date : Oct 31, 2024
  */
 
-#ifndef DataMemNode_H
-#define DataMemNode_H
+#ifndef DataNode_H
+#define DataNode_H
 
 #include <llvm/IR/Value.h>
 #include <llvm/IR/Instruction.h>
@@ -27,21 +27,24 @@
 using namespace llvm;
 using namespace std;
 
-class DataMemNode;
+class DataNode;
 
-class DataMemNode : public DFGNode
+class DataNode : public DFGNode
 {
 private:
     int m_size;      // Size in bytes.
     Type *m_memtype; // Type of the data.
+    DFGNode *m_ParentNode;
 
 public:
-    DataMemNode(int, bool, Value *, StringRef, int, Type *);
+    DataNode(int, bool, Value *, StringRef, int, Type *);
     void initType();
     int getSize();
     void setSize(int);
     Type *getMemType();
     void setMemType(Type *);
+    DFGNode *getParentNode();
+    void setParentNode(DFGNode *);
 };
 
 #endif

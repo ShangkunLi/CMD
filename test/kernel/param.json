@@ -1,11 +1,11 @@
 {
-  "kernel"                : "_Z6kernelPfS_S_S_S_",
+  "kernel"                : "_Z6kernelv",
   "targetFunction"        : false,
   "targetNested"          : false,
   "targetLoopsID"         : [0],
   "doCGRAMapping"         : true,
-  "row"                   : 2,
-  "column"                : 2,
+  "row"                   : 4,
+  "column"                : 4,
   "precisionAware"        : false,
   "heterogeneity"         : false,
   "isTrimmedDemo"         : true,
@@ -24,7 +24,7 @@
   "additionalFunc"        : {},
   "incrementalMapping"    : false,
   "supportMemory"         : true,
-  "clusterSize"           : 4,
-  "memorySize"            : 1024
+  "clusterSize"           : 1,
+  "memorySize"            : 5120
 }
 

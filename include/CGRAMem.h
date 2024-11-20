@@ -35,6 +35,7 @@ class CGRAMem : public CGRANode
 private:
   int m_memorySize; // memory size in bytes
   list<CGRANode *> m_CGRANodeCluster;
+  int m_availableMemSize; // available size in bytes
 
 public:
   CGRAMem(int t_id, int t_x, int t_y, int t_memorySize);
@@ -43,6 +44,9 @@ public:
   bool isInCluster(CGRANode *);
   list<CGRANode *> getCluster();
   void addNodeToCluster(CGRANode *);
+  int getAvailableMemSize();
+  void setAvailableMemSize(int);
+  void constructMRRG();
 };
 
 #endif

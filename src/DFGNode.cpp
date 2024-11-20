@@ -25,6 +25,7 @@ DFGNode::DFGNode(int t_id, bool t_precisionAware, Instruction *t_inst,
   m_numConst = 0;
   m_optType = "";
   m_combined = false;
+  m_hasmemory = false;
   m_isPatternRoot = false;
   m_patternRoot = NULL;
   m_critical = false;
@@ -831,4 +832,14 @@ void DFGNode::removeConst()
 int DFGNode::getNumConst()
 {
   return m_numConst;
+}
+
+void DFGNode::sethasMemory(bool t_hasMemory)
+{
+  m_hasmemory = t_hasMemory;
+}
+
+bool DFGNode::hasMemory()
+{
+  return m_hasmemory;
 }

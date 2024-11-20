@@ -16,6 +16,7 @@ DFG::DFG(Function &t_F, list<Loop *> *t_loops, bool t_targetFunction,
          map<string, int> *t_execLatency, list<string> *t_pipelinedOpt)
 {
   m_num = 0;
+  m_nodeCount = 0;
   m_targetFunction = t_targetFunction;
   m_targetLoops = t_loops;
   m_orderedNodes = NULL;
@@ -63,6 +64,7 @@ DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
   m_precisionAware = t_precisionAware;
   this->m_DFGEdges.clear();
   this->nodes.clear();
+  this->dataNodes.clear();
   this->m_ctrlEdges.clear();
   m_nodeCount = 0;
   m_ctrledgeCount = 0;
@@ -87,6 +89,10 @@ DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
     }
     cout << endl;
   }
+  cout << "==================================\n";
+  errs() << "Nodes Count: " << this->getNodeCount() << "\n";
+  errs() << "Fu Nodes Count: " << this->getFuNodeCount() << "\n";
+  errs() << "Data Nodes Count: " << this->getDataNodeCount() << "\n";
 }
 
 // FIXME: only combine operations of mul+alu and alu+cmp for now,
@@ -493,6 +499,7 @@ list<DFGNode *> *DFG::getBFSOrderedNodes()
 bool DFG::constructWithDataMem(Loop *L)
 {
 
+  int dataNodeID = 0;
   if (!L->getSubLoops().empty())
   {
     errs() << "Nested Loop not Supported: " << L->getName() << "\n";
@@ -553,7 +560,7 @@ bool DFG::constructWithDataMem(Loop *L)
           if (loadInst)
           {
             DFGNode *loadNode = this->getNode(loadInst);
-            DataMemNode *dataNode; // Use this node to store the array data
+            DataNode *dataNode; // Use this node to store the array data
             errs() << "\t[Memory Node] LoadInst Operand: " << *loadInst->getOperand(0) << "\n";
             Instruction *gepInst = getParentGEP(loadInst);
             if (gepInst)
@@ -567,6 +574,10 @@ bool DFG::constructWithDataMem(Loop *L)
                 this->nodes.push_back(gepNode);
                 cout << " (ID: " << dfgNode->getID() << ")\n";
               }
+              else
+              {
+                gepNode = this->getNode(gepInst);
+              }
 
               Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
               errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
@@ -577,30 +588,33 @@ bool DFG::constructWithDataMem(Loop *L)
               int datasize = DL.getTypeAllocSize(pointertype);
               errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
 
-              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
-              this->nodes.push_back(dataNode);
+              dataNode = new DataNode(dataNodeID++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
+              this->dataNodes.push_back(dataNode);
+              dataNode->setParentNode(loadNode);
+              loadNode->sethasMemory(true);
               errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
               cout << " (ID: " << dataNode->getID() << ")\n";
             }
             else
             {
               errs() << " gepInst is NULL\n";
+              return false;
               // dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, loadInst->getOperand(0), loadInst->getOperand(0)->getName());
               // this->nodes.push_back(dataNode);
               // errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
               // cout << " (ID: " << dataNode->getID() << ")\n";
             }
 
-            DFGEdge *dataEdge; // Create data edge dataNode -> loadNode
-            if (this->hasDFGEdge(dataNode, loadNode))
-            {
-              dataEdge = this->getDFGEdge(dataNode, loadNode);
-            }
-            else
-            {
-              dataEdge = new DFGEdge(this->m_dfgedgeCount++, dataNode, loadNode);
-              this->m_DFGEdges.push_back(dataEdge);
-            }
+            // DFGEdge *dataEdge; // Create data edge dataNode -> loadNode
+            // if (this->hasDFGEdge(dataNode, loadNode))
+            // {
+            //   dataEdge = this->getDFGEdge(dataNode, loadNode);
+            // }
+            // else
+            // {
+            //   dataEdge = new DFGEdge(this->m_dfgedgeCount++, dataNode, loadNode);
+            //   this->m_DFGEdges.push_back(dataEdge);
+            // }
             continue;
           }
           else
@@ -615,7 +629,7 @@ bool DFG::constructWithDataMem(Loop *L)
           if (storeInst)
           {
             DFGNode *storeNode = this->getNode(storeInst);
-            DataMemNode *dataNode; // Use this node to store the array data
+            DataNode *dataNode; // Use this node to store the array data
             Instruction *gepInst = getParentGEP(storeInst);
             if (gepInst)
             {
@@ -628,6 +642,10 @@ bool DFG::constructWithDataMem(Loop *L)
                 this->nodes.push_back(gepNode);
                 cout << " (ID: " << dfgNode->getID() << ")\n";
               }
+              else
+              {
+                gepNode = this->getNode(gepInst);
+              }
 
               Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
               errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
@@ -638,8 +656,10 @@ bool DFG::constructWithDataMem(Loop *L)
               int datasize = DL.getTypeAllocSize(pointertype);
               errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
 
-              dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
-              this->nodes.push_back(dataNode);
+              dataNode = new DataNode(dataNodeID++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
+              this->dataNodes.push_back(dataNode);
+              dataNode->setParentNode(storeNode);
+              storeNode->sethasMemory(true);
               errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
               cout << " (ID: " << dataNode->getID() << ")\n";
             }
@@ -657,16 +677,17 @@ bool DFG::constructWithDataMem(Loop *L)
             // errs() << "DataMemNode Opcode Name: " << dataNode->getOpcodeName() << "\n";
             // errs() << "DataMemNode Function Type: " << dataNode->getFuType() << "\n";
             // dataNode->addPredNode(storeNode);
-            DFGEdge *dataEdge; // Create data edge storeNode -> dataNode
-            if (this->hasDFGEdge(storeNode, dataNode))
-            {
-              dataEdge = this->getDFGEdge(storeNode, dataNode);
-            }
-            else
-            {
-              dataEdge = new DFGEdge(m_dfgedgeCount++, storeNode, dataNode);
-              this->m_DFGEdges.push_back(dataEdge);
-            }
+
+            // DFGEdge *dataEdge; // Create data edge storeNode -> dataNode
+            // if (this->hasDFGEdge(storeNode, dataNode))
+            // {
+            //   dataEdge = this->getDFGEdge(storeNode, dataNode);
+            // }
+            // else
+            // {
+            //   dataEdge = new DFGEdge(m_dfgedgeCount++, storeNode, dataNode);
+            //   this->m_DFGEdges.push_back(dataEdge);
+            // }
 
             DFGNode *storeValNode;
             if (this->hasNode(storeInst->getOperand(0)))
@@ -896,6 +917,11 @@ bool DFG::constructWithDataMem(Loop *L)
   for (DFGNode *node : this->nodes)
   {
     errs() << "DFG Node: " << node->getID() << " " << *node->getValue() << "\n";
+  }
+
+  for (DataNode *dataNode : this->dataNodes)
+  {
+    errs() << "DFG Node: " << dataNode->getID() << "  " << dataNode->getOpcodeName() << "[size=" << dataNode->getSize() << "]: " << *dataNode->getValue() << ", Parent:" << dataNode->getParentNode()->getID() << "\n";
   }
 
   errs() << "==================================\n";
@@ -1747,7 +1773,7 @@ void DFG::generateJSON()
   jsonFile << "]\n";
 }
 
-void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
+void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo, bool t_supportMemory)
 {
 
   error_code error;
@@ -1759,8 +1785,53 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
 
   file << "digraph \"DFG for'" + t_F.getName() + "\' function\" {\n";
 
+  if (t_supportMemory)
+  {
+    for (DataNode *dataNode : this->dataNodes)
+    {
+      if (t_isTrimmedDemo)
+      {
+        if (dataNode->getParentNode()->getInst()->getOpcode() == Instruction::Load)
+        {
+          DFGEdge *dataEdge;
+          file << "\tNode" << dataNode->getID() << dataNode->getOpcodeName() << "[shape=record, color=lightblue, style=filled, label=\"" << "(" << dataNode->getID() << ") " << dataNode->getOpcodeName() << "\"];\n";
+          dataEdge = new DFGEdge(0, dataNode, dataNode->getParentNode());
+          file << "edge [color=red]" << "\n";
+          file << "\tNode" << dataEdge->getSrc()->getID() << dataEdge->getSrc()->getOpcodeName() << " -> Node" << dataEdge->getDst()->getID() << dataEdge->getDst()->getOpcodeName() << "\n";
+        }
+        else if (dataNode->getParentNode()->getInst()->getOpcode() == Instruction::Store)
+        {
+          DFGEdge *dataEdge;
+          file << "\tNode" << dataNode->getID() << dataNode->getOpcodeName() << "[shape=record, color=lightblue, style=filled, label=\"" << "(" << dataNode->getID() << ") " << dataNode->getOpcodeName() << "\"];\n";
+          dataEdge = new DFGEdge(0, dataNode->getParentNode(), dataNode);
+          file << "edge [color=red]" << "\n";
+          file << "\tNode" << dataEdge->getSrc()->getID() << dataEdge->getSrc()->getOpcodeName() << " -> Node" << dataEdge->getDst()->getID() << dataEdge->getDst()->getOpcodeName() << "\n";
+        }
+      }
+      else
+      {
+        if (dataNode->getParentNode()->getInst()->getOpcode() == Instruction::Load)
+        {
+          DFGEdge *dataEdge;
+          file << "\tNode" << dataNode->getValue() << "[shape=record, color=lightblue, style=filled, label=\"" << changeVal2Str(dataNode->getValue()) << "\"];\n";
+          dataEdge = new DFGEdge(0, dataNode, dataNode->getParentNode());
+          file << "edge [color=red]" << "\n";
+          file << "\tNode" << dataEdge->getSrc()->getValue() << " -> Node" << dataEdge->getDst()->getValue() << "\n";
+        }
+        else if (dataNode->getParentNode()->getInst()->getOpcode() == Instruction::Store)
+        {
+          DFGEdge *dataEdge;
+          file << "\tNode" << dataNode->getID() << dataNode->getOpcodeName() << "[shape=record, color=lightblue, style=filled, label=\"" << "(" << dataNode->getID() << ") " << dataNode->getOpcodeName() << "\"];\n";
+          dataEdge = new DFGEdge(0, dataNode->getParentNode(), dataNode);
+          file << "edge [color=red]" << "\n";
+          file << "\tNode" << dataEdge->getSrc()->getValue() << " -> Node" << dataEdge->getDst()->getValue() << "\n";
+        }
+      }
+    }
+  }
+
   // Dump DFG nodes.
-  for (DFGNode *node : nodes)
+  for (DFGNode *node : this->nodes)
   {
     //    if (dyn_cast<Instruction>((*node)->getInst())) {
     if (t_isTrimmedDemo)
@@ -1768,10 +1839,6 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo)
       if (node->getOpcodeName() == "load" || node->getOpcodeName() == "store")
       {
         file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=oval, color=darkorange, style=filled, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
-      }
-      else if (node->getOpcodeName() == "datamem")
-      {
-        file << "\tNode" << node->getID() << node->getOpcodeName() << "[shape=record, color=lightblue, style=filled, label=\"" << "(" << node->getID() << ") " << node->getOpcodeName() << "\"];\n";
       }
       else
       {
@@ -2108,7 +2175,17 @@ StringRef DFG::getValueName(Value *t_value)
 
 int DFG::getNodeCount()
 {
-  return nodes.size();
+  return this->nodes.size();
+}
+
+int DFG::getDataNodeCount()
+{
+  return this->dataNodes.size();
+}
+
+int DFG::getFuNodeCount()
+{
+  return this->getNodeCount() - this->getDataNodeCount();
 }
 
 void DFG::tuneForBitcast()

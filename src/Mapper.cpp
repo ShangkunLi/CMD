@@ -24,7 +24,7 @@ using json = nlohmann::json;
 // Get the resource MII
 int Mapper::getResMII(DFG *t_dfg, CGRA *t_cgra)
 {
-  int ResMII = ceil(float(t_dfg->getNodeCount()) / t_cgra->getFUCount());
+  int ResMII = ceil(float(t_dfg->getFuNodeCount()) / t_cgra->getFUCount());
   return ResMII;
 }
 
@@ -51,6 +51,7 @@ void Mapper::constructMRRG(DFG *t_dfg, CGRA *t_cgra, int t_II)
   m_mapping.clear();
   m_mappingTiming.clear();
   t_cgra->constructMRRG(t_II);
+  errs() << "MRRG constructed\n";
   m_maxMappingCycle = t_cgra->getFUCount() * t_II * t_II;
   for (DFGNode *dfgNode : t_dfg->nodes)
   {
@@ -1916,39 +1917,86 @@ int Mapper::incrementalMap(CGRA *t_cgra, DFG *t_dfg, int t_II)
 int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_isStaticElasticCGRA)
 {
   bool fail = false;
+  DataNode *dataNode = NULL;
+  this->m_mapping.clear();
   while (1)
   {
     cout << "----------------------------------------\n";
-    cout << "[DEBUG] start heuristic algorithm with II=" << t_II << "\n";
+    cout << "[DEBUG] start heuristic memory algorithm with II=" << t_II << "\n";
     int cycle = 0;
     // Clean existing mapping results.
     constructMRRG(t_dfg, t_cgra, t_II);
+    errs() << "Done MRRG Constuction\n";
     fail = false;
     for (list<DFGNode *>::iterator dfgNode = t_dfg->nodes.begin();
          dfgNode != t_dfg->nodes.end(); ++dfgNode)
     {
       list<map<CGRANode *, int> *> paths;
-      // Calculate the cost of mapping dfgNode onto fu
-      for (int i = 0; i < t_cgra->getRows(); ++i)
+
+      // Check if the node needs memory mapping
+      if (checkIsNeedMemMap(t_cgra, t_dfg, (*dfgNode)))
       {
-        for (int j = 0; j < t_cgra->getColumns(); ++j)
+        errs() << "Need Memory Mapping for DFG Node: " << (*dfgNode)->getID() << "\n";
+        for (list<DataNode *>::iterator it = t_dfg->dataNodes.begin(); it != t_dfg->dataNodes.end(); ++it)
         {
-          CGRANode *fu = t_cgra->nodes[i][j];
-          // Calculate the cost of mapping dfgNode onto fu
-          // Use the longest path from predecessors' CGRANodes to t_fu as the cost
-          map<CGRANode *, int> *tempPath =
-              calculateCost(t_cgra, t_dfg, t_II, *dfgNode, fu);
-          if (tempPath != NULL and tempPath->size() != 0)
+          if ((*it)->getParentNode() == (*dfgNode))
           {
-            paths.push_back(tempPath); // Add this path to the list
+            dataNode = *it;
+            break;
           }
-          else
+        }
+        // Calculate the cost of mapping dfgNode onto fu
+        for (int i = 0; i < t_cgra->getRows(); ++i)
+        {
+          for (int j = 0; j < t_cgra->getColumns(); ++j)
           {
-            cout << "[DEBUG] no available path for DFG node " << (*dfgNode)->getID()
-                 << " on CGRA node " << fu->getID() << " within II " << t_II << "; path size: " << paths.size() << ".\n";
+            CGRANode *fu = t_cgra->nodes[i][j];
+
+            if (this->checkIsMemoryOverflow(t_cgra, t_dfg, dataNode, fu))
+            {
+              continue;
+            }
+            // Calculate the cost of mapping dfgNode onto fu
+            // Use the longest path from predecessors' CGRANodes to t_fu as the cost
+            map<CGRANode *, int> *tempPath =
+                calculateCost(t_cgra, t_dfg, t_II, *dfgNode, fu);
+            if (tempPath != NULL and tempPath->size() != 0)
+            {
+              paths.push_back(tempPath); // Add this path to the list
+            }
+            else
+            {
+              cout << "[DEBUG] no available path for DFG node " << (*dfgNode)->getID()
+                   << " on CGRA node " << fu->getID() << " within II " << t_II << "; path size: " << paths.size() << ".\n";
+            }
           }
         }
       }
+      else
+      {
+        // Calculate the cost of mapping dfgNode onto fu
+        for (int i = 0; i < t_cgra->getRows(); ++i)
+        {
+          for (int j = 0; j < t_cgra->getColumns(); ++j)
+          {
+            CGRANode *fu = t_cgra->nodes[i][j];
+            // Calculate the cost of mapping dfgNode onto fu
+            // Use the longest path from predecessors' CGRANodes to t_fu as the cost
+            map<CGRANode *, int> *tempPath =
+                calculateCost(t_cgra, t_dfg, t_II, *dfgNode, fu);
+            if (tempPath != NULL and tempPath->size() != 0)
+            {
+              paths.push_back(tempPath); // Add this path to the list
+            }
+            else
+            {
+              cout << "[DEBUG] no available path for DFG node " << (*dfgNode)->getID()
+                   << " on CGRA node " << fu->getID() << " within II " << t_II << "; path size: " << paths.size() << ".\n";
+            }
+          }
+        }
+      }
+
       // Found some potential mappings.
       if (paths.size() != 0)
       {
@@ -1969,6 +2017,12 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
             fail = true;
             break;
           }
+          // Finish the data memory node to CGRA memory node mapping
+          if (this->checkIsNeedMemMap(t_cgra, t_dfg, (*dfgNode)))
+          {
+            this->dataMemNodeMapping(t_cgra, t_dfg, dataNode, prev(optimalPath->end())->first);
+          }
+
           cout << "[DEBUG] success in schedule()\n";
         }
         else
@@ -1998,4 +2052,32 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
     return t_II;
   else
     return -1;
+}
+
+bool Mapper::checkIsMemoryOverflow(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRANode *t_fu)
+{
+  CGRAMem *memNode = t_cgra->MemNodes[t_fu->getClusterId()];
+  if (t_dataNode->getSize() <= memNode->getAvailableMemSize())
+  {
+    return false;
+  }
+  return true;
+}
+
+void Mapper::dataMemNodeMapping(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRANode *t_fu)
+{
+  CGRAMem *memNode = t_cgra->MemNodes[t_fu->getClusterId()];
+  memNode->setAvailableMemSize(memNode->getAvailableMemSize() - t_dataNode->getSize());
+  m_dataMemMapping[memNode] = t_dataNode;
+  errs() << "Map Data Node " << t_dataNode->getID() << " to Mem Node " << memNode->getID() << "\n";
+  errs() << "Mem Node " << memNode->getID() << " has " << memNode->getAvailableMemSize() << " memory size left\n";
+}
+
+bool Mapper::checkIsNeedMemMap(CGRA *t_cgra, DFG *t_dfg, DFGNode *t_dfgNode)
+{
+  if ((t_dfgNode->isLoad() && t_dfgNode->hasMemory()) || (t_dfgNode->isStore() && t_dfgNode->hasMemory()))
+  {
+    return true;
+  }
+  return false;
 }

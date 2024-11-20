@@ -15,15 +15,16 @@ CGRAMem::CGRAMem(int t_id, int t_x, int t_y, int t_memorySize)
     : CGRANode()
 {
     setID(t_id);
-    cout << "Memory Node ID: " << t_id << endl;
+    // cout << "Memory Node ID: " << t_id << endl;
     setLocation(t_x, t_y);
-    cout << "Memory Node at (" << t_x << ", " << t_y << ")" << endl;
+    // cout << "Memory Node at (" << t_x << ", " << t_y << ")" << endl;
     setMemorySize(t_memorySize);
-    cout << "Memory size: " << t_memorySize << " bytes" << endl;
+    // cout << "Memory size: " << t_memorySize << " bytes" << endl;
     setIsMem(true);
     setDisabled(false);
+    setAvailableMemSize(t_memorySize);
     // m_CGRANodeCluster = NULL;
-    cout << "Memory node created\n";
+    // cout << "Memory node created\n";
 }
 
 void CGRAMem::setMemorySize(int t_memorySize)
@@ -56,4 +57,19 @@ list<CGRANode *> CGRAMem::getCluster()
 void CGRAMem::addNodeToCluster(CGRANode *t_node)
 {
     m_CGRANodeCluster.push_back(t_node);
+}
+
+int CGRAMem::getAvailableMemSize()
+{
+    return this->m_availableMemSize;
+}
+
+void CGRAMem::setAvailableMemSize(int t_availableMemSize)
+{
+    this->m_availableMemSize = t_availableMemSize;
+}
+
+void CGRAMem::constructMRRG()
+{
+    this->setAvailableMemSize(getMemorySize());
 }
