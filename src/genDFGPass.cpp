@@ -329,7 +329,7 @@ namespace
                 cout << "[fail]\n";
             else
             {
-                mapper->showSchedule(cgra, dfg2, II, isStaticElasticCGRA, parameterizableCGRA);
+                mapper->showSchedule(cgra, dfg2, II, isStaticElasticCGRA, parameterizableCGRA, supportMemory);
                 cout << "==================================\n";
                 cout << "[Mapping Success]\n";
                 cout << "==================================\n";

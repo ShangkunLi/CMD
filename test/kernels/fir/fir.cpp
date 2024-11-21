@@ -27,7 +27,7 @@ int main()
   return 0;
 }
 
-void kernel(float input[], float output[], float coefficient[])
+void kernel()
 /*   input :           input sample array */
 /*   output:           output sample array */
 /*   coefficient:      coefficient array */
@@ -36,7 +36,7 @@ void kernel(float input[], float output[], float coefficient[])
   float sum = 0.0;
   #pragma clang loop unroll_count(4) vectorize_width(4)
   for (i = 0; i < NTAPS; ++i) {
-    sum += input[i] * coefficient[i];
+    sum += input[i] * coefficients[i];
   }
   output[0] = sum;
 }

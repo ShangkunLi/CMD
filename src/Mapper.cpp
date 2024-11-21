@@ -581,7 +581,7 @@ int Mapper::getMaxMappingCycle()
 }
 
 void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
-                          bool t_isStaticElasticCGRA, bool t_parameterizableCGRA)
+                          bool t_isStaticElasticCGRA, bool t_parameterizableCGRA, bool t_supportMemory)
 {
 
   // tiles and links are in different formats (only used for
@@ -592,203 +592,427 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
   map<string, map<string, vector<int>>> jsonTiles;
   map<string, map<string, vector<int>>> jsonLinks;
   map<string, map<string, map<string, vector<int>>>> jsonTilesLinks;
-
-  int cycle = 0;
-  int displayRows = t_cgra->getRows() * 2 - 1;
-  int displayColumns = t_cgra->getColumns() * 2;
-  string **display = new std::string *[displayRows];
-  for (int i = 0; i < displayRows; ++i)
-    display[i] = new std::string[displayColumns];
-  for (int i = 0; i < displayRows; ++i)
+  if (!t_supportMemory)
   {
-    for (int j = 0; j < displayColumns; ++j)
-    {
-      display[i][j] = "     ";
-      if (j == displayColumns - 1)
-        display[i][j] = "\n";
-    }
-  }
-  int showCycleBoundary = t_cgra->getFUCount();
-  if (showCycleBoundary < 2 * t_II)
-  {
-    showCycleBoundary = 2 * t_II;
-  }
-  if (t_isStaticElasticCGRA)
-    showCycleBoundary = t_dfg->getNodeCount();
-  while (cycle <= 2 * showCycleBoundary)
-  {
-
-    if (cycle < t_II and t_parameterizableCGRA)
-    {
-      for (int i = 0; i < t_cgra->getLinkCount(); ++i)
-      {
-        CGRALink *link = t_cgra->links[i];
-        if (link->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-        {
-          string strSrcNodeID = to_string(link->getSrc()->getID());
-          string strDstNodeID = to_string(link->getDst()->getID());
-          if (jsonLinks.find(strSrcNodeID) == jsonLinks.end())
-          {
-            map<string, vector<int>> jsonLinkDsts;
-            jsonLinks[strSrcNodeID] = jsonLinkDsts;
-          }
-          if (jsonLinks[strSrcNodeID].find(strDstNodeID) == jsonLinks[strSrcNodeID].end())
-          {
-            vector<int> jsonLinkDstCycles;
-            jsonLinks[strSrcNodeID][strDstNodeID] = jsonLinkDstCycles;
-          }
-          jsonLinks[strSrcNodeID][strDstNodeID].push_back(cycle);
-        }
-      }
-    }
-
-    mappingResult << "--------------------------- cycle:" << cycle << " ---------------------------" << endl;
-    for (int i = 0; i < t_cgra->getRows(); ++i)
-    {
-      for (int j = 0; j < t_cgra->getColumns(); ++j)
-      {
-
-        // Display the CGRA node occupancy.
-        bool fu_occupied = false;
-        DFGNode *dfgNode;
-        for (DFGNode *currentDFGNode : t_dfg->nodes)
-        {
-          if (m_mappingTiming[currentDFGNode] == cycle and
-              m_mapping[currentDFGNode] == t_cgra->nodes[i][j])
-          {
-            fu_occupied = true;
-            dfgNode = currentDFGNode;
-            break;
-          }
-          else if (m_mapping[currentDFGNode] == t_cgra->nodes[i][j])
-          {
-            int temp_cycle = cycle - t_II;
-            while (temp_cycle >= 0)
-            {
-              if (m_mappingTiming[currentDFGNode] == temp_cycle)
-              {
-                fu_occupied = true;
-                dfgNode = currentDFGNode;
-                break;
-              }
-              temp_cycle -= t_II;
-            }
-          }
-        }
-        string str_fu;
-        if (fu_occupied)
-        {
-          if (t_dfg->getID(dfgNode) < 10)
-            str_fu = "[  " + to_string(dfgNode->getID()) + "  ]";
-          else
-            str_fu = "[ " + to_string(dfgNode->getID()) + "  ]";
-          string strNodeID = to_string(t_cgra->nodes[i][j]->getID());
-          if (t_parameterizableCGRA)
-          {
-            if (jsonTiles.find(strNodeID) == jsonTiles.end())
-            {
-              map<string, vector<int>> jsonTileCycleOps;
-              jsonTiles[strNodeID] = jsonTileCycleOps;
-            }
-            vector<int> jsonCycleOp{dfgNode->getID()};
-            jsonTiles[strNodeID][to_string(cycle % t_II)] = jsonCycleOp;
-          }
-        }
-        else
-        {
-          str_fu = "[     ]";
-        }
-        display[i * 2][j * 2] = str_fu;
-
-        // FIXME: some arrows are not display correctly (e.g., 7).
-        // Display the CGRA link occupancy.
-        // \u2190: left; \u2191: up; \u2192: right; \u2193: down;
-        // \u21c4: left&right; \u21c5: up&down.
-        // TODO: [dashed for bypass]
-        // \u21e0: left; \u21e1: up; \u21e2: right; \u21e3: down;
-        if (i < t_cgra->getRows() - 1)
-        {
-          string str_link = "";
-          CGRALink *lu = t_cgra->getLink(t_cgra->nodes[i][j], t_cgra->nodes[i + 1][j]);
-          CGRALink *ld = t_cgra->getLink(t_cgra->nodes[i + 1][j], t_cgra->nodes[i][j]);
-          if (ld != NULL and ld->isOccupied(cycle, t_II, t_isStaticElasticCGRA) and
-              lu != NULL and lu->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-          {
-            str_link = "   \u21c5 ";
-          }
-          else if (ld != NULL and ld->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-          {
-            if (!ld->isBypass(cycle))
-              str_link = "   \u2193 ";
-            else
-              str_link = "   \u2193 ";
-          }
-          else if (lu != NULL and lu->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-          {
-            if (!lu->isBypass(cycle))
-              str_link = "   \u2191 ";
-            else
-              str_link = "   \u2191 ";
-          }
-          else
-          {
-            str_link = "     ";
-          }
-          display[i * 2 + 1][j * 2] = str_link;
-        }
-        if (j < t_cgra->getColumns() - 1)
-        {
-          string str_link = "";
-          CGRALink *lr = t_cgra->getLink(t_cgra->nodes[i][j], t_cgra->nodes[i][j + 1]);
-          CGRALink *ll = t_cgra->getLink(t_cgra->nodes[i][j + 1], t_cgra->nodes[i][j]);
-          if (lr != NULL and lr->isOccupied(cycle, t_II, t_isStaticElasticCGRA) and
-              ll != NULL and ll->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-          {
-            str_link = " \u21c4 ";
-          }
-          else if (lr != NULL and lr->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-          {
-            if (!lr->isBypass(cycle))
-              str_link = " \u2192 ";
-            else
-              str_link = " \u2192 ";
-          }
-          else if (ll != NULL and ll->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
-          {
-            if (!ll->isBypass(cycle))
-              str_link = " \u2190 ";
-            else
-              str_link = " \u2190 ";
-          }
-          else
-          {
-            str_link = "   ";
-          }
-          display[i * 2][j * 2 + 1] = str_link;
-        }
-      }
-    }
-
-    // Display mapping and routing cycle by cycle.
-    //    for (int i=0; i<displayRows; ++i) {
-    for (int i = displayRows - 1; i >= 0; --i)
+    int cycle = 0;
+    int displayRows = t_cgra->getRows() * 2 - 1;
+    int displayColumns = t_cgra->getColumns() * 2;
+    string **display = new std::string *[displayRows];
+    for (int i = 0; i < displayRows; ++i)
+      display[i] = new std::string[displayColumns];
+    for (int i = 0; i < displayRows; ++i)
     {
       for (int j = 0; j < displayColumns; ++j)
       {
-        mappingResult << display[i][j];
+        display[i][j] = "     ";
+        if (j == displayColumns - 1)
+          display[i][j] = "\n";
       }
     }
-    ++cycle;
-  }
-  mappingResult << "[Mapping II: " << t_II << "]" << endl;
+    int showCycleBoundary = t_cgra->getFUCount();
+    if (showCycleBoundary < 2 * t_II)
+    {
+      showCycleBoundary = 2 * t_II;
+    }
+    if (t_isStaticElasticCGRA)
+      showCycleBoundary = t_dfg->getNodeCount();
+    while (cycle <= 2 * showCycleBoundary)
+    {
 
-  if (t_parameterizableCGRA)
+      if (cycle < t_II and t_parameterizableCGRA)
+      {
+        for (int i = 0; i < t_cgra->getLinkCount(); ++i)
+        {
+          CGRALink *link = t_cgra->links[i];
+          if (link->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+          {
+            string strSrcNodeID = to_string(link->getSrc()->getID());
+            string strDstNodeID = to_string(link->getDst()->getID());
+            if (jsonLinks.find(strSrcNodeID) == jsonLinks.end())
+            {
+              map<string, vector<int>> jsonLinkDsts;
+              jsonLinks[strSrcNodeID] = jsonLinkDsts;
+            }
+            if (jsonLinks[strSrcNodeID].find(strDstNodeID) == jsonLinks[strSrcNodeID].end())
+            {
+              vector<int> jsonLinkDstCycles;
+              jsonLinks[strSrcNodeID][strDstNodeID] = jsonLinkDstCycles;
+            }
+            jsonLinks[strSrcNodeID][strDstNodeID].push_back(cycle);
+          }
+        }
+      }
+
+      mappingResult << "--------------------------- cycle:" << cycle << " ---------------------------" << endl;
+      for (int i = 0; i < t_cgra->getRows(); ++i)
+      {
+        for (int j = 0; j < t_cgra->getColumns(); ++j)
+        {
+
+          // Display the CGRA node occupancy.
+          bool fu_occupied = false;
+          DFGNode *dfgNode;
+          for (DFGNode *currentDFGNode : t_dfg->nodes)
+          {
+            if (m_mappingTiming[currentDFGNode] == cycle and
+                m_mapping[currentDFGNode] == t_cgra->nodes[i][j])
+            {
+              fu_occupied = true;
+              dfgNode = currentDFGNode;
+              break;
+            }
+            else if (m_mapping[currentDFGNode] == t_cgra->nodes[i][j])
+            {
+              int temp_cycle = cycle - t_II;
+              while (temp_cycle >= 0)
+              {
+                if (m_mappingTiming[currentDFGNode] == temp_cycle)
+                {
+                  fu_occupied = true;
+                  dfgNode = currentDFGNode;
+                  break;
+                }
+                temp_cycle -= t_II;
+              }
+            }
+          }
+          string str_fu;
+          if (fu_occupied)
+          {
+            if (t_dfg->getID(dfgNode) < 10)
+              str_fu = "[  " + to_string(dfgNode->getID()) + "  ]";
+            else
+              str_fu = "[ " + to_string(dfgNode->getID()) + "  ]";
+            string strNodeID = to_string(t_cgra->nodes[i][j]->getID());
+            if (t_parameterizableCGRA)
+            {
+              if (jsonTiles.find(strNodeID) == jsonTiles.end())
+              {
+                map<string, vector<int>> jsonTileCycleOps;
+                jsonTiles[strNodeID] = jsonTileCycleOps;
+              }
+              vector<int> jsonCycleOp{dfgNode->getID()};
+              jsonTiles[strNodeID][to_string(cycle % t_II)] = jsonCycleOp;
+            }
+          }
+          else
+          {
+            str_fu = "[     ]";
+          }
+          display[i * 2][j * 2] = str_fu;
+
+          // FIXME: some arrows are not display correctly (e.g., 7).
+          // Display the CGRA link occupancy.
+          // \u2190: left; \u2191: up; \u2192: right; \u2193: down;
+          // \u21c4: left&right; \u21c5: up&down.
+          // TODO: [dashed for bypass]
+          // \u21e0: left; \u21e1: up; \u21e2: right; \u21e3: down;
+          if (i < t_cgra->getRows() - 1)
+          {
+            string str_link = "";
+            CGRALink *lu = t_cgra->getLink(t_cgra->nodes[i][j], t_cgra->nodes[i + 1][j]);
+            CGRALink *ld = t_cgra->getLink(t_cgra->nodes[i + 1][j], t_cgra->nodes[i][j]);
+            if (ld != NULL and ld->isOccupied(cycle, t_II, t_isStaticElasticCGRA) and
+                lu != NULL and lu->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              str_link = "   \u21c5 ";
+            }
+            else if (ld != NULL and ld->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!ld->isBypass(cycle))
+                str_link = "   \u2193 ";
+              else
+                str_link = "   \u2193 ";
+            }
+            else if (lu != NULL and lu->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!lu->isBypass(cycle))
+                str_link = "   \u2191 ";
+              else
+                str_link = "   \u2191 ";
+            }
+            else
+            {
+              str_link = "     ";
+            }
+            display[i * 2 + 1][j * 2] = str_link;
+          }
+          if (j < t_cgra->getColumns() - 1)
+          {
+            string str_link = "";
+            CGRALink *lr = t_cgra->getLink(t_cgra->nodes[i][j], t_cgra->nodes[i][j + 1]);
+            CGRALink *ll = t_cgra->getLink(t_cgra->nodes[i][j + 1], t_cgra->nodes[i][j]);
+            if (lr != NULL and lr->isOccupied(cycle, t_II, t_isStaticElasticCGRA) and
+                ll != NULL and ll->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              str_link = " \u21c4 ";
+            }
+            else if (lr != NULL and lr->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!lr->isBypass(cycle))
+                str_link = " \u2192 ";
+              else
+                str_link = " \u2192 ";
+            }
+            else if (ll != NULL and ll->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!ll->isBypass(cycle))
+                str_link = " \u2190 ";
+              else
+                str_link = " \u2190 ";
+            }
+            else
+            {
+              str_link = "   ";
+            }
+            display[i * 2][j * 2 + 1] = str_link;
+          }
+        }
+      }
+
+      // Display mapping and routing cycle by cycle.
+      //    for (int i=0; i<displayRows; ++i) {
+      for (int i = displayRows - 1; i >= 0; --i)
+      {
+        for (int j = 0; j < displayColumns; ++j)
+        {
+          mappingResult << display[i][j];
+        }
+      }
+      ++cycle;
+    }
+    mappingResult << "[Mapping II: " << t_II << "]" << endl;
+
+    if (t_parameterizableCGRA)
+    {
+      jsonTilesLinks["tiles"] = jsonTiles;
+      jsonTilesLinks["links"] = jsonLinks;
+      json jsonMap(jsonTilesLinks);
+      ofstream f("schedule.json", ios_base::trunc | ios_base::out);
+      f << jsonMap;
+    }
+  }
+  else
   {
-    jsonTilesLinks["tiles"] = jsonTiles;
-    jsonTilesLinks["links"] = jsonLinks;
-    json jsonMap(jsonTilesLinks);
-    ofstream f("schedule.json", ios_base::trunc | ios_base::out);
-    f << jsonMap;
+    int cycle = 0;
+    int displayRows = t_cgra->getRows() * 2 - 1;
+    int displayColumns = t_cgra->getColumns() * 2;
+    string **display = new std::string *[displayRows];
+    for (int i = 0; i < displayRows; ++i)
+      display[i] = new std::string[displayColumns];
+    for (int i = 0; i < displayRows; ++i)
+    {
+      for (int j = 0; j < displayColumns; ++j)
+      {
+        display[i][j] = "     ";
+        if (j == displayColumns - 1)
+          display[i][j] = "\n";
+      }
+    }
+    int showCycleBoundary = t_cgra->getFUCount();
+    if (showCycleBoundary < 2 * t_II)
+    {
+      showCycleBoundary = 2 * t_II;
+    }
+    if (t_isStaticElasticCGRA)
+      showCycleBoundary = t_dfg->getNodeCount();
+
+    mappingResult << "[Mapping II: " << t_II << "]" << endl;
+    // Generate memory unit mapping result.
+    mappingResult << "[Memory Unit Mapping]" << endl;
+    for (auto memNode : t_cgra->MemNodes)
+    {
+      mappingResult << "\tMemory Unit[" << memNode.second->getID() << "] at (" << memNode.second->getX() << "," << memNode.second->getY() << "): occupied/size=" << memNode.second->getMemorySize() - memNode.second->getAvailableMemSize() << "/" << memNode.second->getMemorySize() << "\n";
+      for (auto it : this->m_dataMemMapping)
+      {
+        if (it.second == memNode.second)
+        {
+          if (it.first->getParentNode()->getInst()->getOpcode() == Instruction::Load)
+          {
+            mappingResult << "\t\tData Node[" << it.first->getID() << "] " << it.first->getStringRef().str() << ": size=" << it.first->getSize() << "\t\u2192\t" << it.first->getParentNode()->getID() << "\n";
+          }
+          else if (it.first->getParentNode()->getInst()->getOpcode() == Instruction::Store)
+          {
+            mappingResult << "\t\tData Node[" << it.first->getID() << "] " << it.first->getStringRef().str() << ": size=" << it.first->getSize() << "\t\u2190\t" << it.first->getParentNode()->getID() << "\n";
+          }
+        }
+      }
+    }
+
+    while (cycle <= 2 * showCycleBoundary)
+    {
+
+      if (cycle < t_II and t_parameterizableCGRA)
+      {
+        for (int i = 0; i < t_cgra->getLinkCount(); ++i)
+        {
+          CGRALink *link = t_cgra->links[i];
+          if (link->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+          {
+            string strSrcNodeID = to_string(link->getSrc()->getID());
+            string strDstNodeID = to_string(link->getDst()->getID());
+            if (jsonLinks.find(strSrcNodeID) == jsonLinks.end())
+            {
+              map<string, vector<int>> jsonLinkDsts;
+              jsonLinks[strSrcNodeID] = jsonLinkDsts;
+            }
+            if (jsonLinks[strSrcNodeID].find(strDstNodeID) == jsonLinks[strSrcNodeID].end())
+            {
+              vector<int> jsonLinkDstCycles;
+              jsonLinks[strSrcNodeID][strDstNodeID] = jsonLinkDstCycles;
+            }
+            jsonLinks[strSrcNodeID][strDstNodeID].push_back(cycle);
+          }
+        }
+      }
+
+      mappingResult << "--------------------------- cycle:" << cycle << " ---------------------------" << endl;
+      for (int i = 0; i < t_cgra->getRows(); ++i)
+      {
+        for (int j = 0; j < t_cgra->getColumns(); ++j)
+        {
+
+          // Display the CGRA node occupancy.
+          bool fu_occupied = false;
+          DFGNode *dfgNode;
+          for (DFGNode *currentDFGNode : t_dfg->nodes)
+          {
+            if (m_mappingTiming[currentDFGNode] == cycle and
+                m_mapping[currentDFGNode] == t_cgra->nodes[i][j])
+            {
+              fu_occupied = true;
+              dfgNode = currentDFGNode;
+              break;
+            }
+            else if (m_mapping[currentDFGNode] == t_cgra->nodes[i][j])
+            {
+              int temp_cycle = cycle - t_II;
+              while (temp_cycle >= 0)
+              {
+                if (m_mappingTiming[currentDFGNode] == temp_cycle)
+                {
+                  fu_occupied = true;
+                  dfgNode = currentDFGNode;
+                  break;
+                }
+                temp_cycle -= t_II;
+              }
+            }
+          }
+          string str_fu;
+          if (fu_occupied)
+          {
+            if (t_dfg->getID(dfgNode) < 10)
+              str_fu = "[  " + to_string(dfgNode->getID()) + "  ]";
+            else
+              str_fu = "[ " + to_string(dfgNode->getID()) + "  ]";
+            string strNodeID = to_string(t_cgra->nodes[i][j]->getID());
+            if (t_parameterizableCGRA)
+            {
+              if (jsonTiles.find(strNodeID) == jsonTiles.end())
+              {
+                map<string, vector<int>> jsonTileCycleOps;
+                jsonTiles[strNodeID] = jsonTileCycleOps;
+              }
+              vector<int> jsonCycleOp{dfgNode->getID()};
+              jsonTiles[strNodeID][to_string(cycle % t_II)] = jsonCycleOp;
+            }
+          }
+          else
+          {
+            str_fu = "[     ]";
+          }
+          display[i * 2][j * 2] = str_fu;
+
+          // FIXME: some arrows are not display correctly (e.g., 7).
+          // Display the CGRA link occupancy.
+          // \u2190: left; \u2191: up; \u2192: right; \u2193: down;
+          // \u21c4: left&right; \u21c5: up&down.
+          // TODO: [dashed for bypass]
+          // \u21e0: left; \u21e1: up; \u21e2: right; \u21e3: down;
+          if (i < t_cgra->getRows() - 1)
+          {
+            string str_link = "";
+            CGRALink *lu = t_cgra->getLink(t_cgra->nodes[i][j], t_cgra->nodes[i + 1][j]);
+            CGRALink *ld = t_cgra->getLink(t_cgra->nodes[i + 1][j], t_cgra->nodes[i][j]);
+            if (ld != NULL and ld->isOccupied(cycle, t_II, t_isStaticElasticCGRA) and
+                lu != NULL and lu->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              str_link = "   \u21c5 ";
+            }
+            else if (ld != NULL and ld->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!ld->isBypass(cycle))
+                str_link = "   \u2193 ";
+              else
+                str_link = "   \u2193 ";
+            }
+            else if (lu != NULL and lu->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!lu->isBypass(cycle))
+                str_link = "   \u2191 ";
+              else
+                str_link = "   \u2191 ";
+            }
+            else
+            {
+              str_link = "     ";
+            }
+            display[i * 2 + 1][j * 2] = str_link;
+          }
+          if (j < t_cgra->getColumns() - 1)
+          {
+            string str_link = "";
+            CGRALink *lr = t_cgra->getLink(t_cgra->nodes[i][j], t_cgra->nodes[i][j + 1]);
+            CGRALink *ll = t_cgra->getLink(t_cgra->nodes[i][j + 1], t_cgra->nodes[i][j]);
+            if (lr != NULL and lr->isOccupied(cycle, t_II, t_isStaticElasticCGRA) and
+                ll != NULL and ll->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              str_link = " \u21c4 ";
+            }
+            else if (lr != NULL and lr->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!lr->isBypass(cycle))
+                str_link = " \u2192 ";
+              else
+                str_link = " \u2192 ";
+            }
+            else if (ll != NULL and ll->isOccupied(cycle, t_II, t_isStaticElasticCGRA))
+            {
+              if (!ll->isBypass(cycle))
+                str_link = " \u2190 ";
+              else
+                str_link = " \u2190 ";
+            }
+            else
+            {
+              str_link = "   ";
+            }
+            display[i * 2][j * 2 + 1] = str_link;
+          }
+        }
+      }
+
+      // Display mapping and routing cycle by cycle.
+      //    for (int i=0; i<displayRows; ++i) {
+      for (int i = displayRows - 1; i >= 0; --i)
+      {
+        for (int j = 0; j < displayColumns; ++j)
+        {
+          mappingResult << display[i][j];
+        }
+      }
+      ++cycle;
+    }
+
+    if (t_parameterizableCGRA)
+    {
+      jsonTilesLinks["tiles"] = jsonTiles;
+      jsonTilesLinks["links"] = jsonLinks;
+      json jsonMap(jsonTilesLinks);
+      ofstream f("schedule.json", ios_base::trunc | ios_base::out);
+      f << jsonMap;
+    }
   }
 }
 
@@ -1919,10 +2143,14 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
   bool fail = false;
   DataNode *dataNode = NULL;
   this->m_mapping.clear();
+  this->m_dataMemMapping.clear();
   while (1)
   {
     cout << "----------------------------------------\n";
     cout << "[DEBUG] start heuristic memory algorithm with II=" << t_II << "\n";
+    this->m_mapping.clear();
+    this->m_dataMemMapping.clear();
+    dataNode = NULL;
     int cycle = 0;
     // Clean existing mapping results.
     constructMRRG(t_dfg, t_cgra, t_II);
@@ -1951,10 +2179,18 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
           for (int j = 0; j < t_cgra->getColumns(); ++j)
           {
             CGRANode *fu = t_cgra->nodes[i][j];
-
-            if (this->checkIsMemoryOverflow(t_cgra, t_dfg, dataNode, fu))
+            if (this->dataInMem(t_cgra, t_dfg, dataNode, t_cgra->MemNodes[fu->getClusterId()]))
             {
-              continue;
+              errs() << "Data Node already in Memory, no need for overflow check.\n";
+            }
+            else
+            {
+              // Check if the memory is overflow
+              if (this->checkIsMemoryOverflow(t_cgra, t_dfg, dataNode, fu))
+              {
+                errs() << "Memory Overflow.\n";
+                continue;
+              }
             }
             // Calculate the cost of mapping dfgNode onto fu
             // Use the longest path from predecessors' CGRANodes to t_fu as the cost
@@ -2067,8 +2303,12 @@ bool Mapper::checkIsMemoryOverflow(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNod
 void Mapper::dataMemNodeMapping(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRANode *t_fu)
 {
   CGRAMem *memNode = t_cgra->MemNodes[t_fu->getClusterId()];
-  memNode->setAvailableMemSize(memNode->getAvailableMemSize() - t_dataNode->getSize());
-  m_dataMemMapping[memNode] = t_dataNode;
+  if (!this->dataInMem(t_cgra, t_dfg, t_dataNode, memNode))
+  {
+    memNode->setAvailableMemSize(memNode->getAvailableMemSize() - t_dataNode->getSize());
+    errs() << memNode->getAvailableMemSize() - t_dataNode->getSize() << "\n";
+  }
+  this->m_dataMemMapping[t_dataNode] = memNode;
   errs() << "Map Data Node " << t_dataNode->getID() << " to Mem Node " << memNode->getID() << "\n";
   errs() << "Mem Node " << memNode->getID() << " has " << memNode->getAvailableMemSize() << " memory size left\n";
 }
@@ -2079,5 +2319,25 @@ bool Mapper::checkIsNeedMemMap(CGRA *t_cgra, DFG *t_dfg, DFGNode *t_dfgNode)
   {
     return true;
   }
+  return false;
+}
+
+bool Mapper::dataInMem(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRAMem *t_mem)
+{
+  if (this->m_dataMemMapping.size() != 0)
+  {
+    for (auto it : this->m_dataMemMapping)
+    {
+      if (it.second == t_mem)
+      {
+        if (it.first->getStringRef().str() == t_dataNode->getStringRef().str())
+        {
+          errs() << "Data Node " << t_dataNode->getID() << t_dataNode->getStringRef().str() << " is already in Mem Node " << t_mem->getID() << "\n";
+          return true;
+        }
+      }
+    }
+  }
+  errs() << "Data Node " << t_dataNode->getID() << t_dataNode->getStringRef().str() << " is not in Mem Node " << t_mem->getID() << "\n";
   return false;
 }

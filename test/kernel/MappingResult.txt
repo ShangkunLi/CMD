@@ -1,3 +1,11 @@
+[Mapping II: 4]
+[Memory Unit Mapping]
+	Memory Unit[0] at (0,0): occupied/size=0/5120
+	Memory Unit[1] at (2,0): occupied/size=128/5120
+		Data Node[0] coefficients: size=128	→	4
+	Memory Unit[2] at (0,2): occupied/size=0/5120
+	Memory Unit[3] at (2,2): occupied/size=128/5120
+		Data Node[1] input: size=128	→	6
 --------------------------- cycle:0 ---------------------------
 [     ]   [     ]   [     ]   [     ]
                        ↑           
@@ -262,4 +270,3 @@
 [     ]   [ 13  ]   [  1  ]   [  5  ]
                                    
 [     ]   [     ] ← [  3  ]   [     ]
-[Mapping II: 4]

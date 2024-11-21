@@ -16,7 +16,7 @@ class Mapper
 private:
   int m_maxMappingCycle;
   map<DFGNode *, CGRANode *> m_mapping;
-  map<CGRAMem *, DataNode *> m_dataMemMapping;
+  map<DataNode *, CGRAMem *> m_dataMemMapping;
   map<DFGNode *, int> m_mappingTiming;
   map<CGRANode *, int> *dijkstra_search(CGRA *, DFG *, int, DFGNode *,
                                         DFGNode *, CGRANode *);
@@ -47,7 +47,7 @@ public:
   map<CGRANode *, int> *getPathWithMinCostAndConstraints(CGRA *, DFG *, int,
                                                          DFGNode *, list<map<CGRANode *, int> *> *);
   bool schedule(CGRA *, DFG *, int, DFGNode *, map<CGRANode *, int> *, bool);
-  void showSchedule(CGRA *, DFG *, int, bool, bool);
+  void showSchedule(CGRA *, DFG *, int, bool, bool, bool);
   void generateJSON(CGRA *, DFG *, int, bool);
   void generateJSON4IncrementalMap(CGRA *, DFG *);
   bool checkIsMemoryOverflow(CGRA *, DFG *, DataNode *, CGRANode *);
@@ -57,4 +57,5 @@ public:
   void sortAllocTilesByLevel(CGRA *);
   list<CGRANode *> placementGen(CGRA *, DFGNode *);
   int incrementalMap(CGRA *, DFG *, int);
+  bool dataInMem(CGRA*, DFG*, DataNode*, CGRAMem*);
 };
