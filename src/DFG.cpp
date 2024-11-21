@@ -712,6 +712,15 @@ bool DFG::constructWithDataMem(Loop *L)
             //   this->m_allEdges.push_back(dataEdge);
             // }
 
+            if (storeInst->getOperand(0))
+            {
+              errs() << "storeInst Operand: " << *storeInst->getOperand(0) << "\n";
+            }
+            else
+            {
+              errs() << "storeInst Operand is NULL\n";
+            }
+
             DFGNode *storeValNode;
             if (this->hasNode(storeInst->getOperand(0)))
             {
@@ -719,6 +728,7 @@ bool DFG::constructWithDataMem(Loop *L)
             }
             else
             {
+
               storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Instruction>(storeInst->getOperand(0)), storeInst->getOperand(0)->getName());
               errs() << storeNode->getInst() << " ";
               cout << " (ID: " << dataNode->getID() << ")\n";
