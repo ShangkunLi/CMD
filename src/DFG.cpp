@@ -53,7 +53,7 @@ DFG::DFG(Function &t_F, list<Loop *> *t_loops, bool t_targetFunction,
 
 DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
          bool t_precisionAware, bool t_heterogeneity,
-         map<string, int> *t_execLatency, list<string> *t_pipelinedOpt)
+         map<string, int> *t_execLatency, list<string> *t_pipelinedOpt, bool t_isSupportMemory)
 {
   m_num = 0;
   m_targetFunction = t_targetFunction;
@@ -67,12 +67,20 @@ DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
   this->dataNodes.clear();
   this->m_ctrlEdges.clear();
   m_nodeCount = 0;
+  m_dataNodeCount = 0;
   m_ctrledgeCount = 0;
   m_dfgedgeCount = 0;
   for (Loop *loop : *t_loops)
   {
     DFGLoops.push_back(loop);
-    this->constructWithDataMem(loop);
+    if (t_isSupportMemory)
+    {
+      this->constructWithDataMem(loop);
+    }
+    else
+    {
+      this->construct(loop);
+    }
     cout << "==================================\n";
   }
   this->connectDFGNodes();
@@ -93,6 +101,10 @@ DFG::DFG(list<Loop *> *t_loops, bool t_targetFunction,
   errs() << "Nodes Count: " << this->getNodeCount() << "\n";
   errs() << "Fu Nodes Count: " << this->getFuNodeCount() << "\n";
   errs() << "Data Nodes Count: " << this->getDataNodeCount() << "\n";
+  for (DataNode *dataNodes : this->dataNodes)
+  {
+    errs() << "Data Node: " << dataNodes->getID() << "\n";
+  }
 }
 
 // FIXME: only combine operations of mul+alu and alu+cmp for now,
@@ -498,8 +510,6 @@ list<DFGNode *> *DFG::getBFSOrderedNodes()
 // extract DFG with data accessing info
 bool DFG::constructWithDataMem(Loop *L)
 {
-
-  int dataNodeID = 0;
   if (!L->getSubLoops().empty())
   {
     errs() << "Nested Loop not Supported: " << L->getName() << "\n";
@@ -548,6 +558,7 @@ bool DFG::constructWithDataMem(Loop *L)
       {
         dfgNode = new DFGNode(this->m_nodeCount++, m_precisionAware, curII, getValueName(curII));
         this->nodes.push_back(dfgNode);
+        this->allNodes.push_back(dfgNode);
         cout << " (ID: " << dfgNode->getID() << ")\n";
       }
 
@@ -572,6 +583,7 @@ bool DFG::constructWithDataMem(Loop *L)
                 errs() << *gepInst << "\n";
                 gepNode = new DFGNode(this->m_nodeCount++, m_precisionAware, gepInst, this->getValueName(gepInst));
                 this->nodes.push_back(gepNode);
+                this->allNodes.push_back(gepNode);
                 cout << " (ID: " << dfgNode->getID() << ")\n";
               }
               else
@@ -588,8 +600,9 @@ bool DFG::constructWithDataMem(Loop *L)
               int datasize = DL.getTypeAllocSize(pointertype);
               errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
 
-              dataNode = new DataNode(dataNodeID++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
+              dataNode = new DataNode(this->m_dataNodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
               this->dataNodes.push_back(dataNode);
+              this->allNodes.push_back(dataNode);
               dataNode->setParentNode(loadNode);
               loadNode->sethasMemory(true);
               errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
@@ -599,8 +612,18 @@ bool DFG::constructWithDataMem(Loop *L)
             {
               errs() << " gepInst is NULL\n";
               return false;
-              // dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, loadInst->getOperand(0), loadInst->getOperand(0)->getName());
-              // this->nodes.push_back(dataNode);
+              // Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
+              // errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
+              // DataLayout DL = gepInst->getParent()->getModule()->getDataLayout();
+
+              // Type *pointertype = dyn_cast<PointerType>(gepPtrOprandType)->getElementType();
+              // errs() << "\t[Memory Node] Type of Array Type: " << *pointertype << "\n";
+              // int datasize = DL.getTypeAllocSize(pointertype);
+              // errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
+
+              // dataNode = new DataNode(dataNodeID++, m_precisionAware, loadInst->getOperand(0), loadInst->getOperand(0)->getName(), datasize, );
+              // this->dataNodes.push_back(dataNode);
+              // this->allNodes.push_back(dataNode);
               // errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
               // cout << " (ID: " << dataNode->getID() << ")\n";
             }
@@ -656,7 +679,7 @@ bool DFG::constructWithDataMem(Loop *L)
               int datasize = DL.getTypeAllocSize(pointertype);
               errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
 
-              dataNode = new DataNode(dataNodeID++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
+              dataNode = new DataNode(m_dataNodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
               this->dataNodes.push_back(dataNode);
               dataNode->setParentNode(storeNode);
               storeNode->sethasMemory(true);
@@ -665,7 +688,7 @@ bool DFG::constructWithDataMem(Loop *L)
             }
             else
             {
-              errs() << "[ERROR] storeInst is NULL\n";
+              errs() << "[ERROR] 1 storeInst is NULL\n";
               return false;
               // dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, storeInst->getOperand(1), storeInst->getOperand(1)->getName());
               // this->nodes.push_back(dataNode);
@@ -686,7 +709,464 @@ bool DFG::constructWithDataMem(Loop *L)
             // else
             // {
             //   dataEdge = new DFGEdge(m_dfgedgeCount++, storeNode, dataNode);
+            //   this->m_allEdges.push_back(dataEdge);
+            // }
+
+            DFGNode *storeValNode;
+            if (this->hasNode(storeInst->getOperand(0)))
+            {
+              storeValNode = this->getNode(storeInst->getOperand(0));
+            }
+            else
+            {
+              storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Instruction>(storeInst->getOperand(0)), storeInst->getOperand(0)->getName());
+              errs() << storeNode->getInst() << " ";
+              cout << " (ID: " << dataNode->getID() << ")\n";
+              this->nodes.push_back(storeValNode);
+            }
+
+            DFGEdge *dfgEdge; // Create dfg edge storeValNode -> storeNode
+            if (this->hasDFGEdge(storeValNode, storeNode))
+            {
+              dfgEdge = this->getDFGEdge(storeValNode, storeNode);
+            }
+            else
+            {
+              dfgEdge = new DFGEdge(m_dfgedgeCount++, storeValNode, storeNode);
+              this->m_DFGEdges.push_back(dfgEdge);
+            }
+            continue;
+          }
+          else
+          {
+            errs() << "[ERROR] storeInst is NULL\n";
+            return false;
+          }
+        }
+        else if (this->isLiveInBasicBlock(curBB, curII))
+        {
+          if (curII->getOpcode() == Instruction::PHI)
+          {
+            Instruction *outBBInst = this->getInstNotInBasicBlock(curBB, curII);
+            DFGNode *outBBNode;
+
+            if (this->hasNode(outBBInst))
+            {
+              outBBNode = this->getNode(outBBInst);
+            }
+            else
+            {
+              outBBNode = new DFGNode(this->m_nodeCount++, m_precisionAware, outBBInst, getValueName(outBBInst));
+              this->nodes.push_back(outBBNode);
+              cout << " (ID: " << outBBNode->getID() << ")\n";
+            }
+
+            DFGEdge *ctrlEdge;
+            if (hasCtrlEdge(outBBNode, dfgNode))
+            {
+              errs() << "Control Edge already exists.\n";
+              ctrlEdge = getCtrlEdge(outBBNode, dfgNode);
+            }
+            else
+            {
+              errs() << "Control Edge does not exist.\n";
+              ctrlEdge = new DFGEdge(this->m_ctrledgeCount++, outBBNode, dfgNode, true);
+              this->m_ctrlEdges.push_back(ctrlEdge);
+            }
+          }
+          else if (curII->getOpcode() == Instruction::Br)
+          {
+            Instruction *outBBInst = this->getInstNotInBasicBlock(curBB, curII);
+            DFGNode *outBBNode;
+
+            if (this->hasNode(outBBInst))
+            {
+              outBBNode = this->getNode(outBBInst);
+            }
+            else
+            {
+              outBBNode = new DFGNode(m_nodeCount++, m_precisionAware, outBBInst, getValueName(outBBInst));
+              this->nodes.push_back(outBBNode);
+              cout << " (ID: " << outBBNode->getID() << ")\n";
+            }
+
+            DFGEdge *ctrlEdge;
+            if (this->hasCtrlEdge(dfgNode, outBBNode))
+            {
+              ctrlEdge = getCtrlEdge(dfgNode, outBBNode);
+            }
+            else
+            {
+              ctrlEdge = new DFGEdge(m_ctrledgeCount++, dfgNode, outBBNode, true);
+              this->m_ctrlEdges.push_back(ctrlEdge);
+            }
+          }
+          else
+          {
+            Instruction *outBBInst = this->getInstNotInBasicBlock(curBB, curII);
+            DFGNode *outBBNode;
+
+            if (this->hasNode(outBBInst))
+            {
+              outBBNode = this->getNode(outBBInst);
+            }
+            else
+            {
+              outBBNode = new DFGNode(m_nodeCount++, m_precisionAware, outBBInst, getValueName(outBBInst));
+              this->nodes.push_back(outBBNode);
+              cout << " (ID: " << outBBNode->getID() << ")\n";
+            }
+
+            DFGEdge *dfgEdge;
+            if (this->hasDFGEdge(outBBNode, dfgNode))
+            {
+              dfgEdge = getDFGEdge(outBBNode, dfgNode);
+            }
+            else
+            {
+              dfgEdge = new DFGEdge(m_ctrledgeCount++, outBBNode, dfgNode);
+              this->m_DFGEdges.push_back(dfgEdge);
+            }
+          }
+        }
+      }
+    }
+
+    errs() << "==================================\n";
+    errs() << "===Done DFG Nodes Construction.===\n";
+
+    // Construct DFG Control Edges
+    for (DFGNode *node : this->nodes)
+    {
+      if (node->getOpcodeName() == "datamem")
+      {
+        continue;
+      }
+      Instruction *curII = node->getInst();
+      assert(node->getInst() == curII);
+
+      // Only consider the control dependencies for nodes in current BB
+      if (BBInsts.find(curII->getParent()) == BBInsts.end())
+      {
+        continue;
+      }
+
+      if (curII->getOpcode() == Instruction::PHI)
+      {
+        PHINode *phiNode = dyn_cast<PHINode>(curII);
+        errs() << "Phi Instruction: " << *phiNode << "\n";
+        for (unsigned i = 0; i < phiNode->getNumIncomingValues(); i++)
+        {
+          if (Instruction *inst = dyn_cast<Instruction>(phiNode->getIncomingBlock(i)->getTerminator()))
+          {
+            errs() << "Phi Instruction ctrl operand " << *inst << "\n";
+            DFGNode *ctrlNode;
+            if (this->hasNode(inst))
+            {
+              ctrlNode = this->getNode(inst);
+            }
+            else
+            {
+              DFGNode *ctrlNode = new DFGNode(m_nodeCount++, m_precisionAware, inst, getValueName(inst));
+              this->nodes.push_back(ctrlNode);
+              cout << " (ID: " << ctrlNode->getID() << ")\n";
+            }
+
+            DFGEdge *ctrlEdge;
+            if (this->hasCtrlEdge(ctrlNode, node))
+            {
+              errs() << "Control Edge already exists.\n";
+              ctrlEdge = this->getCtrlEdge(ctrlNode, node);
+            }
+            else
+            {
+              errs() << "Control Edge does not exist.\n";
+              ctrlEdge = new DFGEdge(m_ctrledgeCount++, ctrlNode, node, true);
+              this->m_ctrlEdges.push_back(ctrlEdge);
+              errs() << "Control Edge: " << ctrlEdge->getID() << " " << ctrlEdge->getSrc()->getID() << " -> " << ctrlEdge->getDst()->getID() << "\n";
+            }
+          }
+        }
+      }
+    }
+    errs() << "==================================\n";
+    errs() << "===Done DFG Contrl Edges Construction.===\n";
+
+    // Construct DFG Data Flow Edges
+    for (DFGNode *node : this->nodes)
+    {
+      if (node->getOpcodeName() == "datamem")
+      {
+        continue;
+      }
+      Instruction *curII = node->getInst();
+      errs() << "Instruction: " << *curII << "\n";
+      for (Instruction::op_iterator op = curII->op_begin(); op != curII->op_end(); op++)
+      {
+        Instruction *tempInst = dyn_cast<Instruction>(*op);
+        if (tempInst)
+        {
+          errs() << "Operand: " << *tempInst << "\n";
+          DFGEdge *dfgEdge;
+          if (this->hasNode(tempInst))
+          {
+            if (hasDFGEdge(this->getNode(tempInst), node))
+            {
+              dfgEdge = this->getDFGEdge(this->getNode(tempInst), node);
+            }
+            else
+            {
+              dfgEdge = new DFGEdge(m_dfgedgeCount++, this->getNode(tempInst), node);
+              this->m_DFGEdges.push_back(dfgEdge);
+            }
+          }
+          else
+          {
+            DFGNode *tempNode = new DFGNode(m_nodeCount++, m_precisionAware, tempInst, getValueName(tempInst));
+            this->nodes.push_back(tempNode);
+            cout << " (ID: " << tempNode->getID() << ")\n";
+            dfgEdge = new DFGEdge(m_dfgedgeCount++, this->getNode(tempInst), node);
+            this->m_DFGEdges.push_back(dfgEdge);
+          }
+        }
+      }
+    }
+    errs() << "==================================\n";
+    errs() << "===Done DFG Data Flow Edges Construction.===\n";
+  }
+
+  errs() << "==================================\n";
+  errs() << "===Print DFG Nodes===\n";
+  for (DFGNode *node : this->nodes)
+  {
+    errs() << "DFG Node: " << node->getID() << " " << *node->getValue() << "\n";
+  }
+
+  for (DataNode *dataNode : this->dataNodes)
+  {
+    errs() << "DFG Node: " << dataNode->getID() << "  " << dataNode->getOpcodeName() << "[size=" << dataNode->getSize() << "]: " << *dataNode->getValue() << ", Parent:" << dataNode->getParentNode()->getID() << "\n";
+  }
+
+  errs() << "==================================\n";
+  errs() << "===Print DFG Control Edges===\n";
+  for (DFGEdge *edge : this->m_ctrlEdges)
+  {
+    errs() << "DFG Control Edge: " << edge->getID() << " " << edge->getSrc()->getID() << " -> " << edge->getDst()->getID() << "\n";
+  }
+
+  errs() << "==================================\n";
+  errs() << "===Print DFG Data Flow Edges===\n";
+  for (DFGEdge *edge : this->m_DFGEdges)
+  {
+    errs() << "DFG Data Flow Edge: " << edge->getID() << " " << edge->getSrc()->getID() << " -> " << edge->getDst()->getID() << "\n";
+  }
+  // reorderInLongest();
+  return true;
+}
+
+// extract DFG with data accessing info
+bool DFG::construct(Loop *L)
+{
+  if (!L->getSubLoops().empty())
+  {
+    errs() << "Nested Loop not Supported: " << L->getName() << "\n";
+    return false;
+  }
+
+  errs() << "Loop Detected: " << L->getName() << "\n";
+  errs() << "Loop Header: " << L->getHeader()->getName() << "\n";
+  errs() << "Blocks Detected: \n";
+
+  for (BasicBlock *BB : L->getBlocks())
+  {
+    errs() << "BB: " << BB->getName() << "\n";
+    LoopBBs[L].push_back(BB);
+    for (Instruction &I : *BB)
+    {
+      Instruction *ptrI = &I;
+      errs() << "  " << I << "\n";
+      BBInsts[BB].push_back(ptrI);
+    }
+  }
+
+  // Construct DFG nodes.
+  for (BasicBlock *BB : L->getBlocks())
+  {
+    BasicBlock *curBB = BB;
+    errs() << "*** current basic block: " << *curBB->begin() << "\n";
+    for (BasicBlock *sucBB : successors(curBB))
+    {
+      errs() << "   ****** succ bb: " << *sucBB->begin() << "\n";
+    }
+
+    for (BasicBlock::iterator II = curBB->begin(), IEnd = curBB->end(); II != IEnd; ++II)
+    {
+
+      Instruction *curII = &*II;
+      errs() << *curII << "\n";
+
+      // Make nodes for each instruction in the basic block.
+      DFGNode *dfgNode;
+      if (this->hasNode(curII))
+      {
+        dfgNode = this->getNode(curII);
+      }
+      else
+      {
+        dfgNode = new DFGNode(this->m_nodeCount++, m_precisionAware, curII, getValueName(curII));
+        this->nodes.push_back(dfgNode);
+        this->allNodes.push_back(dfgNode);
+        cout << " (ID: " << dfgNode->getID() << ")\n";
+      }
+
+      // Handle Load/Store instructions and Out-of-BB instructions.
+      if (curII->getOpcode() == Instruction::Load || curII->getOpcode() == Instruction::Store || this->isLiveInBasicBlock(curBB, curII))
+      {
+        if (curII->getOpcode() == Instruction::Load)
+        {
+          LoadInst *loadInst = dyn_cast<LoadInst>(curII);
+          if (loadInst)
+          {
+            DFGNode *loadNode = this->getNode(loadInst);
+            DataNode *dataNode; // Use this node to store the array data
+            errs() << "\t[Memory Node] LoadInst Operand: " << *loadInst->getOperand(0) << "\n";
+            Instruction *gepInst = getParentGEP(loadInst);
+            if (gepInst)
+            {
+              errs() << "\t[Memory Node] Parent GEP: " << *gepInst << "\n";
+              DFGNode *gepNode;
+              if (!this->hasNode(gepInst))
+              {
+                errs() << *gepInst << "\n";
+                gepNode = new DFGNode(this->m_nodeCount++, m_precisionAware, gepInst, this->getValueName(gepInst));
+                this->nodes.push_back(gepNode);
+                this->allNodes.push_back(gepNode);
+                cout << " (ID: " << dfgNode->getID() << ")\n";
+              }
+              else
+              {
+                gepNode = this->getNode(gepInst);
+              }
+
+              // Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
+              // errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
+              // DataLayout DL = gepInst->getParent()->getModule()->getDataLayout();
+
+              // Type *pointertype = dyn_cast<PointerType>(gepPtrOprandType)->getElementType();
+              // errs() << "\t[Memory Node] Type of Array Type: " << *pointertype << "\n";
+              // int datasize = DL.getTypeAllocSize(pointertype);
+              // errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
+
+              // dataNode = new DataNode(this->m_dataNodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
+              // this->dataNodes.push_back(dataNode);
+              // this->allNodes.push_back(dataNode);
+              // dataNode->setParentNode(loadNode);
+              // loadNode->sethasMemory(true);
+              // errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
+              // cout << " (ID: " << dataNode->getID() << ")\n";
+            }
+            else
+            {
+              errs() << " gepInst is NULL\n";
+              return false;
+              // Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
+              // errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
+              // DataLayout DL = gepInst->getParent()->getModule()->getDataLayout();
+
+              // Type *pointertype = dyn_cast<PointerType>(gepPtrOprandType)->getElementType();
+              // errs() << "\t[Memory Node] Type of Array Type: " << *pointertype << "\n";
+              // int datasize = DL.getTypeAllocSize(pointertype);
+              // errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
+
+              // dataNode = new DataNode(dataNodeID++, m_precisionAware, loadInst->getOperand(0), loadInst->getOperand(0)->getName(), datasize, );
+              // this->dataNodes.push_back(dataNode);
+              // this->allNodes.push_back(dataNode);
+              // errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
+              // cout << " (ID: " << dataNode->getID() << ")\n";
+            }
+
+            // DFGEdge *dataEdge; // Create data edge dataNode -> loadNode
+            // if (this->hasDFGEdge(dataNode, loadNode))
+            // {
+            //   dataEdge = this->getDFGEdge(dataNode, loadNode);
+            // }
+            // else
+            // {
+            //   dataEdge = new DFGEdge(this->m_dfgedgeCount++, dataNode, loadNode);
             //   this->m_DFGEdges.push_back(dataEdge);
+            // }
+            continue;
+          }
+          else
+          {
+            errs() << "[ERROR] loadInst is NULL\n";
+            return false;
+          }
+        }
+        else if (curII->getOpcode() == Instruction::Store)
+        {
+          StoreInst *storeInst = dyn_cast<StoreInst>(curII);
+          if (storeInst)
+          {
+            DFGNode *storeNode = this->getNode(storeInst);
+            DataNode *dataNode; // Use this node to store the array data
+            Instruction *gepInst = getParentGEP(storeInst);
+            if (gepInst)
+            {
+              errs() << "\t[Memory Node] Parent GEP: " << *gepInst << "\n";
+              DFGNode *gepNode;
+              if (!this->hasNode(gepInst))
+              {
+                errs() << *gepInst << "\n";
+                gepNode = new DFGNode(m_nodeCount++, m_precisionAware, gepInst, this->getValueName(gepInst));
+                this->nodes.push_back(gepNode);
+                cout << " (ID: " << dfgNode->getID() << ")\n";
+              }
+              else
+              {
+                gepNode = this->getNode(gepInst);
+              }
+
+              // Type *gepPtrOprandType = dyn_cast<GetElementPtrInst>(gepInst)->getPointerOperandType();
+              // errs() << "\t[Memory Node] gepPtrOprandType: " << *gepPtrOprandType << "\n";
+              // DataLayout DL = gepInst->getParent()->getModule()->getDataLayout();
+
+              // Type *pointertype = dyn_cast<PointerType>(gepPtrOprandType)->getElementType();
+              // errs() << "\t[Memory Node] Type of Array Type: " << *pointertype << "\n";
+              // int datasize = DL.getTypeAllocSize(pointertype);
+              // errs() << "\t[Memory Node] Size of datasize: " << datasize << "\n";
+
+              // dataNode = new DataNode(m_dataNodeCount++, m_precisionAware, gepInst->getOperand(0), gepInst->getOperand(0)->getName(), datasize, pointertype);
+              // this->dataNodes.push_back(dataNode);
+              // dataNode->setParentNode(storeNode);
+              // storeNode->sethasMemory(true);
+              // errs() << dataNode->getOpcodeName() << "[size = " << dataNode->getSize() << "]" << ": " << dataNode->getValue()->getName() << " ";
+              // cout << " (ID: " << dataNode->getID() << ")\n";
+            }
+            else
+            {
+              errs() << "[ERROR] 1 storeInst is NULL\n";
+              return false;
+              // dataNode = new DataMemNode(m_nodeCount++, m_precisionAware, storeInst->getOperand(1), storeInst->getOperand(1)->getName());
+              // this->nodes.push_back(dataNode);
+              // errs() << dataNode->getOpcodeName() << ": " << dataNode->getValue()->getName() << " ";
+              // cout << " (ID: " << dataNode->getID() << ")\n";
+            }
+            // errs() << "DataMemNode Value: " << dataNode->getValue()->getName() << "\n";
+            // errs() << "DataMemNode StringRef: " << dataNode->getStringRef() << "\n";
+            // errs() << "DataMemNode Opcode Name: " << dataNode->getOpcodeName() << "\n";
+            // errs() << "DataMemNode Function Type: " << dataNode->getFuType() << "\n";
+            // dataNode->addPredNode(storeNode);
+
+            // DFGEdge *dataEdge; // Create data edge storeNode -> dataNode
+            // if (this->hasDFGEdge(storeNode, dataNode))
+            // {
+            //   dataEdge = this->getDFGEdge(storeNode, dataNode);
+            // }
+            // else
+            // {
+            //   dataEdge = new DFGEdge(m_dfgedgeCount++, storeNode, dataNode);
+            //   this->m_allEdges.push_back(dataEdge);
             // }
 
             DFGNode *storeValNode;
@@ -1787,6 +2267,7 @@ void DFG::generateDot(Function &t_F, bool t_isTrimmedDemo, bool t_supportMemory)
 
   if (t_supportMemory)
   {
+    errs() << "DataNodes Size: " << this->dataNodes.size() << "\n";
     for (DataNode *dataNode : this->dataNodes)
     {
       if (t_isTrimmedDemo)

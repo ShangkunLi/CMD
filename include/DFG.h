@@ -36,6 +36,7 @@ class DFG
 {
 private:
   int m_nodeCount;
+  int m_dataNodeCount;
   int m_ctrledgeCount;
   int m_dfgedgeCount;
 
@@ -49,6 +50,7 @@ private:
   // edges of data flow
   list<DFGEdge *> m_DFGEdges;
   list<DFGEdge *> m_ctrlEdges;
+  list<DFGEdge *> m_allEdges; // all edges including data Node edges
 
   string changeVal2Str(Value *ins);
   // get value's name or inst's content
@@ -97,10 +99,11 @@ private:
 
 public:
   DFG(Function &, list<Loop *> *, bool, bool, bool, map<string, int> *, list<string> *);
-  DFG(list<Loop *> *, bool, bool, bool, map<string, int> *, list<string> *);
+  DFG(list<Loop *> *, bool, bool, bool, map<string, int> *, list<string> *,bool);
   list<list<DFGNode *> *> *m_cycleNodeLists;
   // initial ordering of insts
-  list<DFGNode *> nodes; // nodes of all instructions
+  list<DFGNode *> allNodes;   // all nodes
+  list<DFGNode *> nodes;      // nodes of operating instructions
   list<DataNode *> dataNodes; // nodes of data
 
   list<Loop *> DFGLoops;
@@ -113,6 +116,7 @@ public:
   int getDataNodeCount();
   int getFuNodeCount();
   void construct(Function &);
+  bool construct(Loop *);
   bool constructWithDataMem(Loop *);
   void setupCycles();
   list<list<DFGEdge *> *> *calculateCycles();

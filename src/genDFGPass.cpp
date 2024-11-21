@@ -190,7 +190,7 @@ namespace
             cout << "number of innermost loops: " << innermostLoops->size() << "\n";
             cout << "==================================\n";
             DFG *dfg2 = new DFG(innermostLoops, targetEntireFunction, precisionAware,
-                                heterogeneity, execLatency, pipelinedOpt);
+                                heterogeneity, execLatency, pipelinedOpt, supportMemory);
 
             // Generate DFG without memory information.
             // list<Loop *> *targetLoops = getTargetLoops(t_F, functionWithLoop, targetNested);
@@ -345,7 +345,7 @@ namespace
             }
             cout << "==================================" << endl;
 
-            // return false;
+            return false;
         }
 
         /*

@@ -7,22 +7,22 @@ int row[SIZE];
 int feature[SIZE];
 int output[SIZE];
 
-void kernel(int nnz, int val[], int col[], int row[], int feature[], int output[]);
+// void kernel(int nnz, int val[], int col[], int row[], int feature[], int output[]);
 
-int main()
-{
+// int main()
+// {
 
-//  input_dsp (input, NTAPS, 0);
+// //  input_dsp (input, NTAPS, 0);
 
-  kernel(nnz, val, col, row, feature, output);
+//   kernel(nnz, val, col, row, feature, output);
 
-//  output_dsp (input, NTAPS, 0);
-//  output_dsp (coefficients, NTAPS, 0);
-//  output_dsp (output, NTAPS, 0);
-  return 0;
-}
+// //  output_dsp (input, NTAPS, 0);
+// //  output_dsp (coefficients, NTAPS, 0);
+// //  output_dsp (output, NTAPS, 0);
+//   return 0;
+// }
 
-void kernel(int nnz, int val[], int col[], int row[], int feature[], int output[])
+void kernel(int nnz)
 {
   int i = 0;
   int temp;

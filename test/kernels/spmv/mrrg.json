@@ -1,6 +1,185 @@
 {
+    "Mem Nodes": [
+        {
+            "cluster": [
+                0
+            ],
+            "cluster id": 0,
+            "id": 0,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 0,
+            "y coordinate": 0
+        },
+        {
+            "cluster": [
+                1
+            ],
+            "cluster id": 1,
+            "id": 1,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 1,
+            "y coordinate": 0
+        },
+        {
+            "cluster": [
+                2
+            ],
+            "cluster id": 2,
+            "id": 2,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 2,
+            "y coordinate": 0
+        },
+        {
+            "cluster": [
+                3
+            ],
+            "cluster id": 3,
+            "id": 3,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 3,
+            "y coordinate": 0
+        },
+        {
+            "cluster": [
+                4
+            ],
+            "cluster id": 4,
+            "id": 4,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 0,
+            "y coordinate": 1
+        },
+        {
+            "cluster": [
+                5
+            ],
+            "cluster id": 5,
+            "id": 5,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 1,
+            "y coordinate": 1
+        },
+        {
+            "cluster": [
+                6
+            ],
+            "cluster id": 6,
+            "id": 6,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 2,
+            "y coordinate": 1
+        },
+        {
+            "cluster": [
+                7
+            ],
+            "cluster id": 7,
+            "id": 7,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 3,
+            "y coordinate": 1
+        },
+        {
+            "cluster": [
+                8
+            ],
+            "cluster id": 8,
+            "id": 8,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 0,
+            "y coordinate": 2
+        },
+        {
+            "cluster": [
+                9
+            ],
+            "cluster id": 9,
+            "id": 9,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 1,
+            "y coordinate": 2
+        },
+        {
+            "cluster": [
+                10
+            ],
+            "cluster id": 10,
+            "id": 10,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 2,
+            "y coordinate": 2
+        },
+        {
+            "cluster": [
+                11
+            ],
+            "cluster id": 11,
+            "id": 11,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 3,
+            "y coordinate": 2
+        },
+        {
+            "cluster": [
+                12
+            ],
+            "cluster id": 12,
+            "id": 12,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 0,
+            "y coordinate": 3
+        },
+        {
+            "cluster": [
+                13
+            ],
+            "cluster id": 13,
+            "id": 13,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 1,
+            "y coordinate": 3
+        },
+        {
+            "cluster": [
+                14
+            ],
+            "cluster id": 14,
+            "id": 14,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 2,
+            "y coordinate": 3
+        },
+        {
+            "cluster": [
+                15
+            ],
+            "cluster id": 15,
+            "id": 15,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 3,
+            "y coordinate": 3
+        }
+    ],
     "PE Nodes": [
         {
+            "cluster id": 0,
             "complex": false,
             "id": 0,
             "node type": "PE",
@@ -24,6 +203,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 1,
             "complex": false,
             "id": 1,
             "node type": "PE",
@@ -47,6 +227,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 2,
             "complex": false,
             "id": 2,
             "node type": "PE",
@@ -70,6 +251,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 3,
             "complex": false,
             "id": 3,
             "node type": "PE",
@@ -93,6 +275,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 4,
             "complex": false,
             "id": 4,
             "node type": "PE",
@@ -116,6 +299,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 5,
             "complex": false,
             "id": 5,
             "node type": "PE",
@@ -139,6 +323,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 6,
             "complex": false,
             "id": 6,
             "node type": "PE",
@@ -162,6 +347,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 7,
             "complex": false,
             "id": 7,
             "node type": "PE",
@@ -185,6 +371,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 8,
             "complex": false,
             "id": 8,
             "node type": "PE",
@@ -208,6 +395,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 9,
             "complex": false,
             "id": 9,
             "node type": "PE",
@@ -231,6 +419,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 10,
             "complex": false,
             "id": 10,
             "node type": "PE",
@@ -254,6 +443,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 11,
             "complex": false,
             "id": 11,
             "node type": "PE",
@@ -277,6 +467,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 12,
             "complex": false,
             "id": 12,
             "node type": "PE",
@@ -300,6 +491,7 @@
             "y coordinate": 3
         },
         {
+            "cluster id": 13,
             "complex": false,
             "id": 13,
             "node type": "PE",
@@ -323,6 +515,7 @@
             "y coordinate": 3
         },
         {
+            "cluster id": 14,
             "complex": false,
             "id": 14,
             "node type": "PE",
@@ -346,6 +539,7 @@
             "y coordinate": 3
         },
         {
+            "cluster id": 15,
             "complex": false,
             "id": 15,
             "node type": "PE",

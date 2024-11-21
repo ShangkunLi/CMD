@@ -23,7 +23,7 @@
   "optPipelined"          : ["load", "store"],
   "additionalFunc"        : {},
   "incrementalMapping"    : false,
-  "supportMemory"         : false,
+  "supportMemory"         : true,
   "clusterSize"           : 4,
   "memorySize"            : 1024
 }
