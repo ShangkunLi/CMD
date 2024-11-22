@@ -715,6 +715,16 @@ bool DFG::constructWithDataMem(Loop *L)
             if (storeInst->getOperand(0))
             {
               errs() << "storeInst Operand: " << *storeInst->getOperand(0) << "\n";
+              errs() << "storeInst Operand Name: " << storeInst->getOperand(0)->getName() << "\n";
+              errs() << "storeInst Operand Type: " << *storeInst->getOperand(0)->getType() << "\n";
+              if (isa<Constant>(storeInst->getOperand(0)))
+              {
+                errs() << "storeInst Operand is a constant\n";
+              }
+              else
+              {
+                errs() << "storeInst Operand is not a constant\n";
+              }
             }
             else
             {
@@ -726,13 +736,25 @@ bool DFG::constructWithDataMem(Loop *L)
             {
               storeValNode = this->getNode(storeInst->getOperand(0));
             }
-            else
+            else if (dyn_cast<Instruction>(storeInst->getOperand(0)))
             {
 
               storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Instruction>(storeInst->getOperand(0)), storeInst->getOperand(0)->getName());
-              errs() << storeNode->getInst() << " ";
-              cout << " (ID: " << dataNode->getID() << ")\n";
+              errs() << storeValNode->getInst() << " ";
+              cout << " (ID: " << storeValNode->getID() << ")\n";
               this->nodes.push_back(storeValNode);
+            }
+            else if (isa<Constant>(storeInst->getOperand(0)))
+            {
+              storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Constant>(storeInst->getOperand(0)), true);
+              errs() << *storeValNode->getValue() << " ";
+              cout << " (ID: " << storeValNode->getID() << ")\n";
+              this->nodes.push_back(storeValNode);
+            }
+            else
+            {
+              errs() << "[ERROR] Cannot handle this kind of store value node.\n";
+              return false;
             }
 
             DFGEdge *dfgEdge; // Create dfg edge storeValNode -> storeNode
@@ -848,7 +870,7 @@ bool DFG::constructWithDataMem(Loop *L)
     // Construct DFG Control Edges
     for (DFGNode *node : this->nodes)
     {
-      if (node->getOpcodeName() == "datamem")
+      if (node->getOpcodeName() == "datamem"||node->getOpcodeName() == "Constant")
       {
         continue;
       }
@@ -905,7 +927,7 @@ bool DFG::constructWithDataMem(Loop *L)
     // Construct DFG Data Flow Edges
     for (DFGNode *node : this->nodes)
     {
-      if (node->getOpcodeName() == "datamem")
+      if (node->getOpcodeName() == "datamem"||node->getOpcodeName() == "Constant")
       {
         continue;
       }
@@ -2892,19 +2914,41 @@ void DFG::eliminateOpcode(string t_opcodeName)
 
 Instruction *DFG::getParentGEP(Instruction *t_inst)
 {
-  if (t_inst->getOpcode() == Instruction::GetElementPtr)
+  // if (t_inst->getOpcode() == Instruction::GetElementPtr)
+  // {
+  //   return t_inst;
+  // }
+  // else
+  // {
+  //   for (Instruction::op_iterator op = t_inst->op_begin(), opEnd = t_inst->op_end(); op != opEnd; ++op)
+  //   {
+  //     Instruction *tempInst = dyn_cast<Instruction>(*op);
+  //     if (tempInst)
+  //     {
+  //       return getParentGEP(tempInst);
+  //     }
+  //   }
+  // }
+  if (t_inst->getOpcode() == Instruction::Load)
   {
-    return t_inst;
-  }
-  else
-  {
-    for (Instruction::op_iterator op = t_inst->op_begin(), opEnd = t_inst->op_end(); op != opEnd; ++op)
+    if (Instruction *gepInst = dyn_cast<Instruction>(t_inst->getOperand(0)))
     {
-      Instruction *tempInst = dyn_cast<Instruction>(*op);
-      if (tempInst)
-      {
-        return getParentGEP(tempInst);
-      }
+      return gepInst;
+    }
+    else
+    {
+      return nullptr;
+    }
+  }
+  else if (t_inst->getOpcode() == Instruction::Store)
+  {
+    if (Instruction *gepInst = dyn_cast<Instruction>(t_inst->getOperand(1)))
+    {
+      return gepInst;
+    }
+    else
+    {
+      return nullptr;
     }
   }
   return nullptr;

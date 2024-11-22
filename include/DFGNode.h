@@ -50,6 +50,7 @@ private:
   string m_optType;
   string m_fuType;
   bool m_combined;
+  bool m_isConst;
   bool m_hasmemory;
   bool m_isPatternRoot;
   bool m_critical;
@@ -66,6 +67,7 @@ private:
 
 public:
   DFGNode(int, bool, Instruction *, StringRef);
+  DFGNode(int, bool, Value *, bool);
   DFGNode();
   string getOptType();
   void setOptType(string t_optType);

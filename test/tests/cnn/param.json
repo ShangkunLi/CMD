@@ -1,5 +1,5 @@
 {
-  "kernel"                : "_Z6kernelv",
+  "kernel"                : "main",
   "targetFunction"        : false,
   "targetNested"          : false,
   "targetLoopsID"         : [0],
@@ -23,7 +23,7 @@
   "optPipelined"          : ["load", "store"],
   "additionalFunc"        : {},
   "incrementalMapping"    : false,
-  "supportMemory"         : false,
+  "supportMemory"         : true,
   "clusterSize"           : 1,
   "memorySize"            : 8192
 }

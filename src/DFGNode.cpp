@@ -29,6 +29,7 @@ DFGNode::DFGNode(int t_id, bool t_precisionAware, Instruction *t_inst,
   m_isPatternRoot = false;
   m_patternRoot = NULL;
   m_critical = false;
+  m_isConst = false;
   m_cycleID = new list<int>();
   m_level = 0;
   m_execLatency = 1;
@@ -41,6 +42,35 @@ DFGNode::DFGNode(int t_id, bool t_precisionAware, Instruction *t_inst,
 }
 
 DFGNode::DFGNode() {}
+
+DFGNode::DFGNode(int t_id, bool t_precisionAware, Value *t_val, bool t_isConst)
+{
+  m_id = t_id;
+  m_precisionAware = t_precisionAware;
+  m_inst = NULL;
+  m_value = t_val;
+  m_predNodes = NULL;
+  m_succNodes = NULL;
+  m_opcodeName = "Constant";
+  m_isMapped = false;
+  m_numConst = 0;
+  m_optType = "";
+  m_combined = false;
+  m_hasmemory = false;
+  m_isPatternRoot = false;
+  m_patternRoot = NULL;
+  m_critical = false;
+  m_isConst = t_isConst;
+  m_cycleID = new list<int>();
+  m_level = 0;
+  m_execLatency = 1;
+  m_pipelinable = false;
+  m_isPredicatee = false;
+  m_predicatees = NULL;
+  m_isPredicater = false;
+  m_patternNodes = new list<DFGNode *>();
+  initType();
+}
 
 string DFGNode::getOptType()
 {
