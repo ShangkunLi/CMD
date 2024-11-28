@@ -9,7 +9,7 @@
             ],
             "cluster id": 0,
             "id": 0,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 0,
             "y coordinate": 0
@@ -23,7 +23,7 @@
             ],
             "cluster id": 1,
             "id": 1,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 2,
             "y coordinate": 0
@@ -37,7 +37,7 @@
             ],
             "cluster id": 2,
             "id": 2,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 4,
             "y coordinate": 0
@@ -51,7 +51,7 @@
             ],
             "cluster id": 3,
             "id": 3,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 0,
             "y coordinate": 2
@@ -65,7 +65,7 @@
             ],
             "cluster id": 4,
             "id": 4,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 2,
             "y coordinate": 2
@@ -79,7 +79,7 @@
             ],
             "cluster id": 5,
             "id": 5,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 4,
             "y coordinate": 2
@@ -93,7 +93,7 @@
             ],
             "cluster id": 6,
             "id": 6,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 0,
             "y coordinate": 4
@@ -107,7 +107,7 @@
             ],
             "cluster id": 7,
             "id": 7,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 2,
             "y coordinate": 4
@@ -121,7 +121,7 @@
             ],
             "cluster id": 8,
             "id": 8,
-            "memory size": 16384,
+            "memory size": 4096,
             "node type": "Mem",
             "x coordinate": 4,
             "y coordinate": 4

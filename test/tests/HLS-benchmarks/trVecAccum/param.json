@@ -24,8 +24,8 @@
   "additionalFunc"        : {},
   "incrementalMapping"    : false,
   "supportMemory"         : true,
-  "clusterSize"           : 6,
-  "memorySize"            : 2048,
-  "memoryArchitectureRefinement" : false
+  "clusterSize"           : 4,
+  "memorySize"            : 16384,
+  "memoryArchitectureRefinement" : true
 }
 
