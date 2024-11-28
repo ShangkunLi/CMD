@@ -1086,8 +1086,46 @@ void CGRA::createMemNodes(int t_memorySize)
       }
     }
   }
+  else if (this->m_clusterSize == 6)
+  {
+    if (this->m_rows % 3 != 0 || this->m_columns % 2 != 0)
+    {
+      errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
+      return;
+    }
+    singleCluster->clear();
+    mem_id = 0;
+    for (int i = 0; i < this->m_rows; i += 3)
+    {
+      for (int j = 0; j < this->m_columns; j += 2)
+      {
+        singleCluster->clear();
+        if (i + 2 < this->m_rows && j + 1 < this->m_columns)
+        {
+          singleCluster->push_back(this->nodes[i][j]);
+          singleCluster->push_back(this->nodes[i][j + 1]);
+          singleCluster->push_back(this->nodes[i + 1][j]);
+          singleCluster->push_back(this->nodes[i + 1][j + 1]);
+          singleCluster->push_back(this->nodes[i + 2][j]);
+          singleCluster->push_back(this->nodes[i + 2][j + 1]);
+        }
+        else
+        {
+          errs() << "The number of CGRA nodes should be a multiple of the cluster size.\n";
+        }
+        CGRAMem *memNode = new CGRAMem(mem_id, j, i, t_memorySize);
+        this->MemNodes[mem_id] = memNode;
+        for (CGRANode *node : *singleCluster)
+        {
+          memNode->addNodeToCluster(node);
+        }
+        mem_id++;
+      }
+    }
+  }
   else
   {
-    errs() << "The cluster size should be 1, 2, or 4.\n";
+    errs() << "The cluster size should be 1, 2, 4 or 6.\n";
+    return;
   }
 }

@@ -1,0 +1,30 @@
+{
+  "kernel"                : "kernel_correlation",
+  "targetFunction"        : false,
+  "targetNested"          : false,
+  "targetLoopsID"         : [0],
+  "doCGRAMapping"         : true,
+  "row"                   : 6,
+  "column"                : 6,
+  "precisionAware"        : false,
+  "heterogeneity"         : false,
+  "isTrimmedDemo"         : true,
+  "heuristicMapping"      : true,
+  "parameterizableCGRA"   : false,
+  "diagonalVectorization" : false,
+  "bypassConstraint"      : 4,
+  "isStaticElasticCGRA"   : false,
+  "ctrlMemConstraint"     : 10,
+  "regConstraint"         : 8,
+  "optLatency"            : {
+                              "load" : 1,
+                              "store": 1
+                            },
+  "optPipelined"          : ["load", "store"],
+  "additionalFunc"        : {},
+  "incrementalMapping"    : false,
+  "supportMemory"         : false,
+  "clusterSize"           : 1,
+  "memorySize"            : 8192
+}
+

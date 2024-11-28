@@ -9,8 +9,9 @@
 
 // #include "DFG.h"
 // #include "CGRA.h"
-#include "Mapper.h"
+// #include "Mapper.h"
 #include "json.hpp"
+#include "Refinement.h"
 
 using namespace llvm;
 using namespace std;
@@ -25,6 +26,7 @@ namespace
     {
         static char ID;
         Mapper *mapper;
+        Mapper *refineMapper;
         genDFGPass() : FunctionPass(ID) {}
 
         void getAnalysisUsage(AnalysisUsage &AU) const override
@@ -59,6 +61,7 @@ namespace
             bool heuristicMapping = true;
             bool parameterizableCGRA = false;
             bool incrementalMapping = false;
+            bool memoryArchitectureRefinement = false;
             map<string, int> *execLatency = new map<string, int>();
             list<string> *pipelinedOpt = new list<string>();
             map<string, list<int> *> *additionalFunc = new map<string, list<int> *>();
@@ -105,6 +108,7 @@ namespace
                 paramKeys.insert("clusterSize");
                 paramKeys.insert("memorySize");
                 paramKeys.insert("supportMemory");
+                paramKeys.insert("memoryArchitectureRefinement");
 
                 try
                 {
@@ -148,6 +152,7 @@ namespace
                 clusterSize = param["clusterSize"];
                 memorySize = param["memorySize"];
                 supportMemory = param["supportMemory"];
+                memoryArchitectureRefinement = param["memoryArchitectureRefinement"];
 
                 cout << "Initialize opt latency for DFG nodes: " << endl;
                 for (auto &opt : param["optLatency"].items())
@@ -280,6 +285,40 @@ namespace
                     if (supportMemory)
                     {
                         II = mapper->heuristicMapwithMemory(cgra, dfg2, II, isStaticElasticCGRA);
+                        if (memoryArchitectureRefinement)
+                        {
+                            refineMapper = new Mapper();
+                            int refineII = II;
+                            Refinement *refinement = new Refinement(mapper, cgra, dfg2, II, diagonalVectorization, heterogeneity, parameterizableCGRA, additionalFunc, regConstraint, ctrlMemConstraint, bypassConstraint);
+                            refineII = refinement->memoryRefinement(mapper, cgra, dfg2, II, isStaticElasticCGRA);
+                            CGRA *refinecgra = new CGRA(rows, columns, refinement->m_bestClusterSize, refinement->m_bestMemorySize, diagonalVectorization, heterogeneity, parameterizableCGRA, additionalFunc);
+                            // refinecgra->setRegConstraint(regConstraint);
+                            // refinecgra->setCtrlMemConstraint(ctrlMemConstraint);
+                            // refinecgra->setBypassConstraint(bypassConstraint);
+
+                            // // Initialize the II.
+                            // ResMII = refineMapper->getResMII(dfg2, refinecgra);
+                            // cout << "==================================\n";
+                            // cout << "[ResMII: " << ResMII << "]\n";
+                            // RecMII = refineMapper->getRecMII(dfg2);
+                            // cout << "==================================\n";
+                            // cout << "[RecMII: " << RecMII << "]\n";
+                            // // II = max(ResMII, RecMII)
+                            // refineII = ResMII;
+                            // if (refineII < RecMII)
+                            //     refineII = RecMII;
+
+                            // refineII = refineMapper->heuristicMapwithMemory(refinecgra, dfg2, refineII, isStaticElasticCGRA);
+                            if (refineII == -1)
+                            {
+                                errs() << "Memory Architecture Refinement Failed\n";
+                            }
+                            else
+                            {
+                                // refineMapper->showSchedule(refinecgra, dfg2, refineII, isStaticElasticCGRA, parameterizableCGRA, supportMemory, true);
+                                errs() << "Memory Architecture Refinement Done\n";
+                            }
+                        }
                     }
                     else
                     {
@@ -329,7 +368,7 @@ namespace
                 cout << "[fail]\n";
             else
             {
-                mapper->showSchedule(cgra, dfg2, II, isStaticElasticCGRA, parameterizableCGRA, supportMemory);
+                mapper->showSchedule(cgra, dfg2, II, isStaticElasticCGRA, parameterizableCGRA, supportMemory, false);
                 cout << "==================================\n";
                 cout << "[Mapping Success]\n";
                 cout << "==================================\n";

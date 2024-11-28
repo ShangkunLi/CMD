@@ -738,7 +738,6 @@ bool DFG::constructWithDataMem(Loop *L)
             }
             else if (dyn_cast<Instruction>(storeInst->getOperand(0)))
             {
-
               storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Instruction>(storeInst->getOperand(0)), storeInst->getOperand(0)->getName());
               errs() << storeValNode->getInst() << " ";
               cout << " (ID: " << storeValNode->getID() << ")\n";
@@ -870,7 +869,7 @@ bool DFG::constructWithDataMem(Loop *L)
     // Construct DFG Control Edges
     for (DFGNode *node : this->nodes)
     {
-      if (node->getOpcodeName() == "datamem"||node->getOpcodeName() == "Constant")
+      if (node->getOpcodeName() == "datamem" || node->getOpcodeName() == "constant")
       {
         continue;
       }
@@ -927,7 +926,7 @@ bool DFG::constructWithDataMem(Loop *L)
     // Construct DFG Data Flow Edges
     for (DFGNode *node : this->nodes)
     {
-      if (node->getOpcodeName() == "datamem"||node->getOpcodeName() == "Constant")
+      if (node->getOpcodeName() == "datamem" || node->getOpcodeName() == "constant")
       {
         continue;
       }
@@ -1206,12 +1205,24 @@ bool DFG::construct(Loop *L)
             {
               storeValNode = this->getNode(storeInst->getOperand(0));
             }
-            else
+            else if (dyn_cast<Instruction>(storeInst->getOperand(0)))
             {
               storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Instruction>(storeInst->getOperand(0)), storeInst->getOperand(0)->getName());
-              errs() << storeNode->getInst() << " ";
-              cout << " (ID: " << dataNode->getID() << ")\n";
+              errs() << storeValNode->getInst() << " ";
+              cout << " (ID: " << storeValNode->getID() << ")\n";
               this->nodes.push_back(storeValNode);
+            }
+            else if (isa<Constant>(storeInst->getOperand(0)))
+            {
+              storeValNode = new DFGNode(m_nodeCount++, m_precisionAware, dyn_cast<Constant>(storeInst->getOperand(0)), true);
+              errs() << *storeValNode->getValue() << " ";
+              cout << " (ID: " << storeValNode->getID() << ")\n";
+              this->nodes.push_back(storeValNode);
+            }
+            else
+            {
+              errs() << "[ERROR] Cannot handle this kind of store value node.\n";
+              return false;
             }
 
             DFGEdge *dfgEdge; // Create dfg edge storeValNode -> storeNode
@@ -1327,7 +1338,7 @@ bool DFG::construct(Loop *L)
     // Construct DFG Control Edges
     for (DFGNode *node : this->nodes)
     {
-      if (node->getOpcodeName() == "datamem")
+      if (node->getOpcodeName() == "datamem" || node->getOpcodeName() == "constant")
       {
         continue;
       }
@@ -1384,7 +1395,7 @@ bool DFG::construct(Loop *L)
     // Construct DFG Data Flow Edges
     for (DFGNode *node : this->nodes)
     {
-      if (node->getOpcodeName() == "datamem")
+      if (node->getOpcodeName() == "datamem" || node->getOpcodeName() == "constant")
       {
         continue;
       }
@@ -2914,42 +2925,61 @@ void DFG::eliminateOpcode(string t_opcodeName)
 
 Instruction *DFG::getParentGEP(Instruction *t_inst)
 {
-  // if (t_inst->getOpcode() == Instruction::GetElementPtr)
-  // {
-  //   return t_inst;
-  // }
-  // else
-  // {
-  //   for (Instruction::op_iterator op = t_inst->op_begin(), opEnd = t_inst->op_end(); op != opEnd; ++op)
+  if (t_inst->getOpcode() == Instruction::GetElementPtr)
+  {
+    return t_inst;
+  }
+  else
+  {
+    if (t_inst->getOpcode() == Instruction::Load)
+    {
+      Instruction *tempInst = dyn_cast<Instruction>(t_inst->getOperand(0));
+      return getParentGEP(tempInst);
+    }else if(t_inst->getOpcode() == Instruction::Store){
+      Instruction *tempInst = dyn_cast<Instruction>(t_inst->getOperand(1));
+      return getParentGEP(tempInst);
+    }
+    for (Instruction::op_iterator op = t_inst->op_begin(), opEnd = t_inst->op_end(); op != opEnd; ++op)
+    {
+      Instruction *tempInst = dyn_cast<Instruction>(*op);
+      if (tempInst)
+      {
+        errs() << "tempInst: " << *tempInst << "\n";
+        return getParentGEP(tempInst);
+      }
+    }
+  }
+  // if (dyn_cast<Instruction>(t_inst->getOperand(0))->getOpcode() == Instruction::BitCast)
+
+  //   if (t_inst->getOpcode() == Instruction::Load)
   //   {
-  //     Instruction *tempInst = dyn_cast<Instruction>(*op);
-  //     if (tempInst)
+  //     if (dyn_cast<Instruction>(t_inst->getOperand(0))->getOpcode() == Instruction::BitCast)
   //     {
-  //       return getParentGEP(tempInst);
+  //       return dyn_cast<Instruction>(dyn_cast<Instruction>(t_inst->getOperand(0))->getOperand(0));
+  //     }
+  //     else if (Instruction *gepInst = dyn_cast<Instruction>(t_inst->getOperand(0)))
+  //     {
+  //       return gepInst;
+  //     }
+  //     else
+  //     {
+  //       return nullptr;
   //     }
   //   }
-  // }
-  if (t_inst->getOpcode() == Instruction::Load)
-  {
-    if (Instruction *gepInst = dyn_cast<Instruction>(t_inst->getOperand(0)))
-    {
-      return gepInst;
-    }
-    else
-    {
-      return nullptr;
-    }
-  }
-  else if (t_inst->getOpcode() == Instruction::Store)
-  {
-    if (Instruction *gepInst = dyn_cast<Instruction>(t_inst->getOperand(1)))
-    {
-      return gepInst;
-    }
-    else
-    {
-      return nullptr;
-    }
-  }
+  //   else if (t_inst->getOpcode() == Instruction::Store)
+  //   {
+  //     if (dyn_cast<Instruction>(t_inst->getOperand(1))->getOpcode() == Instruction::BitCast)
+  //     {
+  //       return dyn_cast<Instruction>(dyn_cast<Instruction>(t_inst->getOperand(1))->getOperand(0));
+  //     }
+  //     else if (Instruction *gepInst = dyn_cast<Instruction>(t_inst->getOperand(1)))
+  //     {
+  //       return gepInst;
+  //     }
+  //     else
+  //     {
+  //       return nullptr;
+  //     }
+  //   }
   return nullptr;
 }

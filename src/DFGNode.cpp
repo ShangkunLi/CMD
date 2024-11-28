@@ -51,7 +51,7 @@ DFGNode::DFGNode(int t_id, bool t_precisionAware, Value *t_val, bool t_isConst)
   m_value = t_val;
   m_predNodes = NULL;
   m_succNodes = NULL;
-  m_opcodeName = "Constant";
+  m_opcodeName = "constant";
   m_isMapped = false;
   m_numConst = 0;
   m_optType = "";

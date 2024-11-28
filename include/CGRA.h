@@ -25,13 +25,14 @@ private:
   int m_rows;      // number of rows
   int m_columns;   // number of columns
   int m_MemCount;  // number of memory tiles
-  int m_clusterSize;
+
   void disableSpecificConnections();
 
 public:
   CGRA(int, int, bool, bool, bool, map<string, list<int> *> *);
   CGRA(int, int, bool, bool, bool, map<string, list<int> *> *, bool);
   CGRA(int, int, int, int, bool, bool, bool, map<string, list<int> *> *);
+  int m_clusterSize;
   CGRANode ***nodes;                     // 2D array of CGRANode pointers
   CGRALink **links;                      // 1D array of CGRALink pointers
   int getFUCount() { return m_FUCount; } // get the number of functional units

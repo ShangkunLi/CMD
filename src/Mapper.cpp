@@ -581,19 +581,20 @@ int Mapper::getMaxMappingCycle()
 }
 
 void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
-                          bool t_isStaticElasticCGRA, bool t_parameterizableCGRA, bool t_supportMemory)
+                          bool t_isStaticElasticCGRA, bool t_parameterizableCGRA, bool t_supportMemory, bool t_memoryArchitectureRefinement)
 {
 
   // tiles and links are in different formats (only used for
   // parameterizable CGRA, i.e., CGRA-Flow mapping demonstration).
   // tiles[tileID][cycleID][optID]
   // links[srcTileID][dstTileID][cycleID]
-  ofstream mappingResult("MappingResult.txt");
-  map<string, map<string, vector<int>>> jsonTiles;
-  map<string, map<string, vector<int>>> jsonLinks;
-  map<string, map<string, map<string, vector<int>>>> jsonTilesLinks;
+
   if (!t_supportMemory)
   {
+    ofstream mappingResult("MappingResult_base.txt");
+    map<string, map<string, vector<int>>> jsonTiles;
+    map<string, map<string, vector<int>>> jsonLinks;
+    map<string, map<string, map<string, vector<int>>>> jsonTilesLinks;
     int cycle = 0;
     int displayRows = t_cgra->getRows() * 2 - 1;
     int displayColumns = t_cgra->getColumns() * 2;
@@ -616,7 +617,7 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
     }
     if (t_isStaticElasticCGRA)
       showCycleBoundary = t_dfg->getNodeCount();
-    while (cycle <= 2 * showCycleBoundary)
+    while (cycle <= 4 * showCycleBoundary)
     {
 
       if (cycle < t_II and t_parameterizableCGRA)
@@ -794,6 +795,19 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
   }
   else
   {
+    string filename;
+    if (t_memoryArchitectureRefinement)
+    {
+      filename = "MappingResult_Refinement.txt";
+    }
+    else
+    {
+      filename = "MappingResult.txt";
+    }
+    ofstream mappingResult(filename);
+    map<string, map<string, vector<int>>> jsonTiles;
+    map<string, map<string, vector<int>>> jsonLinks;
+    map<string, map<string, map<string, vector<int>>>> jsonTilesLinks;
     int cycle = 0;
     int displayRows = t_cgra->getRows() * 2 - 1;
     int displayColumns = t_cgra->getColumns() * 2;
@@ -839,7 +853,7 @@ void Mapper::showSchedule(CGRA *t_cgra, DFG *t_dfg, int t_II,
       }
     }
 
-    while (cycle <= 2 * showCycleBoundary)
+    while (cycle <= 4 * showCycleBoundary)
     {
 
       if (cycle < t_II and t_parameterizableCGRA)
@@ -2188,7 +2202,7 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
               // Check if the memory is overflow
               if (this->checkIsMemoryOverflow(t_cgra, t_dfg, dataNode, fu))
               {
-                errs() << "Memory Overflow.\n";
+                errs() << "Memory Overflow 1.\n";
                 continue;
               }
             }
@@ -2206,6 +2220,13 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
                    << " on CGRA node " << fu->getID() << " within II " << t_II << "; path size: " << paths.size() << ".\n";
             }
           }
+        }
+        if (paths.size() == 0)
+        {
+          cout << "[DEBUG] no available path for DFG node due to memory overflow. " << (*dfgNode)->getID()
+               << " within II " << t_II << ".\n";
+          fail = true;
+          break;
         }
       }
       else
@@ -2256,7 +2277,7 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
           // Finish the data memory node to CGRA memory node mapping
           if (this->checkIsNeedMemMap(t_cgra, t_dfg, (*dfgNode)))
           {
-            this->dataMemNodeMapping(t_cgra, t_dfg, dataNode, prev(optimalPath->end())->first);
+            this->dataMemNodeMapping(t_cgra, t_dfg, dataNode, this->m_mapping[*dfgNode]);
           }
 
           cout << "[DEBUG] success in schedule()\n";
@@ -2283,6 +2304,12 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
       break;
     }
     ++t_II;
+    if (t_II > 11)
+    {
+      fail = true;
+      errs() << "Max II Constriant.\n";
+      break;
+    }
   }
   if (!fail)
     return t_II;
@@ -2305,8 +2332,12 @@ void Mapper::dataMemNodeMapping(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, 
   CGRAMem *memNode = t_cgra->MemNodes[t_fu->getClusterId()];
   if (!this->dataInMem(t_cgra, t_dfg, t_dataNode, memNode))
   {
+    // if (checkIsMemoryOverflow(t_cgra, t_dfg, t_dataNode, t_fu))
+    // {
+    //   errs() << "Memory Overflow 2\n";
+    //   return;
+    // }
     memNode->setAvailableMemSize(memNode->getAvailableMemSize() - t_dataNode->getSize());
-    errs() << memNode->getAvailableMemSize() - t_dataNode->getSize() << "\n";
   }
   this->m_dataMemMapping[t_dataNode] = memNode;
   errs() << "Map Data Node " << t_dataNode->getID() << " to Mem Node " << memNode->getID() << "\n";
@@ -2332,7 +2363,7 @@ bool Mapper::dataInMem(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRAMem *
       {
         if (it.first->getStringRef().str() == t_dataNode->getStringRef().str())
         {
-          errs() << "Data Node " << t_dataNode->getID() << t_dataNode->getStringRef().str() << " is already in Mem Node " << t_mem->getID() << "\n";
+          errs() << "Data Node " << t_dataNode->getID() << " " << t_dataNode->getStringRef().str() << " is already in Mem Node " << t_mem->getID() << "\n";
           return true;
         }
       }
