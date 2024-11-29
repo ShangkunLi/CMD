@@ -2304,7 +2304,7 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
       break;
     }
     ++t_II;
-    if (t_II > 11)
+    if (t_II > 23)
     {
       fail = true;
       errs() << "Max II Constriant.\n";

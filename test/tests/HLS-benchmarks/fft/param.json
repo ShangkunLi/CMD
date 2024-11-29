@@ -25,7 +25,7 @@
   "incrementalMapping"    : false,
   "supportMemory"         : true,
   "clusterSize"           : 4,
-  "memorySize"            : 4096,
-  "memoryArchitectureRefinement" : false
+  "memorySize"            : 11264,
+  "memoryArchitectureRefinement" : true
 }
 

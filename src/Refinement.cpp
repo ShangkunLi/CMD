@@ -71,7 +71,10 @@ double Refinement::calculateCost(CGRA *t_cgra, int t_II)
     else
     {
         // return 100 * t_II + 0.5 / memoryEfficiency + 0.8 * allmemorySizeinKB;
-        return 500 * t_II + 50 / memoryEfficiency + 20 * allmemorySizeinKB;
+        return 500 * t_II + 50 / memoryEfficiency + 20 * allmemorySizeinKB; // cost function of red results
+        // return 500 * t_II + 30 / memoryEfficiency + 30 * allmemorySizeinKB;
+        // return 100 * t_II + 0.5 / memoryEfficiency + 0.8 * allmemorySizeinKB; // cost function of blue results
+
     }
 }
 

@@ -26,6 +26,6 @@
   "supportMemory"         : true,
   "clusterSize"           : 4,
   "memorySize"            : 16384,
-  "memoryArchitectureRefinement" : false
+  "memoryArchitectureRefinement" : true
 }
 
