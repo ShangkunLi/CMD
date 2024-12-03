@@ -24,12 +24,14 @@ void gemver()
     float u11 = u1[i];
     float u22 = u2[i];
   loop_2:
-    for (int j = 0; j < N; j += 4)
+    for (int j = 0; j < N; j += 6)
     {
       A[ii + j] += u11 * v1[j] + u22 * v2[j];
       A[ii + j + 1] += u11 * v1[j + 1] + u22 * v2[j + 1];
       A[ii + j + 2] += u11 * v1[j + 2] + u22 * v2[j + 2];
       A[ii + j + 3] += u11 * v1[j + 3] + u22 * v2[j + 3];
+      A[ii + j + 4] += u11 * v1[j + 4] + u22 * v2[j + 4];
+      A[ii + j + 5] += u11 * v1[j + 5] + u22 * v2[j + 5];
     }
     ii += N;
   }
@@ -39,12 +41,14 @@ void gemver()
     float tmp = x[i];
     int jj = 0;
   loop_3:
-    for (int j = 0; j < N; j += 4, jj += N)
+    for (int j = 0; j < N; j += 6, jj += N)
     {
       tmp += beta * A[jj + i] * y[j];
       tmp += beta * A[jj + i] * y[j + 1];
       tmp += beta * A[jj + i] * y[j + 2];
       tmp += beta * A[jj + i] * y[j + 3];
+      tmp += beta * A[jj + i] * y[j + 4];
+      tmp += beta * A[jj + i] * y[j + 5];
     }
     x[i] = tmp + z[i];
   }
@@ -54,12 +58,14 @@ void gemver()
   {
     float tmp = w[i];
   loop_4:
-    for (int j = 0; j < N; j += 4)
+    for (int j = 0; j < N; j += 6)
     {
       tmp = tmp + alpha * A[kk + j] * x[j];
       tmp = tmp + alpha * A[kk + j + 1] * x[j + 1];
       tmp = tmp + alpha * A[kk + j + 2] * x[j + 2];
       tmp = tmp + alpha * A[kk + j + 3] * x[j + 3];
+      tmp = tmp + alpha * A[kk + j + 4] * x[j + 4];
+      tmp = tmp + alpha * A[kk + j + 5] * x[j + 5];
     }
     w[i] = tmp;
     kk += N;

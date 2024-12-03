@@ -14,7 +14,7 @@
   "diagonalVectorization" : false,
   "bypassConstraint"      : 4,
   "isStaticElasticCGRA"   : false,
-  "ctrlMemConstraint"     : 10,
+  "ctrlMemConstraint"     : 25,
   "regConstraint"         : 8,
   "optLatency"            : {
                               "load" : 1,
@@ -25,7 +25,7 @@
   "incrementalMapping"    : false,
   "supportMemory"         : true,
   "clusterSize"           : 4,
-  "memorySize"            : 16384,
-  "memoryArchitectureRefinement" : true
+  "memorySize"            : 14336,
+  "memoryArchitectureRefinement" : false
 }
 

@@ -14,7 +14,7 @@
   "diagonalVectorization" : false,
   "bypassConstraint"      : 4,
   "isStaticElasticCGRA"   : false,
-  "ctrlMemConstraint"     : 10,
+  "ctrlMemConstraint"     : 25,
   "regConstraint"         : 8,
   "optLatency"            : {
                               "load" : 1,

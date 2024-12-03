@@ -1,1 +1,1 @@
-Mapping algorithm elapsed time=89480ms
+Mapping algorithm elapsed time=2237ms
