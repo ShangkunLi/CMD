@@ -1,6 +1,65 @@
 {
+    "Mem Nodes": [
+        {
+            "cluster": [
+                0,
+                1,
+                4,
+                5
+            ],
+            "cluster id": 0,
+            "id": 0,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 0,
+            "y coordinate": 0
+        },
+        {
+            "cluster": [
+                2,
+                3,
+                6,
+                7
+            ],
+            "cluster id": 1,
+            "id": 1,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 2,
+            "y coordinate": 0
+        },
+        {
+            "cluster": [
+                8,
+                9,
+                12,
+                13
+            ],
+            "cluster id": 2,
+            "id": 2,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 0,
+            "y coordinate": 2
+        },
+        {
+            "cluster": [
+                10,
+                11,
+                14,
+                15
+            ],
+            "cluster id": 3,
+            "id": 3,
+            "memory size": 1024,
+            "node type": "Mem",
+            "x coordinate": 2,
+            "y coordinate": 2
+        }
+    ],
     "PE Nodes": [
         {
+            "cluster id": 0,
             "complex": false,
             "id": 0,
             "node type": "PE",
@@ -24,6 +83,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 0,
             "complex": false,
             "id": 1,
             "node type": "PE",
@@ -47,6 +107,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 1,
             "complex": false,
             "id": 2,
             "node type": "PE",
@@ -70,6 +131,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 1,
             "complex": false,
             "id": 3,
             "node type": "PE",
@@ -93,6 +155,7 @@
             "y coordinate": 0
         },
         {
+            "cluster id": 0,
             "complex": false,
             "id": 4,
             "node type": "PE",
@@ -116,6 +179,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 0,
             "complex": false,
             "id": 5,
             "node type": "PE",
@@ -139,6 +203,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 1,
             "complex": false,
             "id": 6,
             "node type": "PE",
@@ -162,6 +227,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 1,
             "complex": false,
             "id": 7,
             "node type": "PE",
@@ -185,6 +251,7 @@
             "y coordinate": 1
         },
         {
+            "cluster id": 2,
             "complex": false,
             "id": 8,
             "node type": "PE",
@@ -208,6 +275,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 2,
             "complex": false,
             "id": 9,
             "node type": "PE",
@@ -231,6 +299,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 3,
             "complex": false,
             "id": 10,
             "node type": "PE",
@@ -254,6 +323,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 3,
             "complex": false,
             "id": 11,
             "node type": "PE",
@@ -277,6 +347,7 @@
             "y coordinate": 2
         },
         {
+            "cluster id": 2,
             "complex": false,
             "id": 12,
             "node type": "PE",
@@ -300,6 +371,7 @@
             "y coordinate": 3
         },
         {
+            "cluster id": 2,
             "complex": false,
             "id": 13,
             "node type": "PE",
@@ -323,6 +395,7 @@
             "y coordinate": 3
         },
         {
+            "cluster id": 3,
             "complex": false,
             "id": 14,
             "node type": "PE",
@@ -346,6 +419,7 @@
             "y coordinate": 3
         },
         {
+            "cluster id": 3,
             "complex": false,
             "id": 15,
             "node type": "PE",

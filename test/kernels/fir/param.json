@@ -1,9 +1,9 @@
 {
-  "kernel"                : "kernel",
+  "kernel"                : "_Z6kernelv",
   "targetFunction"        : false,
   "targetNested"          : false,
   "targetLoopsID"         : [0],
-  "doCGRAMapping"         : true,
+  "doCGRAMapping"         : false,
   "row"                   : 4,
   "column"                : 4,
   "precisionAware"        : false,
@@ -23,8 +23,9 @@
   "optPipelined"          : ["load", "store"],
   "additionalFunc"        : {},
   "incrementalMapping"    : false,
-  "supportMemory"         : false,
+  "supportMemory"         : true,
   "clusterSize"           : 4,
-  "memorySize"            : 1024
+  "memorySize"            : 1024,
+  "memoryArchitectureRefinement" : false
 }
 

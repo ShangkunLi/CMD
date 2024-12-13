@@ -3,7 +3,7 @@
   "targetFunction"        : false,
   "targetNested"          : false,
   "targetLoopsID"         : [0],
-  "doCGRAMapping"         : true,
+  "doCGRAMapping"         : false,
   "row"                   : 6,
   "column"                : 6,
   "precisionAware"        : false,
@@ -18,7 +18,7 @@
   "regConstraint"         : 8,
   "optLatency"            : {
                               "load" : 1,
-                              "store": 2
+                              "store": 1
                             },
   "optPipelined"          : ["load", "store"],
   "additionalFunc"        : {},

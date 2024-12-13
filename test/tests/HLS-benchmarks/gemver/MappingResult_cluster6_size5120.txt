@@ -1,6 +1,6 @@
 [Mapping II: 12]
 [Memory Unit Mapping]
-	Memory Unit[0] at (0,0): occupied/size=5120/16384
+	Memory Unit[0] at (0,0): occupied/size=5120/5120
 		Data Node[3] x: size=1024	→	18
 		Data Node[7] x: size=1024	→	38
 		Data Node[16] v1: size=1024	→	117
@@ -8,29 +8,29 @@
 		Data Node[19] A: size=2048	←	129
 		Data Node[21] v2: size=1024	→	136
 		Data Node[23] A: size=2048	←	144
-	Memory Unit[1] at (2,0): occupied/size=3072/16384
+	Memory Unit[1] at (2,0): occupied/size=3072/5120
 		Data Node[1] x: size=1024	→	9
 		Data Node[5] x: size=1024	→	27
 		Data Node[11] y: size=1024	→	72
 		Data Node[20] v1: size=1024	→	132
 		Data Node[24] v1: size=1024	→	147
-	Memory Unit[2] at (4,0): occupied/size=5120/16384
+	Memory Unit[2] at (4,0): occupied/size=5120/5120
 		Data Node[9] x: size=1024	→	50
 		Data Node[10] A: size=2048	→	69
 		Data Node[13] y: size=1024	→	82
 		Data Node[25] v2: size=1024	→	150
 		Data Node[27] A: size=2048	←	157
-	Memory Unit[3] at (0,3): occupied/size=4096/16384
+	Memory Unit[3] at (0,3): occupied/size=4096/5120
 		Data Node[0] A: size=2048	→	6
 		Data Node[8] A: size=2048	→	46
 		Data Node[12] y: size=1024	→	77
 		Data Node[14] y: size=1024	→	88
 		Data Node[17] v2: size=1024	→	121
-	Memory Unit[4] at (2,3): occupied/size=2048/16384
+	Memory Unit[4] at (2,3): occupied/size=2048/5120
 		Data Node[2] A: size=2048	→	14
 		Data Node[6] A: size=2048	→	35
 		Data Node[22] A: size=2048	→	142
-	Memory Unit[5] at (4,3): occupied/size=3072/16384
+	Memory Unit[5] at (4,3): occupied/size=3072/5120
 		Data Node[4] A: size=2048	→	23
 		Data Node[15] y: size=1024	→	98
 		Data Node[26] A: size=2048	→	155

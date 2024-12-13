@@ -3,7 +3,7 @@
   "targetFunction"        : false,
   "targetNested"          : false,
   "targetLoopsID"         : [0],
-  "doCGRAMapping"         : true,
+  "doCGRAMapping"         : false,
   "row"                   : 6,
   "column"                : 6,
   "precisionAware"        : false,
@@ -26,6 +26,6 @@
   "supportMemory"         : true,
   "clusterSize"           : 4,
   "memorySize"            : 16384,
-  "memoryArchitectureRefinement" : true
+  "memoryArchitectureRefinement" : false
 }
 

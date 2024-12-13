@@ -1,6 +1,6 @@
 #define SIZE 1000
 
-// conpress
+// compress
 int row0[300];
 int col0[300];
 int value0[300];
