@@ -2193,8 +2193,16 @@ int Mapper::heuristicMapwithMemory(CGRA *t_cgra, DFG *t_dfg, int t_II, bool t_is
           for (int j = 0; j < t_cgra->getColumns(); ++j)
           {
             CGRANode *fu = t_cgra->nodes[i][j];
-            if (this->dataInMem(t_cgra, t_dfg, dataNode, t_cgra->MemNodes[fu->getClusterId()]))
+            DataNode * datanode=NULL; 
+            if (datanode = this->dataInMem(t_cgra, t_dfg, dataNode, t_cgra->MemNodes[fu->getClusterId()]))
             {
+              if ((*dfgNode)->getOpcodeName() == "store")
+              {
+                if (datanode->getParentNode()->getOpcodeName() == "store")
+                {
+                  continue;
+                }
+              }
               errs() << "Data Node already in Memory, no need for overflow check.\n";
             }
             else
@@ -2353,7 +2361,7 @@ bool Mapper::checkIsNeedMemMap(CGRA *t_cgra, DFG *t_dfg, DFGNode *t_dfgNode)
   return false;
 }
 
-bool Mapper::dataInMem(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRAMem *t_mem)
+DataNode *Mapper::dataInMem(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRAMem *t_mem)
 {
   if (this->m_dataMemMapping.size() != 0)
   {
@@ -2364,11 +2372,11 @@ bool Mapper::dataInMem(CGRA *t_cgra, DFG *t_dfg, DataNode *t_dataNode, CGRAMem *
         if (it.first->getStringRef().str() == t_dataNode->getStringRef().str())
         {
           errs() << "Data Node " << t_dataNode->getID() << " " << t_dataNode->getStringRef().str() << " is already in Mem Node " << t_mem->getID() << "\n";
-          return true;
+          return it.first;
         }
       }
     }
   }
   errs() << "Data Node " << t_dataNode->getID() << t_dataNode->getStringRef().str() << " is not in Mem Node " << t_mem->getID() << "\n";
-  return false;
+  return NULL;
 }

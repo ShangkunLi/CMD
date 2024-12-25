@@ -57,5 +57,5 @@ public:
   void sortAllocTilesByLevel(CGRA *);
   list<CGRANode *> placementGen(CGRA *, DFGNode *);
   int incrementalMap(CGRA *, DFG *, int);
-  bool dataInMem(CGRA *, DFG *, DataNode *, CGRAMem *);
+  DataNode* dataInMem(CGRA *, DFG *, DataNode *, CGRAMem *);
 };

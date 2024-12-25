@@ -42,7 +42,7 @@ bar_width = 0.1
 index = np.arange(len(benchmarks))
 
 # create a figure
-plt.figure(figsize=(12, 1.5))
+plt.figure(figsize=(12, 1.2))
 # plot the bars
 plt.bar(
     index + 0.065,
@@ -135,7 +135,7 @@ for pos, label in zip(index, benchmarks):
 # plt.xticks(index, benchmarks, fontsize=12, fontproperties=font_props, rotation=45)
 plt.legend(
     loc="upper center",
-    bbox_to_anchor=(0.5, 1.15),
+    bbox_to_anchor=(0.5, 1.2),
     ncol=5,
     fontsize=18,
     prop=font_props,

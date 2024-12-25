@@ -40,7 +40,7 @@ bar_width = 0.1
 index = np.arange(len(benchmarks))
 
 # create a figure
-fig = plt.figure(figsize=(12, 1.5))
+fig = plt.figure(figsize=(12, 1.3))
 ax1 = fig.add_subplot(111)
 # plot the bars
 bars_baseline = plt.bar(
@@ -80,7 +80,7 @@ plt.xlim(-0.24, 10.45)
 # 添加轴标签和图例
 plt.ylabel("Normalized Speedup", fontsize=12, fontproperties=font_props)
 plt.yticks(
-    [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7],
+    [0.8, 1.0, 1.2, 1.4, 1.6],
     fontsize=12,
     fontproperties=font_props,
 )
@@ -187,14 +187,14 @@ plt.legend(
     bars+lines,
     bar_labels+line_labels,
     loc="upper center",
-    bbox_to_anchor=(0.5, 1.15),
+    bbox_to_anchor=(0.5, 1.2),
     ncol=4,
     fontsize=16,
     prop=font_props,
     borderaxespad=-0.5,
     handleheight=1,
     handlelength=1,
-    columnspacing=6,
+    columnspacing=5,
     handletextpad=1.2,
     fancybox=False,
     frameon=False,
