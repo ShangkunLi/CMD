@@ -5,8 +5,11 @@ You can run the CMD compilation framework and performance simulator by building 
 
 ## 1 Prerequisites
 LLVM `10.0.0`
+
 CMake `3.22.1`
+
 Clang `10.0.0`
+
 GNU Make `4.3`
 
 ## 2 Build the project
