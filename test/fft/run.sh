@@ -1,1 +1,1 @@
-opt -load ../../../../build/src/libgenDFGPass.so -genDFGPass fft.bc
+opt -load ../../build/src/libgenDFGPass.so -genDFGPass fft.bc
