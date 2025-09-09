@@ -1,9 +1,9 @@
 {
-  "kernel"                : "main",
+  "kernel"                : "_Z18gpt2_reduction_sumv",
   "targetFunction"        : false,
   "targetNested"          : false,
   "targetLoopsID"         : [0],
-  "doCGRAMapping"         : false,
+  "doCGRAMapping"         : true,
   "row"                   : 6,
   "column"                : 6,
   "precisionAware"        : false,
@@ -20,12 +20,12 @@
                               "load" : 1,
                               "store": 2
                             },
-  "optPipelined"          : ["load", "store"],
+  "optPipelined"          : [],
   "additionalFunc"        : {},
   "incrementalMapping"    : false,
   "supportMemory"         : true,
   "clusterSize"           : 4,
-  "memorySize"            : 16384,
+  "memorySize"            : 7282,
   "memoryArchitectureRefinement" : false
 }
 
